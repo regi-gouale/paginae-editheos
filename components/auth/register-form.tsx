@@ -34,17 +34,20 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
       return;
     }
     try {
-      const res: any = await authClient.signUp.email({
+      type AuthResponse = { error?: string | { message?: string } | null };
+      const res = await authClient.signUp.email({
         email,
         password,
         name,
         callbackURL: "/",
       });
       if (res?.error) {
+        const error = (res as { error?: string | { message?: string } | null })
+          .error;
         setError(
-          typeof res.error === "string"
-            ? res.error
-            : res.error?.message || "Erreur lors de l'inscription."
+          typeof error === "string"
+            ? error
+            : error?.message || "Erreur lors de l'inscription."
         );
       } else {
         window.location.href = "/";
@@ -147,8 +150,9 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
         </CardContent>
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        En cliquant, vous acceptez nos <a href="#">Conditions d'utilisation</a>{" "}
-        et <a href="#">Politique de confidentialité</a>.
+        En cliquant, vous acceptez nos{" "}
+        <a href="#">Conditions d&apos;utilisation</a> et{" "}
+        <a href="#">Politique de confidentialité</a>.
       </div>
     </div>
   );

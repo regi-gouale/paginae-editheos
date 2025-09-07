@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { on } from "events";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -99,7 +98,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
               </Button>
 
               <div className="text-center text-sm">
-                Vous n'avez pas de compte ?{" "}
+                Vous n&apos;avez pas de compte ?{" "}
                 <Button
                   variant="link"
                   className="text-sm p-0"
@@ -122,8 +121,9 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
         </CardContent>
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        En cliquant, vous acceptez nos <a href="#">Conditions d'utilisation</a>{" "}
-        et <a href="#">Politique de confidentialité</a>.
+        En cliquant, vous acceptez nos{" "}
+        <a href="#">Conditions d&apos;utilisation</a> et{" "}
+        <a href="#">Politique de confidentialité</a>.
       </div>
     </div>
   );
