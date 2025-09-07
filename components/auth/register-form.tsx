@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { EMAIL_WHITELIST } from "@/lib/whitelist";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -24,6 +25,14 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    // Vérification de la whitelist
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedWhitelist = EMAIL_WHITELIST.map((e) => e.toLowerCase());
+    if (!normalizedWhitelist.includes(normalizedEmail)) {
+      setError("Cette adresse email n'est pas autorisée à s'inscrire.");
+      setLoading(false);
+      return;
+    }
     try {
       const res: any = await authClient.signUp.email({
         email,
@@ -56,7 +65,7 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold pb-6">Créez votre compte</h1>
                 <p className="text-muted-foreground text-balance">
-                  Inscrivez-vous sur Paginea
+                  Inscrivez-vous sur Paginae
                 </p>
               </div>
               <div className="grid gap-3">
