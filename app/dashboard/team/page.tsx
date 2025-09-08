@@ -14,7 +14,7 @@ export default async function TeamPage() {
     redirect("/auth");
   }
 
-  const members = await getMembers();
+  const initialData = await getMembers({ page: 1, limit: 10 });
   const breadcrumbs = [{ label: "Équipes", href: "/dashboard/team" }];
 
   return (
@@ -34,7 +34,7 @@ export default async function TeamPage() {
             Gérez les membres de votre équipe et leurs rôles.
           </p>
         </div>
-        <MembersTable members={members} />
+        <MembersTable initialData={initialData} />
       </main>
     </div>
   );

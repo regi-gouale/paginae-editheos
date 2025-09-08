@@ -1,6 +1,12 @@
 "use client";
 
-import { Member, addMember, deleteMember } from "@/app/actions/members";
+import {
+  addMember,
+  deleteMember,
+  getMembers,
+  Member,
+  MembersResponse,
+} from "@/app/actions/members";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +20,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -29,12 +44,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Trash2 } from "lucide-react";
+import { Filter, Plus, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 interface MembersTableProps {
-  members: Member[];
+  initialData: MembersResponse;
 }
 
 const roleLabels = {
@@ -53,15 +69,38 @@ const roleColors = {
   GUEST: "bg-gray-100 text-gray-800",
 };
 
-export function MembersTable({ members }: MembersTableProps) {
+export function MembersTable({ initialData }: MembersTableProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<MembersResponse>(initialData);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRole, setSelectedRole] = useState<string>("ALL");
+  const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     role: "" as "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST",
   });
   const router = useRouter();
+
+  // Debounced search function
+  const debouncedSearch = useDebouncedCallback(
+    async (search: string, role: string, page: number) => {
+      const result = await getMembers({
+        search,
+        role: role as any,
+        page,
+        limit: 10,
+      });
+      setData(result);
+    },
+    500
+  );
+
+  // Effect to handle search and filter changes
+  useEffect(() => {
+    debouncedSearch(searchTerm, selectedRole, currentPage);
+  }, [searchTerm, selectedRole, currentPage, debouncedSearch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +111,14 @@ export function MembersTable({ members }: MembersTableProps) {
       if (result.success) {
         setIsDialogOpen(false);
         setFormData({ name: "", email: "", role: "" as any });
-        router.refresh();
+        // Refresh the data
+        const refreshedData = await getMembers({
+          search: searchTerm,
+          role: selectedRole as any,
+          page: currentPage,
+          limit: 10,
+        });
+        setData(refreshedData);
       } else {
         alert(result.error || "Erreur lors de l'ajout du membre");
       }
@@ -92,7 +138,14 @@ export function MembersTable({ members }: MembersTableProps) {
     try {
       const result = await deleteMember(id);
       if (result.success) {
-        router.refresh();
+        // Refresh the data
+        const refreshedData = await getMembers({
+          search: searchTerm,
+          role: selectedRole as any,
+          page: currentPage,
+          limit: 10,
+        });
+        setData(refreshedData);
       } else {
         alert(result.error || "Erreur lors de la suppression du membre");
       }
@@ -100,6 +153,20 @@ export function MembersTable({ members }: MembersTableProps) {
       console.error("Error:", error);
       alert("Erreur lors de la suppression du membre");
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleRoleChange = (role: string) => {
+    setSelectedRole(role);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
+  const handleSearchChange = (search: string) => {
+    setSearchTerm(search);
+    setCurrentPage(1); // Reset to first page when search changes
   };
 
   return (
@@ -185,6 +252,47 @@ export function MembersTable({ members }: MembersTableProps) {
         </Dialog>
       </div>
 
+      {/* Contrôles de recherche et filtres */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+        <div className="flex-1">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Rechercher par nom ou email..."
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+        <div className="flex gap-2 items-center">
+          <Filter className="h-4 w-4 text-gray-400" />
+          <Select value={selectedRole} onValueChange={handleRoleChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filtrer par rôle" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">Tous les rôles</SelectItem>
+              <SelectItem value="ADMIN">Administrateur</SelectItem>
+              <SelectItem value="DESIGNER">Designer</SelectItem>
+              <SelectItem value="REVIEWER">Relecteur</SelectItem>
+              <SelectItem value="CONTRIBUTOR">Contributeur</SelectItem>
+              <SelectItem value="GUEST">Invité</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Informations sur les résultats */}
+      <div className="flex justify-between items-center text-sm text-muted-foreground">
+        <div>
+          Affichage de {data.members.length} sur {data.total} membres
+        </div>
+        <div>
+          Page {data.currentPage} sur {data.totalPages}
+        </div>
+      </div>
+
       <div className="border rounded-lg">
         <Table>
           <TableHeader>
@@ -196,7 +304,7 @@ export function MembersTable({ members }: MembersTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {members.length === 0 ? (
+            {data.members.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={4}
@@ -206,7 +314,7 @@ export function MembersTable({ members }: MembersTableProps) {
                 </TableCell>
               </TableRow>
             ) : (
-              members.map((member) => (
+              data.members.map((member: Member) => (
                 <TableRow key={member.id}>
                   <TableCell className="font-medium ml-2">
                     {member.name}
@@ -233,6 +341,86 @@ export function MembersTable({ members }: MembersTableProps) {
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination */}
+      {data.totalPages > 1 && (
+        <div className="flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              {data.hasPrevPage && (
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(data.currentPage - 1);
+                    }}
+                  />
+                </PaginationItem>
+              )}
+
+              {Array.from({ length: data.totalPages }, (_, i) => i + 1)
+                .filter((page) => {
+                  const current = data.currentPage;
+                  return (
+                    page === 1 ||
+                    page === data.totalPages ||
+                    (page >= current - 1 && page <= current + 1)
+                  );
+                })
+                .map((page, index, array) => {
+                  if (index > 0 && array[index - 1] !== page - 1) {
+                    return (
+                      <React.Fragment key={`ellipsis-${page}`}>
+                        <PaginationItem>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePageChange(page);
+                            }}
+                            isActive={page === data.currentPage}
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      </React.Fragment>
+                    );
+                  }
+                  return (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handlePageChange(page);
+                        }}
+                        isActive={page === data.currentPage}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
+
+              {data.hasNextPage && (
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(data.currentPage + 1);
+                    }}
+                  />
+                </PaginationItem>
+              )}
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }

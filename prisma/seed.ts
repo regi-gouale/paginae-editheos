@@ -36,6 +36,56 @@ async function main() {
         email: "emma.leroy@example.com",
         role: "GUEST",
       },
+      {
+        name: "François Dubois",
+        email: "francois.dubois@example.com",
+        role: "DESIGNER",
+      },
+      {
+        name: "Gabrielle Simon",
+        email: "gabrielle.simon@example.com",
+        role: "CONTRIBUTOR",
+      },
+      {
+        name: "Henri Lambert",
+        email: "henri.lambert@example.com",
+        role: "REVIEWER",
+      },
+      {
+        name: "Isabelle Petit",
+        email: "isabelle.petit@example.com",
+        role: "GUEST",
+      },
+      {
+        name: "Jacques Bernard",
+        email: "jacques.bernard@example.com",
+        role: "ADMIN",
+      },
+      {
+        name: "Karine Roux",
+        email: "karine.roux@example.com",
+        role: "DESIGNER",
+      },
+      {
+        name: "Laurent Fournier",
+        email: "laurent.fournier@example.com",
+        role: "CONTRIBUTOR",
+      },
+      {
+        name: "Marie Blanc",
+        email: "marie.blanc@example.com",
+        role: "REVIEWER",
+      },
+      {
+        name: "Nicolas André",
+        email: "nicolas.andre@example.com",
+        role: "GUEST",
+      },
+      {
+        name: "Olivia Girard",
+        email: "olivia.girard@example.com",
+        role: "DESIGNER",
+      },
     ],
   });
 
