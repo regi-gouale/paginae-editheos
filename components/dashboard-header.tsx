@@ -28,7 +28,9 @@ export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/dashboard">Tableau de bord</BreadcrumbLink>
+              <BreadcrumbLink href="/dashboard">
+                Espace de travail
+              </BreadcrumbLink>
             </BreadcrumbItem>
             {breadcrumbs?.map((item, index) => (
               <div key={`breadcrumb-${index}`} className="flex items-center">

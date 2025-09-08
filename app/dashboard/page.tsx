@@ -13,7 +13,7 @@ export default async function DashboardPage() {
     redirect("/auth");
   }
 
-  const breadcrumbs = [{ label: "Accueil", href: "/dashboard" }];
+  const breadcrumbs = [{ label: "Tableau de bord", href: "/dashboard" }];
 
   return (
     <div>

@@ -38,7 +38,9 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Accueil</SidebarGroupLabel>
+      <SidebarGroupLabel className="uppercase">
+        Espace de travail
+      </SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
           const isActive =
