@@ -2,6 +2,10 @@
 
 import {
   Book,
+  BookAlert,
+  BookAudio,
+  BookLock,
+  BookOpen,
   Heart,
   Home,
   Kanban,
@@ -138,21 +142,26 @@ const data = {
       icon: Send,
     },
   ],
-  projects: [
+  stats: [
     {
-      name: "Une décision peux tout changer",
+      name: "À relire",
       url: "#",
-      icon: Book,
+      icon: BookOpen,
     },
     {
-      name: "Le sécret d'un coeur transformé",
+      name: "En cours",
       url: "#",
-      icon: Heart,
+      icon: BookAudio,
     },
     {
-      name: "Métamorphose",
+      name: "Bloqués",
       url: "#",
-      icon: Book,
+      icon: BookLock,
+    },
+    {
+      name: "Échéances aujourd'hui",
+      url: "#",
+      icon: BookAlert,
     },
   ],
 };
@@ -196,7 +205,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavProjects projects={data.stats} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
