@@ -61,7 +61,7 @@ const data = {
     },
     {
       title: "Projets",
-      url: "#",
+      url: "/dashboard/projects",
       icon: Kanban,
       // items: [
       //   {
