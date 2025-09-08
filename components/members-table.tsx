@@ -176,8 +176,8 @@ export function MembersTable({ initialData }: MembersTableProps) {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              {"Ajouter un membre"}
+              <Plus className="mr-1 h-4 w-4" />
+              {"Membre"}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
