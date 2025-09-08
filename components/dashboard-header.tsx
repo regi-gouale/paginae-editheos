@@ -15,7 +15,10 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2 w-full shadow-md rounded-b-2xl">
+    <header
+      className="flex h-16 shrink-0 items-center gap-2 w-full shadow-md rounded-b-2xl"
+      style={{ fontFamily: "var(--font-montserrat)" }}
+    >
       <div className="flex items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator
@@ -35,7 +38,9 @@ export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
                 />
                 <BreadcrumbItem key={`item-${index}`}>
                   {index === breadcrumbs.length - 1 ? (
-                    <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                    <BreadcrumbPage className="ml-2">
+                      {item.label}
+                    </BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink href={item.href}>
                       {item.label}
