@@ -40,7 +40,6 @@ const data = {
       title: "Tableau de bord",
       url: "/dashboard",
       icon: Home,
-      isActive: true,
       // items: [
       //   {
       //     title: "History",
