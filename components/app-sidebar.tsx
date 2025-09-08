@@ -38,7 +38,7 @@ const data = {
   navMain: [
     {
       title: "Tableau de bord",
-      url: "#",
+      url: "/dashboard",
       icon: Home,
       isActive: true,
       // items: [
@@ -77,7 +77,7 @@ const data = {
     },
     {
       title: "Équipe",
-      url: "#",
+      url: "/dashboard/team",
       icon: Users2,
       // items: [
       //   {
