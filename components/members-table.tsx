@@ -45,9 +45,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Filter, Plus, Search, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+
+type MemberRole = "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST";
 
 interface MembersTableProps {
   initialData: MembersResponse;
@@ -79,16 +80,15 @@ export function MembersTable({ initialData }: MembersTableProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    role: "" as "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST",
+    role: "" as MemberRole,
   });
-  const router = useRouter();
 
   // Debounced search function
   const debouncedSearch = useDebouncedCallback(
     async (search: string, role: string, page: number) => {
       const result = await getMembers({
         search,
-        role: role as any,
+        role: role as MemberRole | "ALL",
         page,
         limit: 10,
       });
@@ -110,11 +110,11 @@ export function MembersTable({ initialData }: MembersTableProps) {
       const result = await addMember(formData);
       if (result.success) {
         setIsDialogOpen(false);
-        setFormData({ name: "", email: "", role: "" as any });
+        setFormData({ name: "", email: "", role: "" as MemberRole });
         // Refresh the data
         const refreshedData = await getMembers({
           search: searchTerm,
-          role: selectedRole as any,
+          role: selectedRole as MemberRole | "ALL",
           page: currentPage,
           limit: 10,
         });
@@ -141,7 +141,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
         // Refresh the data
         const refreshedData = await getMembers({
           search: searchTerm,
-          role: selectedRole as any,
+          role: selectedRole as MemberRole | "ALL",
           page: currentPage,
           limit: 10,
         });
@@ -172,12 +172,12 @@ export function MembersTable({ initialData }: MembersTableProps) {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Membres de l'équipe</h2>
+        <h2 className="text-xl font-semibold">Membres de l&apos;équipe</h2>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Ajouter un membre
+              {"Ajouter un membre"}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
@@ -218,7 +218,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
                 <Label htmlFor="role">Rôle</Label>
                 <Select
                   value={formData.role}
-                  onValueChange={(value: any) =>
+                  onValueChange={(value: MemberRole) =>
                     setFormData({ ...formData, role: value })
                   }
                   required
@@ -310,7 +310,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
                   colSpan={4}
                   className="text-center py-8 text-muted-foreground"
                 >
-                  Aucun membre dans l'équipe pour le moment.
+                  Aucun membre dans l&apos;équipe pour le moment.
                 </TableCell>
               </TableRow>
             ) : (

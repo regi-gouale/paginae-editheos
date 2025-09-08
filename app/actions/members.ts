@@ -1,6 +1,6 @@
 "use server";
 
-import { PrismaClient } from "@/prisma/generated/prisma";
+import { Prisma, PrismaClient } from "@/prisma/generated/prisma";
 
 const prisma = new PrismaClient();
 
@@ -38,7 +38,7 @@ export async function getMembers(
     const skip = (page - 1) * limit;
 
     // Construction des conditions de filtrage
-    const where: any = {};
+    const where: Prisma.MemberWhereInput = {};
 
     // Recherche par nom ou email
     if (search) {

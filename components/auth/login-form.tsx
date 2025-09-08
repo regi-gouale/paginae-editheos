@@ -35,7 +35,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
       } else {
         window.location.reload();
       }
-    } catch (err) {
+    } catch {
       setError("Erreur lors de la connexion.");
     } finally {
       setLoading(false);
