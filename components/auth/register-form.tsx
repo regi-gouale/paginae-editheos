@@ -34,7 +34,6 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
       return;
     }
     try {
-      type AuthResponse = { error?: string | { message?: string } | null };
       const res = await authClient.signUp.email({
         email,
         password,
@@ -52,7 +51,7 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
       } else {
         window.location.href = "/";
       }
-    } catch (err) {
+    } catch {
       setError("Erreur lors de l'inscription.");
     } finally {
       setLoading(false);

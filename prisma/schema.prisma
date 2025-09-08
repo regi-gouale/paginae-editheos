@@ -73,3 +73,22 @@ model Verification {
 
   @@map("verification")
 }
+
+model Member {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  name      String
+  role      MemberRole
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now()) @updatedAt
+
+  @@map("member")
+}
+
+enum MemberRole {
+  ADMIN
+  DESIGNER
+  REVIEWER
+  CONTRIBUTOR
+  GUEST
+}

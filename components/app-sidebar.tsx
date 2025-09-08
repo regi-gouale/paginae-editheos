@@ -38,9 +38,8 @@ const data = {
   navMain: [
     {
       title: "Tableau de bord",
-      url: "#",
+      url: "/dashboard",
       icon: Home,
-      isActive: true,
       // items: [
       //   {
       //     title: "History",
@@ -77,7 +76,7 @@ const data = {
     },
     {
       title: "Équipe",
-      url: "#",
+      url: "/dashboard/team",
       icon: Users2,
       // items: [
       //   {
@@ -166,7 +165,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }
 
   return (
-    <Sidebar variant="floating" {...props}>
+    <Sidebar
+      variant="floating"
+      {...props}
+      style={{ fontFamily: "var(--font-montserrat)" }}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -181,8 +184,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Paginae</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate font-medium uppercase">
+                    Paginae
+                  </span>
+                  <span className="truncate text-xs">Editheos</span>
                 </div>
               </a>
             </SidebarMenuButton>
