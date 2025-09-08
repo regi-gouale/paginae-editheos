@@ -99,7 +99,7 @@ const data = {
     },
     {
       title: "Auteurs",
-      url: "#",
+      url: "/dashboard/authors",
       icon: User2,
     },
     {

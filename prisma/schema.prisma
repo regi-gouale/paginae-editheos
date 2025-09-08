@@ -92,3 +92,18 @@ enum MemberRole {
   CONTRIBUTOR
   GUEST
 }
+
+model Author {
+  id          String    @id @default(uuid())
+  firstName   String
+  lastName    String
+  email       String    @unique
+  biography   String?
+  website     String?
+  nationality String?
+  birthDate   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+
+  @@map("author")
+}
