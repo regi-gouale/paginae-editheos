@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Comfortaa, Montserrat } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -30,6 +31,7 @@ export default function RootLayout({
       >
         {children}
         <Toaster />
+        <SpeedInsights />
       </body>
     </html>
   );
