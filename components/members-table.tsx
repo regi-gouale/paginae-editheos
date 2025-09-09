@@ -9,16 +9,9 @@ import {
 } from "@/app/actions/members";
 import { AddMemberDialog } from "@/components/add-member-dialog";
 import { TablePagination } from "@/components/table-pagination";
+import { TableSearchFilter } from "@/components/table-search-filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -27,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Filter, Search, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -166,36 +159,12 @@ export function MembersTable({ initialData }: MembersTableProps) {
         />
       </div>
 
-      {/* Contrôles de recherche et filtres */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Rechercher par nom ou email..."
-              value={searchTerm}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </div>
-        <div className="flex gap-2 items-center">
-          <Filter className="h-4 w-4 text-gray-400" />
-          <Select value={selectedRole} onValueChange={handleRoleChange}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filtrer par rôle" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">Tous les rôles</SelectItem>
-              <SelectItem value="ADMIN">Administrateur</SelectItem>
-              <SelectItem value="DESIGNER">Designer</SelectItem>
-              <SelectItem value="REVIEWER">Relecteur</SelectItem>
-              <SelectItem value="CONTRIBUTOR">Contributeur</SelectItem>
-              <SelectItem value="GUEST">Invité</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      <TableSearchFilter
+        searchValue={searchTerm}
+        onSearchChange={handleSearchChange}
+        selectedRole={selectedRole}
+        onRoleChange={handleRoleChange}
+      />
 
       {/* Informations sur les résultats */}
       <div className="flex justify-between items-center text-sm text-muted-foreground">
