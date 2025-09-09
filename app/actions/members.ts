@@ -1,8 +1,7 @@
 "use server";
 
-import { Prisma, PrismaClient } from "@/prisma/generated/prisma";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/prisma/generated/prisma";
 
 export interface Member {
   id: string;
@@ -54,7 +53,12 @@ export async function getMembers(
     }
 
     // Récupération du nombre total d'éléments
-    const total = await prisma.member.count({ where });
+    const total = await prisma.member.count({
+      where,
+      cacheStrategy: {
+        ttl: 180, // Cache pendant 180 secondes
+      },
+    });
 
     // Récupération des membres avec pagination
     const members = await prisma.member.findMany({
@@ -64,6 +68,9 @@ export async function getMembers(
       },
       skip,
       take: limit,
+      cacheStrategy: {
+        ttl: 180, // Cache pendant 180 secondes
+      },
     });
 
     const totalPages = Math.ceil(total / limit);

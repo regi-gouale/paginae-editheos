@@ -2,6 +2,10 @@
 
 import {
   Book,
+  BookAlert,
+  BookAudio,
+  BookLock,
+  BookOpen,
   Heart,
   Home,
   Kanban,
@@ -57,7 +61,7 @@ const data = {
     },
     {
       title: "Projets",
-      url: "#",
+      url: "/dashboard/projects",
       icon: Kanban,
       // items: [
       //   {
@@ -99,7 +103,7 @@ const data = {
     },
     {
       title: "Auteurs",
-      url: "#",
+      url: "/dashboard/authors",
       icon: User2,
     },
     {
@@ -138,21 +142,26 @@ const data = {
       icon: Send,
     },
   ],
-  projects: [
+  stats: [
     {
-      name: "Une décision peux tout changer",
+      name: "À relire",
       url: "#",
-      icon: Book,
+      icon: BookOpen,
     },
     {
-      name: "Le sécret d'un coeur transformé",
+      name: "En cours",
       url: "#",
-      icon: Heart,
+      icon: BookAudio,
     },
     {
-      name: "Métamorphose",
+      name: "Bloqués",
       url: "#",
-      icon: Book,
+      icon: BookLock,
+    },
+    {
+      name: "Échéances aujourd'hui",
+      url: "#",
+      icon: BookAlert,
     },
   ],
 };
@@ -166,7 +175,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar
-      variant="floating"
+      variant="inset"
       {...props}
       style={{ fontFamily: "var(--font-montserrat)" }}
     >
@@ -196,7 +205,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavProjects projects={data.stats} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
