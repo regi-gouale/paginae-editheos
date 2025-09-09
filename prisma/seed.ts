@@ -188,6 +188,296 @@ async function main() {
   });
 
   console.log(`✅ Created ${authors.count} authors`);
+
+  // Supprime les données Kanban existantes
+  await prisma.customField.deleteMany();
+  await prisma.projectTask.deleteMany();
+  await prisma.ruleAction.deleteMany();
+  await prisma.ruleCondition.deleteMany();
+  await prisma.rule.deleteMany();
+  await prisma.project.deleteMany();
+  await prisma.kanbanColumn.deleteMany();
+
+  // Crée les colonnes Kanban
+  const kanbanColumns = await Promise.all([
+    prisma.kanbanColumn.create({
+      data: {
+        title: "À faire",
+        color: "#3B82F6",
+        position: 0,
+      },
+    }),
+    prisma.kanbanColumn.create({
+      data: {
+        title: "En cours",
+        color: "#F59E0B",
+        position: 1,
+      },
+    }),
+    prisma.kanbanColumn.create({
+      data: {
+        title: "En révision",
+        color: "#8B5CF6",
+        position: 2,
+      },
+    }),
+    prisma.kanbanColumn.create({
+      data: {
+        title: "Terminé",
+        color: "#10B981",
+        position: 3,
+      },
+    }),
+  ]);
+
+  console.log(`✅ Created ${kanbanColumns.length} kanban columns`);
+
+  // Récupère les membres et auteurs créés
+  const createdMembers = await prisma.member.findMany({ take: 10 });
+  const createdAuthors = await prisma.author.findMany({ take: 8 });
+
+  // Crée des projets avec différents statuts
+  const projects = await Promise.all([
+    prisma.project.create({
+      data: {
+        title: "Les Misérables - Édition Critique",
+        description: "Nouvelle édition annotée et commentée du chef-d'œuvre de Victor Hugo",
+        status: "IN_PROGRESS",
+        dueDate: new Date("2024-12-31"),
+        columnId: kanbanColumns[1].id,
+        authors: {
+          connect: [{ id: createdAuthors[0].id }]
+        },
+        members: {
+          connect: createdMembers.slice(0, 3).map(m => ({ id: m.id }))
+        }
+      },
+    }),
+    prisma.project.create({
+      data: {
+        title: "L'Amant - Réédition Premium",
+        description: "Réédition de luxe avec illustrations et analyse littéraire",
+        status: "REVIEW",
+        dueDate: new Date("2024-11-15"),
+        columnId: kanbanColumns[2].id,
+        authors: {
+          connect: [{ id: createdAuthors[1].id }]
+        },
+        members: {
+          connect: createdMembers.slice(2, 5).map(m => ({ id: m.id }))
+        }
+      },
+    }),
+    prisma.project.create({
+      data: {
+        title: "Cent ans de solitude - Traduction Française",
+        description: "Nouvelle traduction française du roman de García Márquez",
+        status: "TODO",
+        dueDate: new Date("2025-03-20"),
+        columnId: kanbanColumns[0].id,
+        authors: {
+          connect: [{ id: createdAuthors[2].id }]
+        },
+        members: {
+          connect: createdMembers.slice(1, 4).map(m => ({ id: m.id }))
+        }
+      },
+    }),
+    prisma.project.create({
+      data: {
+        title: "Beloved - Édition Bilingue",
+        description: "Édition bilingue anglais-français avec notes de traduction",
+        status: "DONE",
+        columnId: kanbanColumns[3].id,
+        authors: {
+          connect: [{ id: createdAuthors[3].id }]
+        },
+        members: {
+          connect: createdMembers.slice(0, 2).map(m => ({ id: m.id }))
+        }
+      },
+    }),
+    prisma.project.create({
+      data: {
+        title: "Kafka sur le rivage - Edition Jeunesse",
+        description: "Adaptation pour jeunes lecteurs du roman de Murakami",
+        status: "IN_PROGRESS",
+        dueDate: new Date("2024-10-30"),
+        columnId: kanbanColumns[1].id,
+        authors: {
+          connect: [{ id: createdAuthors[4].id }]
+        },
+        members: {
+          connect: createdMembers.slice(3, 6).map(m => ({ id: m.id }))
+        }
+      },
+    }),
+  ]);
+
+  console.log(`✅ Created ${projects.length} projects`);
+
+  // Crée des tâches pour les projets
+  const tasks = await Promise.all([
+    // Tâches pour "Les Misérables"
+    prisma.projectTask.create({
+      data: {
+        title: "Révision du texte original",
+        completed: true,
+        projectId: projects[0].id,
+      },
+    }),
+    prisma.projectTask.create({
+      data: {
+        title: "Rédaction des annotations historiques",
+        completed: false,
+        projectId: projects[0].id,
+      },
+    }),
+    prisma.projectTask.create({
+      data: {
+        title: "Création de la préface",
+        completed: false,
+        projectId: projects[0].id,
+      },
+    }),
+    // Tâches pour "L'Amant"
+    prisma.projectTask.create({
+      data: {
+        title: "Sélection des illustrations",
+        completed: true,
+        projectId: projects[1].id,
+      },
+    }),
+    prisma.projectTask.create({
+      data: {
+        title: "Relecture finale",
+        completed: false,
+        projectId: projects[1].id,
+      },
+    }),
+    // Tâches pour "Cent ans de solitude"
+    prisma.projectTask.create({
+      data: {
+        title: "Analyse du texte original",
+        completed: false,
+        projectId: projects[2].id,
+      },
+    }),
+    prisma.projectTask.create({
+      data: {
+        title: "Recherche de traducteur",
+        completed: false,
+        projectId: projects[2].id,
+      },
+    }),
+  ]);
+
+  console.log(`✅ Created ${tasks.length} project tasks`);
+
+  // Crée des champs personnalisés
+  const customFields = await Promise.all([
+    prisma.customField.create({
+      data: {
+        name: "Budget",
+        value: "15000€",
+        projectId: projects[0].id,
+      },
+    }),
+    prisma.customField.create({
+      data: {
+        name: "Éditeur",
+        value: "Gallimard",
+        projectId: projects[0].id,
+      },
+    }),
+    prisma.customField.create({
+      data: {
+        name: "Format",
+        value: "Grand Format",
+        projectId: projects[1].id,
+      },
+    }),
+    prisma.customField.create({
+      data: {
+        name: "Tirage",
+        value: "5000 exemplaires",
+        projectId: projects[1].id,
+      },
+    }),
+    prisma.customField.create({
+      data: {
+        name: "Langue source",
+        value: "Espagnol",
+        projectId: projects[2].id,
+      },
+    }),
+  ]);
+
+  console.log(`✅ Created ${customFields.length} custom fields`);
+
+  // Crée des règles d'automatisation
+  const rules = await Promise.all([
+    prisma.rule.create({
+      data: {
+        name: "Déplacer vers Terminé quand toutes les tâches sont complétées",
+        enabled: true,
+        condition: {
+          create: {
+            type: "TASKS_COMPLETED",
+            operator: "ALL_COMPLETED",
+          },
+        },
+        action: {
+          create: {
+            type: "MOVE_TO_COLUMN",
+            targetColumnId: kanbanColumns[3].id,
+          },
+        },
+      },
+    }),
+    prisma.rule.create({
+      data: {
+        name: "Déplacer vers En Révision si date d'échéance proche",
+        enabled: true,
+        condition: {
+          create: {
+            type: "DUE_DATE",
+            operator: "LESS_THAN",
+            value: "7", // 7 jours
+          },
+        },
+        action: {
+          create: {
+            type: "MOVE_TO_COLUMN",
+            targetColumnId: kanbanColumns[2].id,
+          },
+        },
+      },
+    }),
+    prisma.rule.create({
+      data: {
+        name: "Déplacer si budget défini",
+        enabled: false,
+        condition: {
+          create: {
+            type: "CUSTOM_FIELD",
+            field: "Budget",
+            operator: "IS_NOT_EMPTY",
+          },
+        },
+        action: {
+          create: {
+            type: "MOVE_TO_COLUMN",
+            targetColumnId: kanbanColumns[1].id,
+          },
+        },
+      },
+    }),
+  ]);
+
+  console.log(`✅ Created ${rules.length} automation rules`);
+
+  console.log("🎉 Seeding completed successfully!");
 }
 
 main()
