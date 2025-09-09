@@ -16,7 +16,7 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
   return (
     <header
-      className="flex h-16 shrink-0 items-center gap-2 w-full shadow-md rounded-b-2xl"
+      className="flex h-16 shrink-0 items-center gap-2 w-full shadow-sm"
       style={{ fontFamily: "var(--font-montserrat)" }}
     >
       <div className="flex items-center gap-2 px-4">

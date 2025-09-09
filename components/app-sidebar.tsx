@@ -175,7 +175,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar
-      variant="floating"
+      variant="inset"
       {...props}
       style={{ fontFamily: "var(--font-montserrat)" }}
     >
