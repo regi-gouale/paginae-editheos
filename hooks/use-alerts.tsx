@@ -47,7 +47,9 @@ export const useAlerts = () => {
 
     return new Promise((resolve) => {
       toast(title, {
-        description,
+        description: (
+          <span className="text-muted-foreground text-sm">{description}</span>
+        ),
         action: {
           label: confirmText,
           onClick: () => resolve(true),
