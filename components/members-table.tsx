@@ -8,18 +8,10 @@ import {
   MembersResponse,
 } from "@/app/actions/members";
 import { AddMemberDialog } from "@/components/add-member-dialog";
+import { TablePagination } from "@/components/table-pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -264,85 +256,13 @@ export function MembersTable({ initialData }: MembersTableProps) {
         </Table>
       </div>
 
-      {/* Pagination */}
-      {data.totalPages > 1 && (
-        <div className="flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              {data.hasPrevPage && (
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(data.currentPage - 1);
-                    }}
-                  />
-                </PaginationItem>
-              )}
-
-              {Array.from({ length: data.totalPages }, (_, i) => i + 1)
-                .filter((page) => {
-                  const current = data.currentPage;
-                  return (
-                    page === 1 ||
-                    page === data.totalPages ||
-                    (page >= current - 1 && page <= current + 1)
-                  );
-                })
-                .map((page, index, array) => {
-                  if (index > 0 && array[index - 1] !== page - 1) {
-                    return (
-                      <React.Fragment key={`ellipsis-${page}`}>
-                        <PaginationItem>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationLink
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handlePageChange(page);
-                            }}
-                            isActive={page === data.currentPage}
-                          >
-                            {page}
-                          </PaginationLink>
-                        </PaginationItem>
-                      </React.Fragment>
-                    );
-                  }
-                  return (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handlePageChange(page);
-                        }}
-                        isActive={page === data.currentPage}
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  );
-                })}
-
-              {data.hasNextPage && (
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(data.currentPage + 1);
-                    }}
-                  />
-                </PaginationItem>
-              )}
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
+      <TablePagination
+        currentPage={data.currentPage}
+        totalPages={data.totalPages}
+        hasPrevPage={data.hasPrevPage}
+        hasNextPage={data.hasNextPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }
