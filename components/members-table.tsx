@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAlerts } from "@/hooks/use-alerts";
 import { Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -47,6 +48,7 @@ const roleColors = {
 };
 
 export function MembersTable({ initialData }: MembersTableProps) {
+  const { showSuccess, showError, confirm } = useAlerts();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<MembersResponse>(initialData);
@@ -95,19 +97,32 @@ export function MembersTable({ initialData }: MembersTableProps) {
           limit: 10,
         });
         setData(refreshedData);
+        showSuccess("Membre ajouté avec succès");
       } else {
-        alert(result.error || "Erreur lors de l'ajout du membre");
+        showError("Erreur lors de l'ajout du membre", result.error);
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Erreur lors de l'ajout du membre");
+      showError(
+        "Erreur lors de l'ajout du membre",
+        "Une erreur inattendue s'est produite"
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer ce membre ?")) {
+    const confirmed = await confirm(
+      "Êtes-vous sûr de vouloir supprimer ce membre ?",
+      {
+        title: "Supprimer le membre",
+        confirmText: "Supprimer",
+        cancelText: "Annuler",
+      }
+    );
+
+    if (!confirmed) {
       return;
     }
 
@@ -122,12 +137,16 @@ export function MembersTable({ initialData }: MembersTableProps) {
           limit: 10,
         });
         setData(refreshedData);
+        showSuccess("Membre supprimé avec succès");
       } else {
-        alert(result.error || "Erreur lors de la suppression du membre");
+        showError("Erreur lors de la suppression du membre", result.error);
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Erreur lors de la suppression du membre");
+      showError(
+        "Erreur lors de la suppression du membre",
+        "Une erreur inattendue s'est produite"
+      );
     }
   };
 

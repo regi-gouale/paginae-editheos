@@ -38,6 +38,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
+import { useAlerts } from "@/hooks/use-alerts";
 import { Filter, Plus, Search, Trash2, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -47,6 +48,7 @@ interface AuthorsTableProps {
 }
 
 export function AuthorsTable({ initialData }: AuthorsTableProps) {
+  const { showSuccess, showError, confirm } = useAlerts();
   const [data, setData] = useState<AuthorsResponse>(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -153,19 +155,32 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         ) {
           setNationalities([...nationalities, formData.nationality]);
         }
+        showSuccess("Auteur ajouté avec succès");
       } else {
-        alert(result.error || "Erreur lors de l'ajout de l'auteur");
+        showError("Erreur lors de l'ajout de l'auteur", result.error);
       }
     } catch (error) {
       console.error("Error adding author:", error);
-      alert("Erreur lors de l'ajout de l'auteur");
+      showError(
+        "Erreur lors de l'ajout de l'auteur",
+        "Une erreur inattendue s'est produite"
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer cet auteur ?")) {
+    const confirmed = await confirm(
+      "Êtes-vous sûr de vouloir supprimer cet auteur ?",
+      {
+        title: "Supprimer l'auteur",
+        confirmText: "Supprimer",
+        cancelText: "Annuler",
+      }
+    );
+
+    if (!confirmed) {
       return;
     }
 
@@ -181,12 +196,16 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
           limit: 10,
         });
         setData(updatedData);
+        showSuccess("Auteur supprimé avec succès");
       } else {
-        alert(result.error || "Erreur lors de la suppression");
+        showError("Erreur lors de la suppression", result.error);
       }
     } catch (error) {
       console.error("Error deleting author:", error);
-      alert("Erreur lors de la suppression");
+      showError(
+        "Erreur lors de la suppression",
+        "Une erreur inattendue s'est produite"
+      );
     }
   };
 
