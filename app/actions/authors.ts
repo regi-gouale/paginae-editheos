@@ -32,11 +32,13 @@ export interface AuthorsResponse {
   hasPrevPage: boolean;
 }
 
+export const DEFAULT_NATIONALITY = "ALL";
+
 export async function getAuthors(
   filters: AuthorsFilters = {}
 ): Promise<AuthorsResponse> {
   try {
-    const { search = "", nationality = "ALL", page = 1, limit = 10 } = filters;
+    const { search = "", nationality = DEFAULT_NATIONALITY, page = 1, limit = 10 } = filters;
 
     const skip = (page - 1) * limit;
 

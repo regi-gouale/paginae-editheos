@@ -112,6 +112,9 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
     e.preventDefault();
     setIsLoading(true);
 
+    // Capture la nationalité avant de réinitialiser le formulaire
+    const submittedNationality = formData.nationality;
+
     try {
       const result = await addAuthor({
         firstName: formData.firstName,
@@ -119,7 +122,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         email: formData.email,
         biography: formData.biography || undefined,
         website: formData.website || undefined,
-        nationality: formData.nationality || undefined,
+        nationality: submittedNationality || undefined,
         birthDate: formData.birthDate
           ? new Date(formData.birthDate)
           : undefined,
@@ -136,6 +139,14 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         });
         setData(updatedData);
 
+        // Mettre à jour les nationalités si une nouvelle a été ajoutée
+        if (
+          submittedNationality &&
+          !nationalities.includes(submittedNationality)
+        ) {
+          setNationalities([...nationalities, submittedNationality]);
+        }
+
         // Réinitialiser le formulaire
         setFormData({
           firstName: "",
@@ -148,13 +159,6 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         });
         setIsDialogOpen(false);
 
-        // Mettre à jour les nationalités si une nouvelle a été ajoutée
-        if (
-          formData.nationality &&
-          !nationalities.includes(formData.nationality)
-        ) {
-          setNationalities([...nationalities, formData.nationality]);
-        }
         showSuccess("Auteur ajouté avec succès");
       } else {
         showError("Erreur lors de l'ajout de l'auteur", result.error);
