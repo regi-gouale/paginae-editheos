@@ -1,8 +1,7 @@
 "use server";
 
-import { Prisma, PrismaClient } from "@/prisma/generated/prisma";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/prisma/generated/prisma";
 
 export interface Author {
   id: string;
@@ -59,7 +58,12 @@ export async function getAuthors(
     }
 
     // Récupération du nombre total d'éléments
-    const total = await prisma.author.count({ where });
+    const total = await prisma.author.count({
+      where,
+      cacheStrategy: {
+        ttl: 180, // Cache pendant 180 secondes
+      },
+    });
 
     // Récupération des auteurs avec pagination
     const authors = await prisma.author.findMany({
@@ -69,6 +73,9 @@ export async function getAuthors(
       },
       skip,
       take: limit,
+      cacheStrategy: {
+        ttl: 180, // Cache pendant 180 secondes
+      },
     });
 
     const totalPages = Math.ceil(total / limit);
@@ -152,6 +159,9 @@ export async function getNationalities(): Promise<string[]> {
         nationality: {
           not: null,
         },
+      },
+      cacheStrategy: {
+        ttl: 3600, // Cache pendant 1 heure
       },
     });
 
