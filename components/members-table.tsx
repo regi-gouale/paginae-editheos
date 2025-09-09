@@ -7,19 +7,10 @@ import {
   Member,
   MembersResponse,
 } from "@/app/actions/members";
+import { AddMemberDialog } from "@/components/add-member-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Pagination,
   PaginationContent,
@@ -44,7 +35,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Filter, Plus, Search, Trash2 } from "lucide-react";
+import { Filter, Search, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -173,83 +164,14 @@ export function MembersTable({ initialData }: MembersTableProps) {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Membres de l&apos;équipe</h2>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-1 h-4 w-4" />
-              {"Membre"}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Ajouter un nouveau membre</DialogTitle>
-              <DialogDescription>
-                Ajoutez un nouveau membre à votre équipe en remplissant les
-                informations ci-dessous.
-              </DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Nom</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  placeholder="Nom du membre"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  placeholder="email@exemple.com"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="role">Rôle</Label>
-                <Select
-                  value={formData.role}
-                  onValueChange={(value: MemberRole) =>
-                    setFormData({ ...formData, role: value })
-                  }
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner un rôle" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ADMIN">Administrateur</SelectItem>
-                    <SelectItem value="DESIGNER">Designer</SelectItem>
-                    <SelectItem value="REVIEWER">Relecteur</SelectItem>
-                    <SelectItem value="CONTRIBUTOR">Contributeur</SelectItem>
-                    <SelectItem value="GUEST">Invité</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsDialogOpen(false)}
-                >
-                  Annuler
-                </Button>
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "Ajout..." : "Ajouter"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <AddMemberDialog
+          isOpen={isDialogOpen}
+          setIsOpen={setIsDialogOpen}
+          isLoading={isLoading}
+          formData={formData}
+          setFormData={setFormData}
+          handleSubmit={handleSubmit}
+        />
       </div>
 
       {/* Contrôles de recherche et filtres */}
