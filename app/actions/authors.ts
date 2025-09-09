@@ -32,7 +32,7 @@ export interface AuthorsResponse {
   hasPrevPage: boolean;
 }
 
-export const DEFAULT_NATIONALITY = "ALL";
+const DEFAULT_NATIONALITY = "ALL";
 
 export async function getAuthors(
   filters: AuthorsFilters = {}
