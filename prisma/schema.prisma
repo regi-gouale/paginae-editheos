@@ -82,6 +82,8 @@ model Member {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now()) @updatedAt
 
+  projects Project[] @relation("ProjectMembers")
+
   @@map("member")
 }
 
@@ -105,5 +107,130 @@ model Author {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now()) @updatedAt
 
+  projects Project[] @relation("ProjectAuthors")
+
   @@map("author")
+}
+
+model Project {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  status      String
+  dueDate     DateTime? @map("endDate")
+  priority    Int
+
+  authors Author[] @relation("ProjectAuthors")
+  members Member[] @relation("ProjectMembers")
+  tasks   Task[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("project")
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  priority    Int
+  dueDate     DateTime?
+
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+
+  kanbanColumn   KanbanColumn? @relation("KanbanColumnTasks", fields: [kanbanColumnId], references: [id])
+  kanbanColumnId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("task")
+}
+
+model CustomField {
+  id    String @id @default(uuid())
+  name  String
+  value String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("custom_field")
+}
+
+model KanbanColumn {
+  id    String  @id @default(uuid())
+  name  String
+  tasks Task[]  @relation("KanbanColumnTasks")
+  color String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("kanban_column")
+}
+
+// Add new Rule interfaces for automation
+model Rule {
+  id          String      @id @default(uuid())
+  name        String
+  conditionId String
+  condition   RuleCondion @relation(fields: [conditionId], references: [id], onDelete: Cascade)
+  actionId    String
+  action      RuleAction  @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  isActive    Boolean     @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("rule")
+}
+
+enum RuleConditionType {
+  DUE_DATE
+  TASK_COMPLETED
+  CUSTOM_FIELD
+}
+
+enum RuleConditionOperator {
+  EQUALS
+  NOT_EQUALS
+  CONTAINS
+  GREATER_THAN
+  LESS_THAN
+  IS_EMPTY
+  IS_NOT_EMPTY
+  IS_OVERDUE
+  ALL_COMPLETED
+}
+
+enum RuleActionType {
+  SEND_NOTIFICATION
+  ASSIGN_MEMBER
+  MOVE_TASK
+  UPDATE_FIELD
+  MOVE_TO_COLUMN
+}
+
+model RuleCondion {
+  id       String                @id @default(uuid())
+  type     RuleConditionType
+  field    String?
+  operator RuleConditionOperator
+  value    String?
+
+  rules Rule[]
+}
+
+model RuleAction {
+  id             String         @id @default(uuid())
+  type           RuleActionType
+  targetColumnId String
+
+  rules Rule[]
 }
