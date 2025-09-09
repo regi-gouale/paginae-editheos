@@ -58,7 +58,7 @@ export const useAlerts = () => {
           label: cancelText,
           onClick: () => resolve(false),
         },
-        duration: Infinity, // Le toast reste affiché jusqu'à ce que l'utilisateur choisisse
+        duration: Infinity, // Le toast reste affiché jusqu'à ce que l'utilisateur fasse un choix
       });
     });
   };
