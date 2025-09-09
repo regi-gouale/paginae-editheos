@@ -226,7 +226,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="font-semibold">
               <Plus className="h-4 w-4 mr-1" />
               Auteur
             </Button>
