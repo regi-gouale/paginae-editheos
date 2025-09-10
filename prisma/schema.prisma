@@ -98,9 +98,9 @@ enum MemberRole {
 enum ProjectStatus {
   TODO
   IN_PROGRESS
-  REVIEW
+  BLOCKED
   DONE
-  CANCELLED
+  REJECTED
 }
 
 enum RuleConditionType {

@@ -43,34 +43,36 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
   useEffect(() => {
     setColumns(initialColumns);
 
-    setRules([
-      {
-        id: `rule-${randomUUID}`,
-        name: "Déplacer les projets en retard à Bloqué",
-        enabled: true,
-        condition: {
-          type: RuleConditionType.DUE_DATE,
-          operator: RuleConditionOperator.IS_OVERDUE,
+    if (initialColumns.length >= 5) {
+      setRules([
+        {
+          id: `rule-${randomUUID}`,
+          name: "Déplacer les projets en retard à Bloqué",
+          enabled: true,
+          condition: {
+            type: RuleConditionType.DUE_DATE,
+            operator: RuleConditionOperator.IS_OVERDUE,
+          },
+          action: {
+            type: RuleActionType.MOVE_TO_COLUMN,
+            targetColumnId: columns[2].id,
+          },
         },
-        action: {
-          type: RuleActionType.MOVE_TO_COLUMN,
-          targetColumnId: columns[2].id,
+        {
+          id: `rule-${randomUUID}`,
+          name: "Move completed projects when all tasks are done",
+          enabled: true,
+          condition: {
+            type: RuleConditionType.TASKS_COMPLETED,
+            operator: RuleConditionOperator.ALL_COMPLETED,
+          },
+          action: {
+            type: RuleActionType.MOVE_TO_COLUMN,
+            targetColumnId: columns[3].id,
+          },
         },
-      },
-      {
-        id: `rule-${randomUUID}`,
-        name: "Move completed projects when all tasks are done",
-        enabled: true,
-        condition: {
-          type: RuleConditionType.TASKS_COMPLETED,
-          operator: RuleConditionOperator.ALL_COMPLETED,
-        },
-        action: {
-          type: RuleActionType.MOVE_TO_COLUMN,
-          targetColumnId: columns[3].id,
-        },
-      },
-    ]);
+      ]);
+    }
   }, []);
 
   // Process automation rules
