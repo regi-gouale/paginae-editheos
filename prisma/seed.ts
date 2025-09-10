@@ -266,7 +266,7 @@ async function main() {
         title: "L'Amant - Réédition Premium",
         description:
           "Réédition de luxe avec illustrations et analyse littéraire",
-        status: "REVIEW",
+        status: "BLOCKED",
         dueDate: new Date("2024-11-15"),
         columnId: kanbanColumns[2].id,
         authors: {

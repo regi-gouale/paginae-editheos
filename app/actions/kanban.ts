@@ -22,6 +22,64 @@ export async function getKanbanData() {
       },
     });
 
+    console.log("Kanban columns fetched:", columns);
+
+    if (columns.length === 0) {
+      // Crée les colonnes Kanban
+      await Promise.all([
+        prisma.kanbanColumn.create({
+          data: {
+            title: "À faire",
+            color: "bg-blue-50 dark:bg-blue-900/30",
+            position: 0,
+          },
+        }),
+        prisma.kanbanColumn.create({
+          data: {
+            title: "En cours",
+            color: "bg-yellow-50 dark:bg-yellow-900/30",
+            position: 1,
+          },
+        }),
+        prisma.kanbanColumn.create({
+          data: {
+            title: "Bloqué",
+            color: "bg-orange-50 dark:bg-orange-900/30",
+            position: 2,
+          },
+        }),
+        prisma.kanbanColumn.create({
+          data: {
+            title: "Terminé",
+            color: "bg-green-50 dark:bg-green-900/30",
+            position: 3,
+          },
+        }),
+        prisma.kanbanColumn.create({
+          data: {
+            title: "Rejeté",
+            color: "bg-red-50 dark:bg-red-900/30",
+            position: 4,
+          },
+        }),
+      ]);
+      const newColumns = await prisma.kanbanColumn.findMany({
+        orderBy: { position: "asc" },
+        include: {
+          projects: {
+            include: {
+              authors: true,
+              members: true,
+              tasks: true,
+              customFields: true,
+              kanbanColumn: true,
+            },
+          },
+        },
+      });
+      return newColumns;
+    }
+
     return columns;
   } catch (error) {
     console.error("Error fetching kanban data:", error);
@@ -127,6 +185,9 @@ export async function createProject(data: {
   try {
     const { authorIds, memberIds, ...projectData } = data;
 
+    const columnTodo = await prisma.kanbanColumn.findFirst({
+      where: { title: "À faire" },
+    });
     const project = await prisma.project.create({
       data: {
         ...projectData,
@@ -140,6 +201,7 @@ export async function createProject(data: {
               connect: memberIds.map((id) => ({ id })),
             }
           : undefined,
+        columnId: columnTodo?.id,
       },
       include: {
         authors: true,
