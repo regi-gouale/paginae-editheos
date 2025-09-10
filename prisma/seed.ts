@@ -203,29 +203,36 @@ async function main() {
     prisma.kanbanColumn.create({
       data: {
         title: "À faire",
-        color: "#3B82F6",
+        color: "bg-blue-50 dark:bg-blue-900/30",
         position: 0,
       },
     }),
     prisma.kanbanColumn.create({
       data: {
         title: "En cours",
-        color: "#F59E0B",
+        color: "bg-yellow-50 dark:bg-yellow-900/30",
         position: 1,
       },
     }),
     prisma.kanbanColumn.create({
       data: {
-        title: "En révision",
-        color: "#8B5CF6",
+        title: "Bloqué",
+        color: "bg-orange-50 dark:bg-orange-900/30",
         position: 2,
       },
     }),
     prisma.kanbanColumn.create({
       data: {
         title: "Terminé",
-        color: "#10B981",
+        color: "bg-green-50 dark:bg-green-900/30",
         position: 3,
+      },
+    }),
+    prisma.kanbanColumn.create({
+      data: {
+        title: "Rejeté",
+        color: "bg-red-50 dark:bg-red-900/30",
+        position: 4,
       },
     }),
   ]);
