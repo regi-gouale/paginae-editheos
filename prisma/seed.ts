@@ -241,31 +241,33 @@ async function main() {
     prisma.project.create({
       data: {
         title: "Les Misérables - Édition Critique",
-        description: "Nouvelle édition annotée et commentée du chef-d'œuvre de Victor Hugo",
+        description:
+          "Nouvelle édition annotée et commentée du chef-d'œuvre de Victor Hugo",
         status: "IN_PROGRESS",
         dueDate: new Date("2024-12-31"),
         columnId: kanbanColumns[1].id,
         authors: {
-          connect: [{ id: createdAuthors[0].id }]
+          connect: [{ id: createdAuthors[0].id }],
         },
         members: {
-          connect: createdMembers.slice(0, 3).map(m => ({ id: m.id }))
-        }
+          connect: createdMembers.slice(0, 3).map((m) => ({ id: m.id })),
+        },
       },
     }),
     prisma.project.create({
       data: {
         title: "L'Amant - Réédition Premium",
-        description: "Réédition de luxe avec illustrations et analyse littéraire",
+        description:
+          "Réédition de luxe avec illustrations et analyse littéraire",
         status: "REVIEW",
         dueDate: new Date("2024-11-15"),
         columnId: kanbanColumns[2].id,
         authors: {
-          connect: [{ id: createdAuthors[1].id }]
+          connect: [{ id: createdAuthors[1].id }],
         },
         members: {
-          connect: createdMembers.slice(2, 5).map(m => ({ id: m.id }))
-        }
+          connect: createdMembers.slice(2, 5).map((m) => ({ id: m.id })),
+        },
       },
     }),
     prisma.project.create({
@@ -276,25 +278,26 @@ async function main() {
         dueDate: new Date("2025-03-20"),
         columnId: kanbanColumns[0].id,
         authors: {
-          connect: [{ id: createdAuthors[2].id }]
+          connect: [{ id: createdAuthors[2].id }],
         },
         members: {
-          connect: createdMembers.slice(1, 4).map(m => ({ id: m.id }))
-        }
+          connect: createdMembers.slice(1, 4).map((m) => ({ id: m.id })),
+        },
       },
     }),
     prisma.project.create({
       data: {
         title: "Beloved - Édition Bilingue",
-        description: "Édition bilingue anglais-français avec notes de traduction",
+        description:
+          "Édition bilingue anglais-français avec notes de traduction",
         status: "DONE",
         columnId: kanbanColumns[3].id,
         authors: {
-          connect: [{ id: createdAuthors[3].id }]
+          connect: [{ id: createdAuthors[3].id }],
         },
         members: {
-          connect: createdMembers.slice(0, 2).map(m => ({ id: m.id }))
-        }
+          connect: createdMembers.slice(0, 2).map((m) => ({ id: m.id })),
+        },
       },
     }),
     prisma.project.create({
@@ -305,11 +308,11 @@ async function main() {
         dueDate: new Date("2024-10-30"),
         columnId: kanbanColumns[1].id,
         authors: {
-          connect: [{ id: createdAuthors[4].id }]
+          connect: [{ id: createdAuthors[4].id }],
         },
         members: {
-          connect: createdMembers.slice(3, 6).map(m => ({ id: m.id }))
-        }
+          connect: createdMembers.slice(3, 6).map((m) => ({ id: m.id })),
+        },
       },
     }),
   ]);
