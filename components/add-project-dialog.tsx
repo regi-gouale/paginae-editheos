@@ -11,12 +11,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Plus } from "lucide-react";
 import { useState, useTransition } from "react";
 
 export default function AddProjectDialog({
   onProjectAdded,
+  isInColumn = false,
 }: {
   onProjectAdded?: () => void;
+  isInColumn?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -35,6 +38,8 @@ export default function AddProjectDialog({
           setOpen(false);
           setName("");
           setDescription("");
+          // Actualiser la page des projets
+          window.location.reload();
         } else {
           setError("Erreur lors de la création du projet.");
         }
@@ -47,7 +52,17 @@ export default function AddProjectDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">Ajouter un projet</Button>
+        <Button
+          variant={isInColumn ? "ghost" : "default"}
+          className={
+            isInColumn
+              ? "w-full mt-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 justify-start"
+              : ""
+          }
+        >
+          <Plus className="mr-1 size-4" />
+          Ajouter un projet
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

@@ -34,17 +34,29 @@ export default async function ProjectPage() {
     })),
   })) as KanbanColumnWithProjects[];
 
-  const breadcrumbs = [
-    { label: "Gestion des projets", href: "/dashboard/projects" },
-  ];
+  const breadcrumbs = [{ label: "Projets", href: "/dashboard/projects" }];
 
   return (
     <div className="flex flex-col">
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-end">
-        <AddProjectDialog />
-      </div>
-      <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <div>
+          <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1
+              className="text-3xl font-extrabold tracking-tight"
+              style={{
+                fontFamily: "var(--font-comfortaa)",
+              }}
+            >
+              Gestion des projets
+            </h1>
+            <AddProjectDialog />
+          </div>
+          <p className="px-4 sm:px-6 lg:px-8 text-muted-foreground">
+            Visualisez et gérez l&apos;avancement de vos projets à l&apos;aide
+            du tableau Kanban.
+          </p>
+        </div>
         <KanbanBoard initialColumns={columns} />
       </main>
     </div>
