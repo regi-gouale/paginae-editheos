@@ -92,7 +92,7 @@ export function KanbanColumn({
   const headerColorClass = column.color || "bg-white dark:bg-gray-800";
 
   return (
-    <div className="shrink-0 w-fit flex flex-col bg-muted rounded-lg shadow-sm max-w-92">
+    <div className="shrink-0 w-full flex flex-col bg-muted rounded-lg shadow-sm max-w-92">
       {/* En-tête de colonne */}
       <div
         className={`p-4 flex justify-between items-center border-b rounded-t-lg ${headerColorClass}`}

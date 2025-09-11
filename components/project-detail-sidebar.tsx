@@ -40,6 +40,7 @@ import type {
   ProjectWithDetails,
 } from "@/types/kanban";
 import { randomUUID } from "crypto";
+import { fr } from "date-fns/locale";
 import {
   Calendar,
   CheckSquare,
@@ -306,6 +307,7 @@ export function ProjectDetailSidebar({
               >
                 <CalendarComponent
                   mode="single"
+                  locale={fr}
                   selected={
                     editedProject.dueDate
                       ? new Date(editedProject.dueDate)

@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { createProject } from "@/lib/actions/kanban";
+import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import { useState, useTransition } from "react";
 
@@ -56,12 +57,14 @@ export default function AddProjectDialog({
           variant={isInColumn ? "ghost" : "default"}
           className={
             isInColumn
-              ? "w-full mt-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 justify-start"
-              : ""
+              ? "w-full mt-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 justify-start flex flex-1"
+              : "flex items-center justify-center rounded-full md:rounded-xl"
           }
         >
-          <Plus className="mr-1 size-4" />
-          Ajouter un projet
+          <Plus className="size-4" />
+          <span className={cn(!isInColumn && "hidden md:block")}>
+            Ajouter un projet
+          </span>
         </Button>
       </DialogTrigger>
       <DialogContent>

@@ -47,7 +47,7 @@ export default async function ProjectPage() {
         <div>
           <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1
-              className="text-3xl font-extrabold tracking-tight"
+              className="text-3xl font-extrabold tracking-tight line-clamp-1"
               style={{
                 fontFamily: "var(--font-comfortaa)",
               }}

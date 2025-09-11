@@ -39,7 +39,7 @@ export function ProjectCard({
       onClick={onClick}
     >
       <div className="flex justify-between items-start">
-        <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1 line-clamp-2">
+        <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1 line-clamp-1">
           {project.title}
         </h4>
         <Button
@@ -62,7 +62,7 @@ export function ProjectCard({
         {project.dueDate && (
           <div
             className={cn(
-              "flex items-center text-xs",
+              "flex flex-1 items-center text-xs truncate",
               isOverdue
                 ? "text-red-600 dark:text-red-400"
                 : "text-gray-500 dark:text-gray-400",
