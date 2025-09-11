@@ -140,12 +140,12 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
               </div>
             </div>
           </form>
-          <div className="bg-muted relative hidden md:block">
+          <div className="hidden relative md:block">
             <Image
               fill
               src="/logo-editheos.webp"
               alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              className="relative my-auto max-w-96 max-h-72 object-cover "
             />
           </div>
         </CardContent>

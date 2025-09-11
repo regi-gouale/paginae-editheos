@@ -110,12 +110,12 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
               </div>
             </div>
           </form>
-          <div className="bg-muted relative hidden md:block">
+          <div className="relative hidden md:block max-w-80">
             <Image
               fill
               src="/logo-editheos.webp"
               alt="Logo Editheos"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              className="relative my-auto mx-4 max-h-72 max-w-92 object-cover"
             />
           </div>
         </CardContent>
