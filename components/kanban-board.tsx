@@ -1,5 +1,6 @@
 "use client";
 
+import { updateProject } from "@/app/actions/kanban";
 import { KanbanColumn } from "@/components/kanban-column";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -210,10 +211,10 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     }
   }, [columns, rules, selectedProject, toast]);
 
-  const handleDragEnd = (result: DropResult) => {
+  const handleDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
-    // If there's no destination or the item is dropped in the same place
+    // Si pas de destination ou déplacement au même endroit
     if (
       !destination ||
       (destination.droppableId === source.droppableId &&
@@ -222,15 +223,14 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
       return;
     }
 
-    // Find the source and destination columns
+    // Trouver les colonnes source et destination
     const sourceColumn = columns.find((col) => col.id === source.droppableId);
     const destColumn = columns.find(
       (col) => col.id === destination.droppableId
     );
-
     if (!sourceColumn || !destColumn) return;
 
-    // Create new arrays for the columns
+    // Créer les nouveaux tableaux de colonnes
     const newColumns = [...columns];
     const sourceColIndex = newColumns.findIndex(
       (col) => col.id === source.droppableId
@@ -239,17 +239,11 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
       (col) => col.id === destination.droppableId
     );
 
-    // Find the task being moved
+    // Trouver le projet déplacé
     const project = sourceColumn.projects.find((p) => p.id === draggableId);
     if (!project) return;
 
-    // Remove the task from the source column
-    newColumns[sourceColIndex] = {
-      ...sourceColumn,
-      projects: sourceColumn.projects.filter((t) => t.id !== draggableId),
-    };
-
-    // Add the task to the destination column with updated status
+    // Déterminer le nouveau statut
     const getNewProjectStatus = (columnTitle: string): ProjectStatus => {
       switch (columnTitle) {
         case "À faire":
@@ -266,10 +260,31 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
           return ProjectStatus.TODO;
       }
     };
+    const newStatus = getNewProjectStatus(destColumn.title);
 
+    // Appel de l'action server pour mettre à jour le statut en base
+    try {
+      await updateProject(project.id, {
+        status: newStatus,
+        columnId: destColumn.id,
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur lors du déplacement",
+        description: `Impossible de mettre à jour le projet en base : ${project.title}`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Mise à jour locale
+    newColumns[sourceColIndex] = {
+      ...sourceColumn,
+      projects: sourceColumn.projects.filter((t) => t.id !== draggableId),
+    };
     const updatedProject = {
       ...project,
-      status: getNewProjectStatus(destColumn.title),
+      status: newStatus,
     };
     newColumns[destColIndex] = {
       ...destColumn,
@@ -279,20 +294,16 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
         ...destColumn.projects.slice(destination.index),
       ],
     };
-
-    // update the database
-    // updateProject(updatedProject);
-
     setColumns(newColumns);
 
-    // Update selected project if it's the one being moved
+    // Mettre à jour le projet sélectionné si besoin
     if (selectedProject && selectedProject.id === draggableId) {
       setSelectedProject(updatedProject);
     }
 
     toast({
-      title: "Task moved",
-      description: `"${project.title}" moved to ${destColumn.title}`,
+      title: "Projet déplacé",
+      description: `"${project.title}" déplacé vers ${destColumn.title}`,
     });
   };
 
@@ -315,7 +326,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     });
   };
 
-  const updateProject = (updatedProject: ProjectWithDetails) => {
+  const updateProjectLocal = (updatedProject: ProjectWithDetails) => {
     const newColumns = columns.map((column) => {
       return {
         ...column,
