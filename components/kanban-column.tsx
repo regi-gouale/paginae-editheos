@@ -20,7 +20,6 @@ import type {
 } from "@/types/kanban";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { MoreHorizontal, Palette, Trash2 } from "lucide-react";
-import { useState } from "react";
 
 // Couleurs prédéfinies pour les colonnes
 const COLUMN_COLORS = [
@@ -55,8 +54,8 @@ export function KanbanColumn({
   onDuplicateProject,
 }: KanbanColumnProps) {
   // const [isAddingProject, setIsAddingProject] = useState(false);
-  const [newProjectTitle, setNewProjectTitle] = useState("");
-  const [newProjectDescription, setNewProjectDescription] = useState("");
+  // const [newProjectTitle, setNewProjectTitle] = useState("");
+  // const [newProjectDescription, setNewProjectDescription] = useState("");
 
   // const { showSuccess, showError } = useAlerts();
 

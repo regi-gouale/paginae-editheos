@@ -391,7 +391,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     // Create a deep copy of the project with a new ID
     const duplicatedProject: ProjectWithDetails = {
       ...JSON.parse(JSON.stringify(project)),
-      id: `project-${randomUUID()}`,
+      id: `project-${randomUUID}`,
       title: `${project.title} (Copy)`,
       createdAt: new Date().toISOString(),
     };
