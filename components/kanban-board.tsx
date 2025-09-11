@@ -283,9 +283,6 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
 
     // Déterminer le nouveau statut
     const newStatus = geProjectStatusFromColumnName(destColumn.title);
-    console.log(
-      `Moving project "${project.title}" to column "${destColumn.title}" with status "${newStatus}"`
-    );
 
     // Appel de l'action server pour mettre à jour le statut en base
     try {
@@ -301,10 +298,6 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
       });
       return;
     }
-    console.log(
-      `Project "${project.title}" status updated to "${project.status}"`
-    );
-
     // Mise à jour locale
     newColumns[sourceColIndex] = {
       ...sourceColumn,

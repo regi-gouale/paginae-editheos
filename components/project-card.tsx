@@ -43,7 +43,7 @@ export function ProjectCard({
           ) : (
             <Printer className="size-3 text-green-600 dark:text-green-400 mx-2" />
           )}
-          {/* <BookUser className="size-3 text-gray-500 dark:text-gray-400" /> */}
+
           {project.authors.map((author) => (
             <div
               key={author.id}
