@@ -52,7 +52,12 @@ export default async function ProjectPage() {
             </h1>
             <AddProjectDialog />
           </div>
-          <p className="px-4 sm:px-6 lg:px-8 text-muted-foreground">
+          <p
+            className="px-4 sm:px-6 lg:px-8 text-muted-foreground"
+            style={{
+              fontFamily: "var(--font-montserrat)",
+            }}
+          >
             Visualisez et gérez l&apos;avancement de vos projets à l&apos;aide
             du tableau Kanban.
           </p>

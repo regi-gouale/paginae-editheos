@@ -1,5 +1,6 @@
 "use client";
 
+import { KanbanColumn } from "@/components/kanban-column";
 import { useToast } from "@/hooks/use-toast";
 import {
   ProjectStatus,
@@ -15,15 +16,6 @@ import {
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { randomUUID } from "crypto";
 import { useEffect, useState } from "react";
-import { KanbanColumn } from "./kanban-column";
-
-// interface Task {
-//   id: string;
-
-//   title: string;
-
-//   description?: string;
-// }
 
 interface KanbanBoardProps {
   initialColumns: KanbanColumnWithProjects[];
@@ -35,10 +27,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     useState<KanbanColumnWithProjects[]>(initialColumns);
   const [selectedProject, setSelectedProject] =
     useState<ProjectWithDetails | null>(null);
-  // const [newColumnTitle, setNewColumnTitle] = useState("");
-  // const [isAddingColumn, setIsAddingColumn] = useState(false);
   const [rules, setRules] = useState<KanbanRule[]>([]);
-  // const [activeTab, setActiveTab] = useState<"board" | "rules">("board");
 
   useEffect(() => {
     setColumns(initialColumns);
@@ -251,8 +240,8 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     );
 
     // Find the task being moved
-    const task = sourceColumn.projects.find((t) => t.id === draggableId);
-    if (!task) return;
+    const project = sourceColumn.projects.find((p) => p.id === draggableId);
+    if (!project) return;
 
     // Remove the task from the source column
     newColumns[sourceColIndex] = {
@@ -261,9 +250,26 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     };
 
     // Add the task to the destination column with updated status
+    const getNewProjectStatus = (columnTitle: string): ProjectStatus => {
+      switch (columnTitle) {
+        case "À faire":
+          return ProjectStatus.TODO;
+        case "En cours":
+          return ProjectStatus.IN_PROGRESS;
+        case "Bloqué":
+          return ProjectStatus.BLOCKED;
+        case "Terminé":
+          return ProjectStatus.DONE;
+        case "Rejeté":
+          return ProjectStatus.REJECTED;
+        default:
+          return ProjectStatus.TODO;
+      }
+    };
+
     const updatedProject = {
-      ...task,
-      status: destColumn.title as ProjectStatus,
+      ...project,
+      status: getNewProjectStatus(destColumn.title),
     };
     newColumns[destColIndex] = {
       ...destColumn,
@@ -274,6 +280,9 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
       ],
     };
 
+    // update the database
+    // updateProject(updatedProject);
+
     setColumns(newColumns);
 
     // Update selected project if it's the one being moved
@@ -283,7 +292,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
 
     toast({
       title: "Task moved",
-      description: `"${task.title}" moved to ${destColumn.title}`,
+      description: `"${project.title}" moved to ${destColumn.title}`,
     });
   };
 
