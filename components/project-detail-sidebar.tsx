@@ -261,9 +261,12 @@ export function ProjectDetailSidebar({
             <Select
               value={editedProject.status}
               onValueChange={handleStatusChange}
+              defaultValue={editedProject.status}
             >
               <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
-                <SelectValue placeholder="Sélectionner le statut" />
+                <SelectValue
+                  placeholder={editedProject.status ?? "Sélectionner le statut"}
+                />
               </SelectTrigger>
               <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
                 {columns.map((column) => (

@@ -17,6 +17,7 @@ import {
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { randomUUID } from "crypto";
 import { useEffect, useState } from "react";
+import { ProjectDetailSidebar } from "./project-detail-sidebar";
 
 interface KanbanBoardProps {
   initialColumns: KanbanColumnWithProjects[];
@@ -343,7 +344,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     });
   };
 
-  const deleteProject = (projectId: string) => {
+  const deleteProjectLocal = (projectId: string) => {
     const newColumns = columns.map((column) => {
       return {
         ...column,
@@ -358,7 +359,10 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     });
   };
 
-  const duplicateProject = (project: ProjectWithDetails, columnId?: string) => {
+  const duplicateProjectLocal = (
+    project: ProjectWithDetails,
+    columnId?: string
+  ) => {
     // Create a deep copy of the project with a new ID
     const duplicatedProject: ProjectWithDetails = {
       ...JSON.parse(JSON.stringify(project)),
@@ -393,49 +397,21 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
               onProjectClick={setSelectedProject}
               onDeleteColumn={() => {}}
               onUpdateColumn={() => {}}
-              onDuplicateProject={duplicateProject}
+              onDuplicateProject={duplicateProjectLocal}
             />
           ))}
-
-          {/* <div className="shrink-0 w-fit flex flex-col rounded-lg max-w-92">
-            {isAddingColumn ? (
-              <div className="bg-white dark:bg-gray-800 p-3 rounded-md shadow-sm border dark:border-gray-700">
-                <Label htmlFor="column-title" className="dark:text-gray-200">
-                  Titre de la colonne
-                </Label>
-                <Input
-                  id="column-title"
-                  value={newColumnTitle}
-                  onChange={(e) => setNewColumnTitle(e.target.value)}
-                  placeholder="Titre de la colonne"
-                  className="mb-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                />
-                <div className="flex gap-2">
-                  <Button size="sm" onClick={() => {}}>
-                    Ajouter
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setIsAddingColumn(false)}
-                    className="dark:border-gray-600 dark:text-gray-200"
-                  >
-                    Annuler
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <Button
-                variant="outline"
-                className="border-dashed border-2 w-fit h-12 dark:border-gray-700 dark:text-gray-300 max-w-92"
-                onClick={() => setIsAddingColumn(true)}
-              >
-                <Plus className="mr-2 size-4" /> Ajouter une colonne
-              </Button>
-            )}
-          </div> */}
         </div>
       </DragDropContext>
+      {selectedProject && (
+        <ProjectDetailSidebar
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+          onUpdate={updateProjectLocal}
+          onDelete={deleteProjectLocal}
+          onDuplicate={duplicateProjectLocal}
+          columns={columns}
+        />
+      )}
     </div>
   );
 }
