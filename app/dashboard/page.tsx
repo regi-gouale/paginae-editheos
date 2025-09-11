@@ -1,4 +1,3 @@
-import { SignOutButton } from "@/components/auth/signout-button";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -20,7 +19,6 @@ export default async function DashboardPage() {
       <DashboardHeader breadcrumbs={breadcrumbs} />
       <main className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
         Page d&apos;accueil
-        <SignOutButton />
       </main>
     </div>
   );
