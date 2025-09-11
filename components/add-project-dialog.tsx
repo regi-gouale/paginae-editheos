@@ -1,6 +1,5 @@
 "use client";
 
-import { createProject } from "@/app/actions/kanban";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { createProject } from "@/lib/actions/kanban";
 import { Plus } from "lucide-react";
 import { useState, useTransition } from "react";
 

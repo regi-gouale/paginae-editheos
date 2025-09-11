@@ -1,6 +1,6 @@
-import { getMembers } from "@/app/actions/members";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { MembersTable } from "@/components/members-table";
+import { getMembers } from "@/lib/actions/members";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";

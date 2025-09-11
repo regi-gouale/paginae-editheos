@@ -1,8 +1,8 @@
 "use client";
 
-import { updateProject } from "@/app/actions/kanban";
 import { KanbanColumn } from "@/components/kanban-column";
 import { useToast } from "@/hooks/use-toast";
+import { updateProject } from "@/lib/actions/kanban";
 import {
   ProjectStatus,
   RuleActionType,

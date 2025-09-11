@@ -1,12 +1,5 @@
 "use client";
 
-import {
-  addMember,
-  deleteMember,
-  getMembers,
-  Member,
-  MembersResponse,
-} from "@/app/actions/members";
 import { AddMemberDialog } from "@/components/add-member-dialog";
 import { TablePagination } from "@/components/table-pagination";
 import { TableSearchFilter } from "@/components/table-search-filter";
@@ -21,6 +14,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAlerts } from "@/hooks/use-alerts";
+import {
+  addMember,
+  deleteMember,
+  getMembers,
+  Member,
+  MembersResponse,
+} from "@/lib/actions/members";
 import { Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";

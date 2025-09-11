@@ -1,13 +1,5 @@
 "use client";
 
-import {
-  addAuthor,
-  Author,
-  AuthorsResponse,
-  deleteAuthor,
-  getAuthors,
-  getNationalities,
-} from "@/app/actions/authors";
 import { TablePagination } from "@/components/table-pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,6 +31,14 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useAlerts } from "@/hooks/use-alerts";
+import {
+  addAuthor,
+  Author,
+  AuthorsResponse,
+  deleteAuthor,
+  getAuthors,
+  getNationalities,
+} from "@/lib/actions/authors";
 import { Filter, Plus, Search, Trash2, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";

@@ -1,7 +1,7 @@
-import { getKanbanData } from "@/app/actions/kanban";
 import AddProjectDialog from "@/components/add-project-dialog";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { KanbanBoard } from "@/components/kanban-board";
+import { getKanbanData } from "@/lib/actions/kanban";
 import { auth } from "@/lib/auth";
 import { KanbanColumnWithProjects } from "@/types/kanban";
 import { headers } from "next/headers";
