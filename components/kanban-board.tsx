@@ -418,7 +418,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
             <KanbanColumn
               key={column.id}
               column={column}
-              onAddProject={addProject}
+              // onAddProject={addProject}
               onProjectClick={setSelectedProject}
               onDeleteColumn={() => {}}
               onUpdateColumn={() => {}}

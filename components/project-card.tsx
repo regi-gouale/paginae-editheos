@@ -31,13 +31,15 @@ export function ProjectCard({
     onDuplicate();
   };
 
+  console.log("Rendering ProjectCard:", project.title, project.dueDate);
+
   return (
     <div
       className="mb-2 p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer group"
       onClick={onClick}
     >
       <div className="flex justify-between items-start">
-        <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1">
+        <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1 line-clamp-2">
           {project.title}
         </h4>
         <Button

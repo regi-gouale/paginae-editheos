@@ -1,5 +1,6 @@
 "use client";
 
+import AddProjectDialog from "@/components/add-project-dialog";
 import { ProjectCard } from "@/components/project-card";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +21,6 @@ import type {
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { MoreHorizontal, Palette, Trash2 } from "lucide-react";
 import { useState } from "react";
-import AddProjectDialog from "./add-project-dialog";
 
 // Couleurs prédéfinies pour les colonnes
 const COLUMN_COLORS = [
@@ -36,7 +36,7 @@ const COLUMN_COLORS = [
 
 interface KanbanColumnProps {
   column: KanbanColumnWithProjects;
-  onAddProject: (columnId: string, project: ProjectWithDetails) => void;
+  // onAddProject: (columnId: string, project: ProjectWithDetails) => void;
   onProjectClick: (project: ProjectWithDetails) => void;
   onDeleteColumn: () => void;
   onUpdateColumn: (
@@ -48,7 +48,7 @@ interface KanbanColumnProps {
 
 export function KanbanColumn({
   column,
-  onAddProject,
+  // onAddProject,
   onProjectClick,
   onDeleteColumn,
   onUpdateColumn,

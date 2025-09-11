@@ -30,7 +30,8 @@ export default async function ProjectPage() {
       description: project.description || "",
       tasks: project.tasks,
       customFields: project.customFields,
-      // Add other task properties as needed
+      dueDate: project.dueDate,
+      // Add other project properties as needed
     })),
   })) as KanbanColumnWithProjects[];
 
