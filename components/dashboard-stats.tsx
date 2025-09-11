@@ -90,12 +90,12 @@ export default function DashboardStats() {
       description: "Nécessitent une attention",
     },
     {
-      title: "Échéances aujourd&apos;hui",
+      title: "Échéances aujourd'hui",
       value: data.stats.dueToday,
       icon: BookAlert,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
-      description: "À finaliser aujourd&apos;hui",
+      description: "À finaliser aujourd'hui",
     },
   ];
 
@@ -110,7 +110,7 @@ export default function DashboardStats() {
       changeType: "positive" as const,
     },
     {
-      title: "Membres de l&apos;équipe",
+      title: "Membres de l'équipe",
       value: data.totalMembers,
       icon: Users,
       color: "text-indigo-600",
