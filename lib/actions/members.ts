@@ -64,7 +64,7 @@ export async function getMembers(
     const members = await prisma.member.findMany({
       where,
       orderBy: {
-        createdAt: "desc",
+        name: "asc",
       },
       skip,
       take: limit,

@@ -62,7 +62,7 @@ export function ProjectCard({
         {project.dueDate && (
           <div
             className={cn(
-              "flex flex-1 items-center text-xs truncate",
+              "flex flex-1 items-center text-xs",
               isOverdue
                 ? "text-red-600 dark:text-red-400"
                 : "text-gray-500 dark:text-gray-400",
@@ -70,7 +70,7 @@ export function ProjectCard({
             )}
           >
             <Calendar className="size-3 mr-1" />
-            {formatDate(project.dueDate)}
+            <span className="truncate">{formatDate(project.dueDate)}</span>
           </div>
         )}
 

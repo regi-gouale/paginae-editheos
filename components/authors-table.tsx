@@ -3,6 +3,7 @@
 import { TablePagination } from "@/components/table-pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -39,12 +45,11 @@ import {
   getAuthors,
   getNationalities,
 } from "@/lib/actions/authors";
-import { fr } from "date-fns/locale/fr";
+import { formatDate } from "@/lib/utils";
+import { fr } from "date-fns/locale";
 import { Filter, Plus, Search, Trash2, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { Calendar } from "./ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 interface AuthorsTableProps {
   initialData: AuthorsResponse;
@@ -65,7 +70,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
     biography: "",
     website: "",
     nationality: "",
-    birthDate: "",
+    birthDate: new Date(),
   });
 
   // Charger les nationalités disponibles
@@ -158,7 +163,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
           biography: "",
           website: "",
           nationality: "",
-          birthDate: "",
+          birthDate: new Date(),
         });
         setIsDialogOpen(false);
 
@@ -216,10 +221,11 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
     }
   };
 
-  const formatDate = (date: Date | null | undefined) => {
-    if (!date) return "Non renseignée";
-    return new Date(date).toLocaleDateString("fr-FR");
-  };
+  // const formatDate = (date: Date | null | undefined) => {
+  //   console.log("Formatting date:", date);
+  //   if (!date) return "Non renseignée";
+  //   return new Date(date).toLocaleDateString("fr-FR");
+  // };
 
   return (
     <div className="space-y-6">
@@ -309,9 +315,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                         className="w-full justify-start text-left font-normal"
                       >
                         {formData.birthDate
-                          ? new Date(formData.birthDate).toLocaleDateString(
-                              "fr-FR"
-                            )
+                          ? formatDate(new Date(formData.birthDate))
                           : "Sélectionner une date"}
                       </Button>
                     </PopoverTrigger>
@@ -323,14 +327,15 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                             ? new Date(formData.birthDate)
                             : undefined
                         }
-                        onSelect={(date) =>
-                          setFormData({
+                        captionLayout="dropdown"
+                        onSelect={(date) => {
+                          console.log("Selected date:", date);
+
+                          return setFormData({
                             ...formData,
-                            birthDate: date
-                              ? date.toISOString().split("T")[0]
-                              : "",
-                          })
-                        }
+                            birthDate: date ? date : new Date(),
+                          });
+                        }}
                         locale={fr}
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
@@ -478,7 +483,9 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                     )}
                   </TableCell>
                   <TableCell className="text-sm">
-                    {formatDate(author.birthDate)}
+                    {author.birthDate
+                      ? formatDate(author.birthDate)
+                      : "Non renseignée"}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button

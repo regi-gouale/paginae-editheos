@@ -8,6 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateString: string | Date) {
+  console.log("Formatting date:", dateString);
+  console.log("Type of dateString:", typeof dateString);
   if (typeof dateString === "string") {
     dateString = new Date(dateString);
   }

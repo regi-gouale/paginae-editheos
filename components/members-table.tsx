@@ -96,6 +96,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
           page: currentPage,
           limit: 10,
         });
+        window.location.reload();
         setData(refreshedData);
         showSuccess("Membre ajouté avec succès");
       } else {

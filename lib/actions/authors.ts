@@ -76,7 +76,7 @@ export async function getAuthors(
     const authors = await prisma.author.findMany({
       where,
       orderBy: {
-        createdAt: "desc",
+        lastName: "asc",
       },
       skip,
       take: limit,
