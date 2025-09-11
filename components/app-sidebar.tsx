@@ -193,8 +193,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
   ];
 
-  console.log("Stats dans le sidebar:", stats);
-
   if (!session) {
     return null;
   }

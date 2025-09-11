@@ -221,12 +221,6 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
     }
   };
 
-  // const formatDate = (date: Date | null | undefined) => {
-  //   console.log("Formatting date:", date);
-  //   if (!date) return "Non renseignée";
-  //   return new Date(date).toLocaleDateString("fr-FR");
-  // };
-
   return (
     <div className="space-y-6">
       {/* En-tête avec bouton d'ajout */}
@@ -329,8 +323,6 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                         }
                         captionLayout="dropdown"
                         onSelect={(date) => {
-                          console.log("Selected date:", date);
-
                           return setFormData({
                             ...formData,
                             birthDate: date ? date : new Date(),

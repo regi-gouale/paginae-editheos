@@ -31,8 +31,6 @@ export function ProjectCard({
     onDuplicate();
   };
 
-  // console.log("Rendering ProjectCard:", project.title, project.dueDate);
-
   return (
     <div
       className="mb-2 p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer group"

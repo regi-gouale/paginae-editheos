@@ -347,9 +347,10 @@ export function ProjectDetailDialog({
                 onValueChange={(value) =>
                   handleStatusChange(value as ProjectStatus)
                 }
+                defaultValue={editedProject.status}
               >
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Sélectionner un statut" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={ProjectStatus.TODO}>À faire</SelectItem>
