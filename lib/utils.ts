@@ -8,10 +8,18 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateString: string | Date) {
-  console.log("Formatting date:", dateString);
-  console.log("Type of dateString:", typeof dateString);
   if (typeof dateString === "string") {
     dateString = new Date(dateString);
   }
   return format(dateString, "PPP", { locale: fr });
+}
+
+export function generateRandomId(length: number = 8): string {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
 }

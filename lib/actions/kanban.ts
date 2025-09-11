@@ -1,5 +1,9 @@
 "use server";
 
+import { prisma } from "@/lib/prisma";
+import type { ProjectStatus } from "@/prisma/generated/prisma";
+import { revalidatePath } from "next/cache";
+
 // Create a custom field for a project
 export async function createCustomField(data: {
   name: string;
@@ -45,10 +49,6 @@ export async function deleteCustomField(id: string) {
     throw new Error("Failed to delete custom field");
   }
 }
-
-import { prisma } from "@/lib/prisma";
-import type { ProjectStatus } from "@/prisma/generated/prisma";
-import { revalidatePath } from "next/cache";
 
 // Get all columns with their projects
 export async function getKanbanData() {

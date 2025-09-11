@@ -3,6 +3,7 @@
 import { KanbanColumn } from "@/components/kanban-column";
 import { useToast } from "@/hooks/use-toast";
 import { updateProject } from "@/lib/actions/kanban";
+import { generateRandomId } from "@/lib/utils";
 import {
   ProjectStatus,
   RuleActionType,
@@ -15,7 +16,6 @@ import {
   ProjectWithDetails,
 } from "@/types/kanban";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import { randomUUID } from "crypto";
 import { useEffect, useState } from "react";
 import { ProjectDetailDialog } from "./project-detail-dialog";
 
@@ -75,7 +75,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     if (initialColumns.length >= 5) {
       setRules([
         {
-          id: `rule-${randomUUID}`,
+          id: `rule-${generateRandomId()}`,
           name: "Déplacer les projets en retard à Bloqué",
           enabled: true,
           condition: {
@@ -88,7 +88,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
           },
         },
         {
-          id: `rule-${randomUUID}`,
+          id: `rule-${generateRandomId()}`,
           name: "Move completed projects when all tasks are done",
           enabled: true,
           condition: {
@@ -411,7 +411,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     // Create a deep copy of the project with a new ID
     const duplicatedProject: ProjectWithDetails = {
       ...JSON.parse(JSON.stringify(project)),
-      id: `project-${randomUUID}`,
+      id: `project-${generateRandomId()}`,
       title: `${project.title} (Copy)`,
       createdAt: new Date().toISOString(),
     };

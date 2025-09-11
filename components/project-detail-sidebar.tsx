@@ -33,6 +33,7 @@ import {
   createCustomField,
   createProjectTask,
   deleteCustomField,
+  deleteProjectTask,
   updateCustomField,
   updateProjectTask,
 } from "@/lib/actions/kanban";
@@ -150,8 +151,7 @@ export function ProjectDetailSidebar({
 
   const deleteTask = async (taskId: string) => {
     try {
-      // Il faut créer l'action deleteProjectTask côté server si elle n'existe pas
-      await deleteCustomField(taskId); // Remplacer par deleteProjectTask si disponible
+      await deleteProjectTask(taskId);
       const updatedTask = editedProject.tasks.filter(
         (task) => task.id !== taskId
       );
@@ -369,7 +369,7 @@ export function ProjectDetailSidebar({
                       description: e.target.value,
                     })
                   }
-                  placeholder="Ajoouter une description"
+                  placeholder="Ajouter une description"
                   rows={4}
                   className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                 />
