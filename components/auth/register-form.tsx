@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { EMAIL_WHITELIST } from "@/lib/whitelist";
+import { isEmailWhitelisted } from "@/lib/whitelist";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -27,12 +27,14 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
     setError(null);
     // Vérification de la whitelist
     const normalizedEmail = email.trim().toLowerCase();
-    const normalizedWhitelist = EMAIL_WHITELIST.map((e) => e.toLowerCase());
-    if (!normalizedWhitelist.includes(normalizedEmail)) {
+
+    const emailIsWhitelisted = isEmailWhitelisted(normalizedEmail);
+    if (!emailIsWhitelisted) {
       setError("Cette adresse email n'est pas autorisée à s'inscrire.");
       setLoading(false);
       return;
     }
+
     try {
       const res = await authClient.signUp.email({
         email,
