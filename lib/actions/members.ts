@@ -56,7 +56,7 @@ export async function getMembers(
     const total = await prisma.member.count({
       where,
       cacheStrategy: {
-        ttl: 180, // Cache pendant 180 secondes
+        ttl: 60, // Cache pendant 60 secondes
       },
     });
 
@@ -64,12 +64,12 @@ export async function getMembers(
     const members = await prisma.member.findMany({
       where,
       orderBy: {
-        createdAt: "desc",
+        name: "asc",
       },
       skip,
       take: limit,
       cacheStrategy: {
-        ttl: 180, // Cache pendant 180 secondes
+        ttl: 60, // Cache pendant 60 secondes
       },
     });
 

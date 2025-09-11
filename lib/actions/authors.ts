@@ -38,7 +38,12 @@ export async function getAuthors(
   filters: AuthorsFilters = {}
 ): Promise<AuthorsResponse> {
   try {
-    const { search = "", nationality = DEFAULT_NATIONALITY, page = 1, limit = 10 } = filters;
+    const {
+      search = "",
+      nationality = DEFAULT_NATIONALITY,
+      page = 1,
+      limit = 10,
+    } = filters;
 
     const skip = (page - 1) * limit;
 
@@ -63,7 +68,7 @@ export async function getAuthors(
     const total = await prisma.author.count({
       where,
       cacheStrategy: {
-        ttl: 180, // Cache pendant 180 secondes
+        ttl: 60, // Cache pendant 60 secondes
       },
     });
 
@@ -71,12 +76,12 @@ export async function getAuthors(
     const authors = await prisma.author.findMany({
       where,
       orderBy: {
-        createdAt: "desc",
+        lastName: "asc",
       },
       skip,
       take: limit,
       cacheStrategy: {
-        ttl: 180, // Cache pendant 180 secondes
+        ttl: 60, // Cache pendant 60 secondes
       },
     });
 
@@ -163,7 +168,7 @@ export async function getNationalities(): Promise<string[]> {
         },
       },
       cacheStrategy: {
-        ttl: 3600, // Cache pendant 1 heure
+        ttl: 60, // Cache pendant 1 minute
       },
     });
 

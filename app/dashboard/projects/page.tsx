@@ -1,5 +1,9 @@
+import AddProjectDialog from "@/components/add-project-dialog";
 import { DashboardHeader } from "@/components/dashboard-header";
+import { KanbanBoard } from "@/components/kanban-board";
+import { getKanbanData } from "@/lib/actions/kanban";
 import { auth } from "@/lib/auth";
+import { KanbanColumnWithProjects } from "@/types/kanban";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -12,30 +16,57 @@ export default async function ProjectPage() {
     redirect("/auth");
   }
 
-  const breadcrumbs = [
-    { label: "Gestion des projets", href: "/dashboard/projects" },
-  ];
+  // Récupérer les données du Kanban
+  const kanbanData = await getKanbanData();
+
+  // Transform the data to match Column[] interface
+  const columns = kanbanData.map((column) => ({
+    id: column.id,
+    title: column.title,
+    color: column.color,
+    projects: column.projects.map((project) => ({
+      id: project.id,
+      title: project.title,
+      description: project.description || "",
+      tasks: project.tasks,
+      customFields: project.customFields,
+      dueDate: project.dueDate,
+      status: project.status,
+      authors: project.authors,
+      members: project.members,
+      // Add other project properties as needed
+    })),
+  })) as KanbanColumnWithProjects[];
+
+  const breadcrumbs = [{ label: "Projets", href: "/dashboard/projects" }];
+
   return (
-    <div>
+    <div className="flex flex-col">
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="container mx-auto p-6 space-y-6">
-        <div className="space-y-2">
-          <h1
-            className="text-3xl font-extrabold tracking-tight"
+      <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <div>
+          <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1
+              className="text-3xl font-extrabold tracking-tight line-clamp-1"
+              style={{
+                fontFamily: "var(--font-comfortaa)",
+              }}
+            >
+              Gestion des projets
+            </h1>
+            <AddProjectDialog />
+          </div>
+          <p
+            className="px-4 sm:px-6 lg:px-8 text-muted-foreground"
             style={{
-              fontFamily: "var(--font-comfortaa)",
+              fontFamily: "var(--font-montserrat)",
             }}
           >
-            Gestion des projets
-          </h1>
-          <p
-            className="text-muted-foreground"
-            style={{ fontFamily: "var(--font-montserrat)" }}
-          >
-            Gérez la liste des projets et leurs informations.
+            Visualisez et gérez l&apos;avancement de vos projets à l&apos;aide
+            du tableau Kanban.
           </p>
         </div>
-        {/* Contenu de la page de gestion des projets */}
+        <KanbanBoard initialColumns={columns} />
       </main>
     </div>
   );

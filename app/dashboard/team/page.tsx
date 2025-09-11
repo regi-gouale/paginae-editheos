@@ -1,6 +1,6 @@
-import { getMembers } from "@/app/actions/members";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { MembersTable } from "@/components/members-table";
+import { getMembers } from "@/lib/actions/members";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -20,7 +20,7 @@ export default async function TeamPage() {
   return (
     <div>
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="container mx-auto p-6 space-y-6">
+      <main className="flex flex-1 flex-col mx-auto p-6 space-y-6 max-w-4xl">
         <div className="space-y-2">
           <h1
             className="text-3xl font-extrabold tracking-tight"
