@@ -51,6 +51,7 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import { getColumnNameFromProjectStatus } from "./kanban-board";
 
 interface ProjectDetailsSidebarProps {
   project: ProjectWithDetails;
@@ -198,10 +199,12 @@ export function ProjectDetailSidebar({
     onDuplicate(editedProject);
   };
 
+  console.log("Project in Sidebar:", editedProject.status);
+
   return (
     <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white dark:bg-gray-800 shadow-lg border-l dark:border-gray-700 z-50 flex flex-col rounded-l-2xl">
       <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
-        <h2 className="text-lg font-semibold">Détails du projet</h2>
+        <h2 className="text-xl font-semibold">Détails du projet</h2>
         <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="size-5" />
         </Button>
@@ -259,9 +262,9 @@ export function ProjectDetailSidebar({
               Statut
             </Label>
             <Select
-              value={editedProject.status}
+              value={getColumnNameFromProjectStatus(editedProject.status)}
               onValueChange={handleStatusChange}
-              defaultValue={editedProject.status}
+              defaultValue={""}
             >
               <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                 <SelectValue

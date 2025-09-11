@@ -31,7 +31,7 @@ export function ProjectCard({
     onDuplicate();
   };
 
-  console.log("Rendering ProjectCard:", project.title, project.dueDate);
+  // console.log("Rendering ProjectCard:", project.title, project.dueDate);
 
   return (
     <div

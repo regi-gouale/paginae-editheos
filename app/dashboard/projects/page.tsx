@@ -31,6 +31,9 @@ export default async function ProjectPage() {
       tasks: project.tasks,
       customFields: project.customFields,
       dueDate: project.dueDate,
+      status: project.status,
+      authors: project.authors,
+      members: project.members,
       // Add other project properties as needed
     })),
   })) as KanbanColumnWithProjects[];

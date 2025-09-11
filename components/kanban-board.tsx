@@ -23,7 +23,9 @@ interface KanbanBoardProps {
   initialColumns: KanbanColumnWithProjects[];
 }
 
-export const getNewProjectStatus = (columnTitle: string): ProjectStatus => {
+export const geProjectStatusFromColumnName = (
+  columnTitle: string
+): ProjectStatus => {
   switch (columnTitle) {
     case "À faire":
       return ProjectStatus.TODO;
@@ -37,6 +39,25 @@ export const getNewProjectStatus = (columnTitle: string): ProjectStatus => {
       return ProjectStatus.REJECTED;
     default:
       return ProjectStatus.TODO;
+  }
+};
+
+export const getColumnNameFromProjectStatus = (
+  status: ProjectStatus
+): string => {
+  switch (status) {
+    case ProjectStatus.TODO:
+      return "À faire";
+    case ProjectStatus.IN_PROGRESS:
+      return "En cours";
+    case ProjectStatus.BLOCKED:
+      return "Bloqué";
+    case ProjectStatus.DONE:
+      return "Terminé";
+    case ProjectStatus.REJECTED:
+      return "Rejeté";
+    default:
+      return "À faire";
   }
 };
 
@@ -263,7 +284,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
 
     // Déterminer le nouveau statut
 
-    const newStatus = getNewProjectStatus(destColumn.title);
+    const newStatus = geProjectStatusFromColumnName(destColumn.title);
 
     // Appel de l'action server pour mettre à jour le statut en base
     try {
@@ -331,12 +352,12 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
 
   const updateProjectLocal = async (updatedProject: ProjectWithDetails) => {
     // Appel de l'action server pour persister la modification
-    console.log("Updating project:", updatedProject);
+    // console.log("Updating project:", updatedProject);
     try {
       await updateProject(updatedProject.id, {
         title: updatedProject.title,
         description: updatedProject.description ?? undefined,
-        status: getNewProjectStatus(updatedProject.status),
+        status: geProjectStatusFromColumnName(updatedProject.status),
         dueDate: updatedProject.dueDate
           ? new Date(updatedProject.dueDate)
           : undefined,
