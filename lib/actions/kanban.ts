@@ -1,5 +1,51 @@
 "use server";
 
+// Create a custom field for a project
+export async function createCustomField(data: {
+  name: string;
+  value: string;
+  projectId: string;
+}) {
+  try {
+    const field = await prisma.customField.create({
+      data,
+    });
+    revalidatePath("/dashboard/projects");
+    return field;
+  } catch (error) {
+    console.error("Error creating custom field:", error);
+    throw new Error("Failed to create custom field");
+  }
+}
+
+// Update a custom field
+export async function updateCustomField(id: string, data: { value?: string }) {
+  try {
+    const field = await prisma.customField.update({
+      where: { id },
+      data,
+    });
+    revalidatePath("/dashboard/projects");
+    return field;
+  } catch (error) {
+    console.error("Error updating custom field:", error);
+    throw new Error("Failed to update custom field");
+  }
+}
+
+// Delete a custom field
+export async function deleteCustomField(id: string) {
+  try {
+    await prisma.customField.delete({
+      where: { id },
+    });
+    revalidatePath("/dashboard/projects");
+  } catch (error) {
+    console.error("Error deleting custom field:", error);
+    throw new Error("Failed to delete custom field");
+  }
+}
+
 import { prisma } from "@/lib/prisma";
 import type { ProjectStatus } from "@/prisma/generated/prisma";
 import { revalidatePath } from "next/cache";

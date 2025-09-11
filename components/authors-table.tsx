@@ -39,9 +39,12 @@ import {
   getAuthors,
   getNationalities,
 } from "@/lib/actions/authors";
+import { fr } from "date-fns/locale/fr";
 import { Filter, Plus, Search, Trash2, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { Calendar } from "./ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 interface AuthorsTableProps {
   initialData: AuthorsResponse;
@@ -299,14 +302,43 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="birthDate">Date de naissance</Label>
-                  <Input
-                    id="birthDate"
-                    type="date"
-                    value={formData.birthDate}
-                    onChange={(e) =>
-                      setFormData({ ...formData, birthDate: e.target.value })
-                    }
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal"
+                      >
+                        {formData.birthDate
+                          ? new Date(formData.birthDate).toLocaleDateString(
+                              "fr-FR"
+                            )
+                          : "Sélectionner une date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={
+                          formData.birthDate
+                            ? new Date(formData.birthDate)
+                            : undefined
+                        }
+                        onSelect={(date) =>
+                          setFormData({
+                            ...formData,
+                            birthDate: date
+                              ? date.toISOString().split("T")[0]
+                              : "",
+                          })
+                        }
+                        locale={fr}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        autoFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
               <div className="space-y-2">

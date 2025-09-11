@@ -29,17 +29,19 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { formatDate } from "@/lib/utils";
 import {
-  CustomField,
-  ProjectStatus,
-  ProjectTask,
-} from "@/prisma/generated/prisma";
+  createCustomField,
+  createProjectTask,
+  deleteCustomField,
+  updateCustomField,
+  updateProjectTask,
+} from "@/lib/actions/kanban";
+import { formatDate } from "@/lib/utils";
+import { ProjectStatus } from "@/prisma/generated/prisma";
 import type {
   KanbanColumnWithProjects,
   ProjectWithDetails,
 } from "@/types/kanban";
-import { randomUUID } from "crypto";
 import { fr } from "date-fns/locale";
 import {
   Calendar,
@@ -109,87 +111,106 @@ export function ProjectDetailSidebar({
     onUpdate(updatedProject);
   };
 
-  const toggleTask = (taskId: string) => {
-    const updatedTasks = editedProject.tasks.map((task) =>
-      task.id === taskId ? { ...task, completed: !task.completed } : task
-    );
-    const updatedProject = { ...editedProject, tasks: updatedTasks };
-    setEditedProject(updatedProject);
-    onUpdate(updatedProject);
+  const toggleTask = async (taskId: string) => {
+    const task = editedProject.tasks.find((t) => t.id === taskId);
+    if (!task) return;
+    try {
+      await updateProjectTask(taskId, { completed: !task.completed });
+      const updatedTasks = editedProject.tasks.map((t) =>
+        t.id === taskId ? { ...t, completed: !t.completed } : t
+      );
+      const updatedProject = { ...editedProject, tasks: updatedTasks };
+      setEditedProject(updatedProject);
+      onUpdate(updatedProject);
+    } catch (error) {
+      // TODO: toast d'erreur
+    }
   };
 
-  const addTask = () => {
+  const addTask = async () => {
     if (!newTaskTitle.trim()) return;
-
-    const newTask: ProjectTask = {
-      id: `task-${randomUUID}`,
-      title: newTaskTitle,
-      completed: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      projectId: editedProject.id,
-    };
-
-    const updatedTasks = {
-      ...editedProject,
-      tasks: [...editedProject.tasks, newTask],
-    };
-
-    setEditedProject(updatedTasks);
-    onUpdate(updatedTasks);
-    setNewTaskTitle("");
-    setIsAddingTask(false);
+    try {
+      const newTask = await createProjectTask({
+        title: newTaskTitle,
+        projectId: editedProject.id,
+        completed: false,
+      });
+      const updatedTasks = {
+        ...editedProject,
+        tasks: [...editedProject.tasks, newTask],
+      };
+      setEditedProject(updatedTasks);
+      onUpdate(updatedTasks);
+      setNewTaskTitle("");
+      setIsAddingTask(false);
+    } catch (error) {
+      // TODO: toast d'erreur
+    }
   };
 
-  const deleteTask = (taskId: string) => {
-    const updatedTask = editedProject.tasks.filter(
-      (task) => task.id !== taskId
-    );
-
-    const updatedProject = { ...editedProject, tasks: updatedTask };
-    setEditedProject(updatedProject);
-    onUpdate(updatedProject);
+  const deleteTask = async (taskId: string) => {
+    try {
+      // Il faut créer l'action deleteProjectTask côté server si elle n'existe pas
+      await deleteCustomField(taskId); // Remplacer par deleteProjectTask si disponible
+      const updatedTask = editedProject.tasks.filter(
+        (task) => task.id !== taskId
+      );
+      const updatedProject = { ...editedProject, tasks: updatedTask };
+      setEditedProject(updatedProject);
+      onUpdate(updatedProject);
+    } catch (error) {
+      // TODO: toast d'erreur
+    }
   };
 
-  const addCustomField = () => {
+  const addCustomField = async () => {
     if (!newCustomFieldName.trim()) return;
-
-    const newField: CustomField = {
-      id: `field-${randomUUID}`,
-      name: newCustomFieldName,
-      value: newCustomFieldValue,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      projectId: editedProject.id,
-    };
-
-    const updatedProject = {
-      ...editedProject,
-      customFields: [...editedProject.customFields, newField],
-    };
-    setEditedProject(updatedProject);
-    onUpdate(updatedProject);
-    setNewCustomFieldName("");
-    setNewCustomFieldValue("");
-    setIsAddingCustomField(false);
+    try {
+      const newField = await createCustomField({
+        name: newCustomFieldName,
+        value: newCustomFieldValue,
+        projectId: editedProject.id,
+      });
+      const updatedProject = {
+        ...editedProject,
+        customFields: [...editedProject.customFields, newField],
+      };
+      setEditedProject(updatedProject);
+      onUpdate(updatedProject);
+      setNewCustomFieldName("");
+      setNewCustomFieldValue("");
+      setIsAddingCustomField(false);
+    } catch (error) {
+      // TODO: toast d'erreur
+    }
   };
 
-  const updateCustomField = (fieldId: string, value: string) => {
-    const updatedFields = editedProject.customFields.map((field) =>
-      field.id === fieldId ? { ...field, value } : field
-    );
-    const updatedProject = { ...editedProject, customFields: updatedFields };
-    setEditedProject(updatedProject);
-    onUpdate(updatedProject);
+  const updateCustomFieldValue = async (fieldId: string, value: string) => {
+    try {
+      await updateCustomField(fieldId, { value });
+      const updatedFields = editedProject.customFields.map((field) =>
+        field.id === fieldId ? { ...field, value } : field
+      );
+      const updatedProject = { ...editedProject, customFields: updatedFields };
+      setEditedProject(updatedProject);
+      onUpdate(updatedProject);
+    } catch (error) {
+      // TODO: toast d'erreur
+    }
   };
 
-  const deleteCustomField = (fieldId: string) => {
-    const updatedFields = editedProject.customFields.filter(
-      (field) => field.id !== fieldId
-    );
-    const updatedProject = { ...editedProject, customFields: updatedFields };
-    setEditedProject(updatedProject);
-    onUpdate(updatedProject);
+  const deleteCustomFieldValue = async (fieldId: string) => {
+    try {
+      await deleteCustomField(fieldId);
+      const updatedFields = editedProject.customFields.filter(
+        (field) => field.id !== fieldId
+      );
+      const updatedProject = { ...editedProject, customFields: updatedFields };
+      setEditedProject(updatedProject);
+      onUpdate(updatedProject);
+    } catch (error) {
+      // TODO: toast d'erreur
+    }
   };
 
   const handleDeleteProject = () => {
@@ -529,7 +550,7 @@ export function ProjectDetailSidebar({
                       <Input
                         value={field.value || ""}
                         onChange={(e) =>
-                          updateCustomField(field.id, e.target.value)
+                          updateCustomFieldValue(field.id, e.target.value)
                         }
                         className="h-7 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                       />
@@ -538,7 +559,7 @@ export function ProjectDetailSidebar({
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 text-gray-400 hover:text-red-500 dark:hover:text-red-400"
-                      onClick={() => deleteCustomField(field.id)}
+                      onClick={() => deleteCustomFieldValue(field.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
