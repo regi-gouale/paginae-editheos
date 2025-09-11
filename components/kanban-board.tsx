@@ -23,6 +23,23 @@ interface KanbanBoardProps {
   initialColumns: KanbanColumnWithProjects[];
 }
 
+export const getNewProjectStatus = (columnTitle: string): ProjectStatus => {
+  switch (columnTitle) {
+    case "À faire":
+      return ProjectStatus.TODO;
+    case "En cours":
+      return ProjectStatus.IN_PROGRESS;
+    case "Bloqué":
+      return ProjectStatus.BLOCKED;
+    case "Terminé":
+      return ProjectStatus.DONE;
+    case "Rejeté":
+      return ProjectStatus.REJECTED;
+    default:
+      return ProjectStatus.TODO;
+  }
+};
+
 export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
   const { toast } = useToast();
   const [columns, setColumns] =
@@ -245,22 +262,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     if (!project) return;
 
     // Déterminer le nouveau statut
-    const getNewProjectStatus = (columnTitle: string): ProjectStatus => {
-      switch (columnTitle) {
-        case "À faire":
-          return ProjectStatus.TODO;
-        case "En cours":
-          return ProjectStatus.IN_PROGRESS;
-        case "Bloqué":
-          return ProjectStatus.BLOCKED;
-        case "Terminé":
-          return ProjectStatus.DONE;
-        case "Rejeté":
-          return ProjectStatus.REJECTED;
-        default:
-          return ProjectStatus.TODO;
-      }
-    };
+
     const newStatus = getNewProjectStatus(destColumn.title);
 
     // Appel de l'action server pour mettre à jour le statut en base
@@ -327,7 +329,30 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     });
   };
 
-  const updateProjectLocal = (updatedProject: ProjectWithDetails) => {
+  const updateProjectLocal = async (updatedProject: ProjectWithDetails) => {
+    // Appel de l'action server pour persister la modification
+    console.log("Updating project:", updatedProject);
+    try {
+      await updateProject(updatedProject.id, {
+        title: updatedProject.title,
+        description: updatedProject.description ?? undefined,
+        status: getNewProjectStatus(updatedProject.status),
+        dueDate: updatedProject.dueDate
+          ? new Date(updatedProject.dueDate)
+          : undefined,
+        columnId: columns.find((col) =>
+          col.projects.some((p) => p.id === updatedProject.id)
+        )?.id,
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur lors de la mise à jour",
+        description: `Impossible de mettre à jour le projet en base : ${updatedProject.title}`,
+        variant: "destructive",
+      });
+      return;
+    }
+    // Mise à jour locale
     const newColumns = columns.map((column) => {
       return {
         ...column,
@@ -339,8 +364,8 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     setColumns(newColumns);
     setSelectedProject(updatedProject);
     toast({
-      title: "Project updated",
-      description: `"${updatedProject.title}" has been updated`,
+      title: "Projet mis à jour",
+      description: `"${updatedProject.title}" a été mis à jour`,
     });
   };
 
