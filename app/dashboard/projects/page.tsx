@@ -51,7 +51,7 @@ export default async function ProjectPage() {
             <h1
               className="text-3xl font-extrabold tracking-tight line-clamp-1"
               style={{
-                fontFamily: "var(--font-comfortaa)",
+                fontFamily: "var(--font-lato)",
               }}
             >
               Gestion des projets
@@ -61,7 +61,7 @@ export default async function ProjectPage() {
           <p
             className="px-4 sm:px-6 lg:px-8 text-muted-foreground"
             style={{
-              fontFamily: "var(--font-montserrat)",
+              fontFamily: "var(--font-merriweather)",
             }}
           >
             Visualisez et gérez l&apos;avancement de vos projets à l&apos;aide

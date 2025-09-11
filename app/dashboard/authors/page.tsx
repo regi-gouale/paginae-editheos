@@ -25,7 +25,7 @@ export default async function AuthorsPage() {
           <h1
             className="text-3xl font-extrabold tracking-tight"
             style={{
-              fontFamily: "var(--font-comfortaa)",
+              fontFamily: "var(--font-lato)",
             }}
           >
             Gestion des auteurs

@@ -201,7 +201,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar
       variant="inset"
       {...props}
-      style={{ fontFamily: "var(--font-montserrat)" }}
+      style={{ fontFamily: "var(--font-merriweather)" }}
     >
       <SidebarHeader>
         <SidebarMenu>

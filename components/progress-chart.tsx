@@ -136,12 +136,14 @@ export default function ProgressChart() {
                       className="bg-green-500 transition-all duration-500"
                       style={{
                         width: `${(month.completed / maxValue) * 100}%`,
+                        fontFamily: "var(--font-merriweather)",
                       }}
                     />
                     <div
                       className="bg-orange-500 transition-all duration-500"
                       style={{
                         width: `${(month.inProgress / maxValue) * 100}%`,
+                        fontFamily: "var(--font-merriweather)",
                       }}
                     />
                     <div
@@ -154,6 +156,7 @@ export default function ProgressChart() {
                             maxValue) *
                           100
                         }%`,
+                        fontFamily: "var(--font-merriweather)",
                       }}
                     />
                   </div>
