@@ -8,16 +8,13 @@ import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { isEmailWhitelisted } from "@/lib/whitelist";
 import Image from "next/image";
+import { useQueryState } from "nuqs";
 import { useState } from "react";
 
-interface RegisterFormProps {
-  onToggleMode: () => void;
-}
-
-export function RegisterForm({ onToggleMode }: RegisterFormProps) {
-  const [email, setEmail] = useState("");
+export function RegisterForm() {
+  const [email, setEmail] = useQueryState("registerEmail");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [name, setName] = useQueryState("registerName");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +23,7 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
     setLoading(true);
     setError(null);
     // Vérification de la whitelist
-    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedEmail = email!.trim().toLowerCase();
 
     const emailIsWhitelisted = isEmailWhitelisted(normalizedEmail);
     if (!emailIsWhitelisted) {
@@ -37,9 +34,9 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
 
     try {
       const res = await authClient.signUp.email({
-        email,
+        email: email!,
         password,
-        name,
+        name: name!,
         callbackURL: "/",
       });
       if (res?.error) {
@@ -79,7 +76,7 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
                   type="text"
                   placeholder="Votre nom"
                   required
-                  value={name}
+                  value={name || ""}
                   onChange={(e) => setName(e.target.value)}
                   autoComplete="name"
                   disabled={loading}
@@ -92,7 +89,7 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
                   type="email"
                   placeholder="email@editheos.com"
                   required
-                  value={email}
+                  value={email || ""}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   disabled={loading}
@@ -113,7 +110,7 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
                   type="password"
                   required
                   placeholder="************"
-                  value={password}
+                  value={password || ""}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   disabled={loading}
@@ -132,7 +129,10 @@ export function RegisterForm({ onToggleMode }: RegisterFormProps) {
                 <Button
                   variant="link"
                   className="text-sm p-0"
-                  onClick={onToggleMode}
+                  onClick={() => {
+                    window.location.href = "/auth/login";
+                  }}
+                  disabled={loading}
                   type="button"
                 >
                   Connectez-vous

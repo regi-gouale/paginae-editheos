@@ -7,14 +7,11 @@ import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useQueryState } from "nuqs";
 import { useState } from "react";
 
-interface LoginFormProps {
-  onToggleMode: () => void;
-}
-
-export function LoginForm({ onToggleMode }: LoginFormProps) {
-  const [email, setEmail] = useState("");
+export function LoginForm() {
+  const [email, setEmail] = useQueryState("loginEmail");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -25,8 +22,8 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
     setError(null);
     try {
       const res = await authClient.signIn.email({
-        email,
-        password,
+        email: email!,
+        password: password!,
         callbackURL: "/",
         rememberMe: true,
       });
@@ -63,7 +60,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
                   type="email"
                   placeholder="email@editheos.com"
                   required
-                  value={email}
+                  value={email || ""}
                   onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   disabled={loading}
@@ -84,7 +81,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
                   type="password"
                   required
                   placeholder="************"
-                  value={password}
+                  value={password || ""}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   disabled={loading}
@@ -102,7 +99,10 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
                 <Button
                   variant="link"
                   className="text-sm p-0"
-                  onClick={onToggleMode}
+                  onClick={() => {
+                    window.location.href = "/auth/register";
+                  }}
+                  disabled={loading}
                   type="button"
                 >
                   Inscrivez-vous
