@@ -1,12 +1,10 @@
 "use client";
 
 import {
-  Book,
   BookAlert,
   BookAudio,
   BookLock,
   BookOpen,
-  Heart,
   Home,
   Kanban,
   LifeBuoy,

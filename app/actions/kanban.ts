@@ -22,8 +22,6 @@ export async function getKanbanData() {
       },
     });
 
-    console.log("Kanban columns fetched:", columns);
-
     if (columns.length === 0) {
       // Crée les colonnes Kanban
       await Promise.all([

@@ -278,7 +278,7 @@ export function ProjectDetailSidebar({
           {/* Date d'échéance */}
           <div>
             <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">
-              Date d'échéance
+              Date d&apos;échéance
             </Label>
             <Popover>
               <PopoverTrigger asChild>

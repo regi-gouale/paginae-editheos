@@ -13,14 +13,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useAlerts } from "@/hooks/use-alerts";
-import { ProjectStatus } from "@/prisma/generated/prisma";
 import type {
   KanbanColumnWithProjects,
   ProjectWithDetails,
 } from "@/types/kanban";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
-import { randomUUID } from "crypto";
 import { MoreHorizontal, Palette, Trash2 } from "lucide-react";
 import { useState } from "react";
 import AddProjectDialog from "./add-project-dialog";
@@ -57,36 +54,36 @@ export function KanbanColumn({
   onUpdateColumn,
   onDuplicateProject,
 }: KanbanColumnProps) {
-  const [isAddingProject, setIsAddingProject] = useState(false);
+  // const [isAddingProject, setIsAddingProject] = useState(false);
   const [newProjectTitle, setNewProjectTitle] = useState("");
   const [newProjectDescription, setNewProjectDescription] = useState("");
 
-  const { showSuccess, showError } = useAlerts();
+  // const { showSuccess, showError } = useAlerts();
 
-  const handleAddProject = async () => {
-    if (!newProjectTitle.trim()) return;
+  // const handleAddProject = async () => {
+  //   if (!newProjectTitle.trim()) return;
 
-    const newProject: ProjectWithDetails = {
-      id: `project-${randomUUID()}`,
-      title: newProjectTitle,
-      description: newProjectDescription || "",
-      columnId: column.id,
-      authors: [],
-      members: [],
-      tasks: [],
-      customFields: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+  //   const newProject: ProjectWithDetails = {
+  //     id: `project-${randomUUID()}`,
+  //     title: newProjectTitle,
+  //     description: newProjectDescription || "",
+  //     columnId: column.id,
+  //     authors: [],
+  //     members: [],
+  //     tasks: [],
+  //     customFields: [],
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
 
-      status: ProjectStatus.TODO,
-      dueDate: null,
-    };
+  //     status: ProjectStatus.TODO,
+  //     dueDate: null,
+  //   };
 
-    onAddProject(column.id, newProject);
-    setNewProjectTitle("");
-    setNewProjectDescription("");
-    setIsAddingProject(false);
-  };
+  //   onAddProject(column.id, newProject);
+  //   setNewProjectTitle("");
+  //   setNewProjectDescription("");
+  //   // setIsAddingProject(false);
+  // };
 
   const handleColorChange = (color: string) => {
     onUpdateColumn(column.id, { color });
@@ -187,10 +184,7 @@ export function KanbanColumn({
             {provided.placeholder}
 
             {/* Bouton d'ajout de projet */}
-            <AddProjectDialog
-              onProjectAdded={() => setIsAddingProject(false)}
-              isInColumn={true}
-            />
+            <AddProjectDialog onProjectAdded={() => {}} isInColumn={true} />
           </div>
         )}
       </Droppable>

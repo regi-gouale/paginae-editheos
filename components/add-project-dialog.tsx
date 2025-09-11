@@ -44,7 +44,7 @@ export default function AddProjectDialog({
           setError("Erreur lors de la création du projet.");
         }
       } catch (err) {
-        setError("Erreur lors de la création du projet.");
+        setError(`Erreur lors de la création du projet. : ${err}`);
       }
     });
   };

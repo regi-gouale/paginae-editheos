@@ -17,13 +17,13 @@ import { randomUUID } from "crypto";
 import { useEffect, useState } from "react";
 import { KanbanColumn } from "./kanban-column";
 
-interface Task {
-  id: string;
+// interface Task {
+//   id: string;
 
-  title: string;
+//   title: string;
 
-  description?: string;
-}
+//   description?: string;
+// }
 
 interface KanbanBoardProps {
   initialColumns: KanbanColumnWithProjects[];
@@ -35,10 +35,10 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     useState<KanbanColumnWithProjects[]>(initialColumns);
   const [selectedProject, setSelectedProject] =
     useState<ProjectWithDetails | null>(null);
-  const [newColumnTitle, setNewColumnTitle] = useState("");
-  const [isAddingColumn, setIsAddingColumn] = useState(false);
+  // const [newColumnTitle, setNewColumnTitle] = useState("");
+  // const [isAddingColumn, setIsAddingColumn] = useState(false);
   const [rules, setRules] = useState<KanbanRule[]>([]);
-  const [activeTab, setActiveTab] = useState<"board" | "rules">("board");
+  // const [activeTab, setActiveTab] = useState<"board" | "rules">("board");
 
   useEffect(() => {
     setColumns(initialColumns);

@@ -20,7 +20,7 @@ export default async function AuthorsPage() {
   return (
     <div>
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="container mx-auto p-6 space-y-6">
+      <main className="flex flex-1 flex-col mx-auto p-6 space-y-6 max-w-4xl">
         <div className="space-y-2">
           <h1
             className="text-3xl font-extrabold tracking-tight"
