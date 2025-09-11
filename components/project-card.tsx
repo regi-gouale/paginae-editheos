@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn, formatDate } from "@/lib/utils";
 import { ProjectStatus } from "@/prisma/generated/prisma";
 import type { ProjectWithDetails } from "@/types/kanban";
-import { Calendar, CheckSquare, Copy } from "lucide-react";
+import { BookUser, Calendar, CheckSquare, Copy } from "lucide-react";
 
 interface ProjectCardProps {
   project: ProjectWithDetails;
@@ -38,8 +38,21 @@ export function ProjectCard({
       className="mb-2 p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer group"
       onClick={onClick}
     >
+      {project.authors.length > 0 && (
+        <div className="flex items-center space-x-1">
+          <BookUser className="size-3 text-gray-500 dark:text-gray-400" />
+          {project.authors.map((author) => (
+            <div
+              key={author.id}
+              className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-md"
+            >
+              {author.firstName} {author.lastName}
+            </div>
+          ))}
+        </div>
+      )}
       <div className="flex justify-between items-start">
-        <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1 line-clamp-1">
+        <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1 line-clamp-2">
           {project.title}
         </h4>
         <Button
@@ -52,8 +65,9 @@ export function ProjectCard({
           <Copy className="size-3" />
         </Button>
       </div>
+
       {project.description && (
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 line-clamp-2">
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 line-clamp-3">
           {project.description}
         </p>
       )}

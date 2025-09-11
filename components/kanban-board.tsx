@@ -17,7 +17,7 @@ import {
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { randomUUID } from "crypto";
 import { useEffect, useState } from "react";
-import { ProjectDetailSidebar } from "./project-detail-sidebar";
+import { ProjectDetailDialog } from "./project-detail-dialog";
 
 interface KanbanBoardProps {
   initialColumns: KanbanColumnWithProjects[];
@@ -358,12 +358,11 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
         title: updatedProject.title,
         description: updatedProject.description ?? undefined,
         status: geProjectStatusFromColumnName(updatedProject.status),
-        dueDate: updatedProject.dueDate
-          ? new Date(updatedProject.dueDate)
-          : undefined,
+        dueDate: updatedProject.dueDate || undefined,
         columnId: columns.find((col) =>
           col.projects.some((p) => p.id === updatedProject.id)
         )?.id,
+        authorIds: updatedProject.authors.map((author) => author.id),
       });
     } catch (error) {
       toast({
@@ -448,16 +447,19 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
           ))}
         </div>
       </DragDropContext>
-      {selectedProject && (
-        <ProjectDetailSidebar
-          project={selectedProject}
-          onClose={() => setSelectedProject(null)}
-          onUpdate={updateProjectLocal}
-          onDelete={deleteProjectLocal}
-          onDuplicate={duplicateProjectLocal}
-          columns={columns}
-        />
-      )}
+      <ProjectDetailDialog
+        project={selectedProject}
+        open={!!selectedProject}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedProject(null);
+          }
+        }}
+        onUpdate={updateProjectLocal}
+        onDelete={deleteProjectLocal}
+        onDuplicate={duplicateProjectLocal}
+        columns={columns}
+      />
     </div>
   );
 }

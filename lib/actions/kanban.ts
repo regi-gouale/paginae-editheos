@@ -273,12 +273,22 @@ export async function updateProject(
     status?: ProjectStatus;
     dueDate?: Date;
     columnId?: string;
+    authorIds?: string[];
   }
 ) {
   try {
+    const { authorIds, ...updateData } = data;
+
     const project = await prisma.project.update({
       where: { id },
-      data,
+      data: {
+        ...updateData,
+        ...(authorIds && {
+          authors: {
+            set: authorIds.map((authorId) => ({ id: authorId })),
+          },
+        }),
+      },
       include: {
         authors: true,
         members: true,
@@ -357,6 +367,19 @@ export async function updateProjectTask(
   } catch (error) {
     console.error("Error updating task:", error);
     throw new Error("Failed to update task");
+  }
+}
+
+// Delete a project task
+export async function deleteProjectTask(id: string) {
+  try {
+    await prisma.projectTask.delete({
+      where: { id },
+    });
+    revalidatePath("/dashboard/projects");
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    throw new Error("Failed to delete task");
   }
 }
 
