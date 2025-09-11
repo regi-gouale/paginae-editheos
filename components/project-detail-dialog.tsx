@@ -349,7 +349,7 @@ export function ProjectDetailDialog({
                 }
               >
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Sélectionner un statut" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={ProjectStatus.TODO}>À faire</SelectItem>

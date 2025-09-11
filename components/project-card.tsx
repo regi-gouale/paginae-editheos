@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn, formatDate } from "@/lib/utils";
 import { ProjectStatus } from "@/prisma/generated/prisma";
 import type { ProjectWithDetails } from "@/types/kanban";
-import { BookUser, Calendar, CheckSquare, Copy } from "lucide-react";
+import { BookUser, Calendar, CheckSquare, Copy, Printer } from "lucide-react";
 
 interface ProjectCardProps {
   project: ProjectWithDetails;
@@ -31,8 +31,6 @@ export function ProjectCard({
     onDuplicate();
   };
 
-  // console.log("Rendering ProjectCard:", project.title, project.dueDate);
-
   return (
     <div
       className="mb-2 p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer group"
@@ -40,7 +38,12 @@ export function ProjectCard({
     >
       {project.authors.length > 0 && (
         <div className="flex items-center space-x-1">
-          <BookUser className="size-3 text-gray-500 dark:text-gray-400" />
+          {project.type === "EDITION" ? (
+            <BookUser className="size-3 text-blue-600 dark:text-blue-400 mx-2" />
+          ) : (
+            <Printer className="size-3 text-green-600 dark:text-green-400 mx-2" />
+          )}
+
           {project.authors.map((author) => (
             <div
               key={author.id}

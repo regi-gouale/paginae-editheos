@@ -20,12 +20,12 @@ export default async function TeamPage() {
   return (
     <div>
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="flex flex-1 flex-col mx-auto p-6 space-y-6 max-w-4xl">
+      <main className="flex flex-1 flex-col mx-auto p-6 space-y-6 max-w-4xl pt-24">
         <div className="space-y-2">
           <h1
             className="text-3xl font-extrabold tracking-tight"
             style={{
-              fontFamily: "var(--font-comfortaa)",
+              fontFamily: "var(--font-lato)",
             }}
           >
             Gestion de l&apos;équipe

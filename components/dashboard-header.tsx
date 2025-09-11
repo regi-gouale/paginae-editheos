@@ -16,8 +16,8 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
   return (
     <header
-      className="flex h-16 shrink-0 items-center gap-2 w-full shadow-sm"
-      style={{ fontFamily: "var(--font-montserrat)" }}
+      className="flex h-16 shrink-0 items-center gap-2 w-full shadow-sm fixed top-0 bg-white z-10"
+      style={{ fontFamily: "var(--font-lato)" }}
     >
       <div className="flex items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />

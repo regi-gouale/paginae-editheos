@@ -252,7 +252,6 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
 
   const handleDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
-
     // Si pas de destination ou déplacement au même endroit
     if (
       !destination ||
@@ -283,7 +282,6 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     if (!project) return;
 
     // Déterminer le nouveau statut
-
     const newStatus = geProjectStatusFromColumnName(destColumn.title);
 
     // Appel de l'action server pour mettre à jour le statut en base
@@ -300,7 +298,6 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
       });
       return;
     }
-
     // Mise à jour locale
     newColumns[sourceColIndex] = {
       ...sourceColumn,
@@ -352,7 +349,6 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
 
   const updateProjectLocal = async (updatedProject: ProjectWithDetails) => {
     // Appel de l'action server pour persister la modification
-    // console.log("Updating project:", updatedProject);
     try {
       await updateProject(updatedProject.id, {
         title: updatedProject.title,

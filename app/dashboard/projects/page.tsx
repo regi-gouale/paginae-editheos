@@ -34,6 +34,8 @@ export default async function ProjectPage() {
       status: project.status,
       authors: project.authors,
       members: project.members,
+      priority: project.priority,
+      type: project.type,
       // Add other project properties as needed
     })),
   })) as KanbanColumnWithProjects[];
@@ -43,13 +45,13 @@ export default async function ProjectPage() {
   return (
     <div className="flex flex-col">
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 pt-24">
         <div>
           <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1
               className="text-3xl font-extrabold tracking-tight line-clamp-1"
               style={{
-                fontFamily: "var(--font-comfortaa)",
+                fontFamily: "var(--font-lato)",
               }}
             >
               Gestion des projets
@@ -59,7 +61,7 @@ export default async function ProjectPage() {
           <p
             className="px-4 sm:px-6 lg:px-8 text-muted-foreground"
             style={{
-              fontFamily: "var(--font-montserrat)",
+              fontFamily: "var(--font-merriweather)",
             }}
           >
             Visualisez et gérez l&apos;avancement de vos projets à l&apos;aide

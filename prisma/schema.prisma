@@ -125,6 +125,18 @@ enum RuleActionType {
   MOVE_TO_COLUMN
 }
 
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ProjectType {
+  EDITION
+  PRINTING
+}
+
 model Author {
   id          String    @id @default(uuid())
   firstName   String
@@ -148,8 +160,11 @@ model Project {
   description String?
   status      ProjectStatus @default(TODO)
   dueDate     DateTime?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @default(now()) @updatedAt
+  priority    Priority      @default(LOW)
+  type        ProjectType   @default(EDITION)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   // Relations
   authors      Author[]      @relation("ProjectAuthors")
