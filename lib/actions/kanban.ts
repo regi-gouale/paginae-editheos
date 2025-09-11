@@ -54,6 +54,41 @@ export async function getProjectStats() {
   }
 }
 
+// Get recent projects for the dashboard
+export async function getRecentProjects(limit = 5) {
+  try {
+    const projects = await prisma.project.findMany({
+      take: limit,
+      orderBy: {
+        updatedAt: "desc",
+      },
+      include: {
+        authors: true,
+      },
+    });
+
+    return projects.map((project) => ({
+      id: project.id,
+      title: project.title,
+      status: project.status,
+      priority: project.priority,
+      type: project.type,
+      dueDate: project.dueDate,
+      author: project.authors[0]
+        ? {
+            name: `${project.authors[0].firstName} ${project.authors[0].lastName}`,
+            email: project.authors[0].email,
+            image: undefined,
+          }
+        : undefined,
+      updatedAt: project.updatedAt,
+    }));
+  } catch (error) {
+    console.error("Error getting recent projects:", error);
+    return [];
+  }
+}
+
 // Create a custom field for a project
 export async function createCustomField(data: {
   name: string;
