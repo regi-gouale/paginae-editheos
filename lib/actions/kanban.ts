@@ -4,6 +4,56 @@ import { prisma } from "@/lib/prisma";
 import type { ProjectStatus } from "@/prisma/generated/prisma";
 import { revalidatePath } from "next/cache";
 
+// Get project statistics for the sidebar
+export async function getProjectStats() {
+  try {
+    const today = new Date();
+    today.setHours(23, 59, 59, 999); // End of today
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0); // Start of today
+
+    const [todoCount, inProgressCount, blockedCount, dueTodayCount] =
+      await Promise.all([
+        // À relire (projets TODO)
+        prisma.project.count({
+          where: { status: "TODO" },
+        }),
+        // En cours (projets IN_PROGRESS)
+        prisma.project.count({
+          where: { status: "IN_PROGRESS" },
+        }),
+        // Bloqués (projets BLOCKED)
+        prisma.project.count({
+          where: { status: "BLOCKED" },
+        }),
+        // Échéances aujourd'hui
+        prisma.project.count({
+          where: {
+            dueDate: {
+              gte: startOfToday,
+              lte: today,
+            },
+          },
+        }),
+      ]);
+
+    return {
+      todo: todoCount,
+      inProgress: inProgressCount,
+      blocked: blockedCount,
+      dueToday: dueTodayCount,
+    };
+  } catch (error) {
+    console.error("Error getting project stats:", error);
+    return {
+      todo: 0,
+      inProgress: 0,
+      blocked: 0,
+      dueToday: 0,
+    };
+  }
+}
+
 // Create a custom field for a project
 export async function createCustomField(data: {
   name: string;
