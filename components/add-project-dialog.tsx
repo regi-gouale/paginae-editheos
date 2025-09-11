@@ -10,6 +10,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { createProject } from "@/lib/actions/kanban";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
@@ -25,6 +35,10 @@ export default function AddProjectDialog({
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [type, setType] = useState<"EDITION" | "PRINTING">("EDITION");
+  const [priority, setPriority] = useState<
+    "LOW" | "MEDIUM" | "HIGH" | "URGENT"
+  >("LOW");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -33,12 +47,19 @@ export default function AddProjectDialog({
     setError(null);
     startTransition(async () => {
       try {
-        const res = await createProject({ title: name, description });
+        const res = await createProject({
+          title: name,
+          description,
+          type,
+          priority,
+        });
         if (res && res.id) {
           if (onProjectAdded) onProjectAdded();
           setOpen(false);
           setName("");
           setDescription("");
+          setType("EDITION");
+          setPriority("LOW");
           // Actualiser la page des projets
           window.location.reload();
         } else {
@@ -76,10 +97,10 @@ export default function AddProjectDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium">
+            <Label htmlFor="name" className="block text-sm font-medium">
               Nom du projet
-            </label>
-            <input
+            </Label>
+            <Input
               id="name"
               type="text"
               value={name}
@@ -89,10 +110,55 @@ export default function AddProjectDialog({
             />
           </div>
           <div>
-            <label htmlFor="description" className="block text-sm font-medium">
+            {/* Type de projet et la priorité */}
+            <div className="flex space-x-4">
+              <div className="flex-1">
+                <Label htmlFor="type" className="block text-sm font-medium">
+                  Type de projet
+                </Label>
+                <Select
+                  value={type}
+                  onValueChange={(value: "EDITION" | "PRINTING") =>
+                    setType(value)
+                  }
+                >
+                  <SelectTrigger className="mt-1 w-full">
+                    <SelectValue placeholder="Sélectionner un type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="EDITION">Édition</SelectItem>
+                    <SelectItem value="PRINTING">Impression</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex-1">
+                <Label htmlFor="priority" className="block text-sm font-medium">
+                  Priorité
+                </Label>
+                <Select
+                  value={priority}
+                  onValueChange={(
+                    value: "LOW" | "MEDIUM" | "HIGH" | "URGENT"
+                  ) => setPriority(value)}
+                >
+                  <SelectTrigger className="mt-1 w-full">
+                    <SelectValue placeholder="Sélectionner une priorité" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="LOW">Basse</SelectItem>
+                    <SelectItem value="MEDIUM">Moyenne</SelectItem>
+                    <SelectItem value="HIGH">Haute</SelectItem>
+                    <SelectItem value="URGENT">Urgente</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="description" className="block text-sm font-medium">
               Description
-            </label>
-            <textarea
+            </Label>
+            <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}

@@ -34,6 +34,8 @@ export default async function ProjectPage() {
       status: project.status,
       authors: project.authors,
       members: project.members,
+      priority: project.priority,
+      type: project.type,
       // Add other project properties as needed
     })),
   })) as KanbanColumnWithProjects[];

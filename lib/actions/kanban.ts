@@ -222,6 +222,8 @@ export async function createProject(data: {
   description?: string;
   status?: ProjectStatus;
   dueDate?: Date;
+  priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  type?: "EDITION" | "PRINTING";
   columnId?: string;
   authorIds?: string[];
   memberIds?: string[];

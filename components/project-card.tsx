@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn, formatDate } from "@/lib/utils";
 import { ProjectStatus } from "@/prisma/generated/prisma";
 import type { ProjectWithDetails } from "@/types/kanban";
-import { BookUser, Calendar, CheckSquare, Copy } from "lucide-react";
+import { BookUser, Calendar, CheckSquare, Copy, Printer } from "lucide-react";
 
 interface ProjectCardProps {
   project: ProjectWithDetails;
@@ -40,7 +40,12 @@ export function ProjectCard({
     >
       {project.authors.length > 0 && (
         <div className="flex items-center space-x-1">
-          <BookUser className="size-3 text-gray-500 dark:text-gray-400" />
+          {project.type === "EDITION" ? (
+            <BookUser className="size-3 text-blue-600 dark:text-blue-400 mx-2" />
+          ) : (
+            <Printer className="size-3 text-green-600 dark:text-green-400 mx-2" />
+          )}
+          {/* <BookUser className="size-3 text-gray-500 dark:text-gray-400" /> */}
           {project.authors.map((author) => (
             <div
               key={author.id}
