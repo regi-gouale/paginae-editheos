@@ -1,5 +1,6 @@
 "use client";
 
+import { SelectProjectAuthor } from "@/components/projects/select-project-author";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,7 +36,6 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { getAuthors } from "@/lib/actions/authors";
 import {
   createCustomField,
   createProjectTask,
@@ -58,7 +58,6 @@ import {
   Plus,
   Square,
   Trash2,
-  User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -90,37 +89,6 @@ ProjectDetailDialogProps) {
   const [newCustomFieldName, setNewCustomFieldName] = useState("");
   const [newCustomFieldValue, setNewCustomFieldValue] = useState("");
   const [isAddingCustomField, setIsAddingCustomField] = useState(false);
-  const [authors, setAuthors] = useState<Author[]>([]);
-  const [isLoadingAuthors, setIsLoadingAuthors] = useState(false);
-
-  // Charger les auteurs au montage du composant
-  useEffect(() => {
-    const loadAuthors = async () => {
-      setIsLoadingAuthors(true);
-      try {
-        const response = await getAuthors({ limit: 100 }); // Charger tous les auteurs
-        // Transformer les auteurs en ajoutant les champs manquants avec des valeurs par défaut
-        const transformedAuthors: Author[] = response.authors.map((author) => ({
-          ...author,
-          biography: author.biography ?? null,
-          website: author.website ?? null,
-          nationality: author.nationality ?? null,
-          birthDate: author.birthDate ?? null,
-          createdAt: author.createdAt || new Date(),
-          updatedAt: author.updatedAt || new Date(),
-        }));
-        setAuthors(transformedAuthors);
-      } catch (error) {
-        console.error("Erreur lors du chargement des auteurs:", error);
-      } finally {
-        setIsLoadingAuthors(false);
-      }
-    };
-
-    if (open) {
-      loadAuthors();
-    }
-  }, [open]);
 
   // Réinitialiser le projet édité quand le projet change
   useEffect(() => {
@@ -162,16 +130,13 @@ ProjectDetailDialogProps) {
     onUpdate(updatedProject);
   };
 
-  const handleAuthorChange = (authorId: string) => {
-    const selectedAuthor = authors.find((author) => author.id === authorId);
-    if (selectedAuthor) {
-      const updatedProject = {
-        ...editedProject,
-        authors: [selectedAuthor], // Pour simplifier, on ne garde qu'un seul auteur
-      };
-      setEditedProject(updatedProject);
-      onUpdate(updatedProject);
-    }
+  const handleAuthorChange = (author: Author) => {
+    const updatedProject = {
+      ...editedProject,
+      authors: [author], // Pour simplifier, on ne garde qu'un seul auteur
+    };
+    setEditedProject(updatedProject);
+    onUpdate(updatedProject);
   };
 
   const handleDueDateChange = (date: Date | undefined) => {
@@ -363,40 +328,11 @@ ProjectDetailDialogProps) {
             </div>
 
             {/* Auteur */}
-            <div className="space-y-2">
-              <Label>Auteur</Label>
-              {isLoadingAuthors ? (
-                <div className="text-sm text-muted-foreground">
-                  Chargement des auteurs...
-                </div>
-              ) : (
-                <Select
-                  value={editedProject.authors[0]?.id || ""}
-                  onValueChange={handleAuthorChange}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner un auteur">
-                      {editedProject.authors[0] && (
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4" />
-                          {`${editedProject.authors[0].firstName} ${editedProject.authors[0].lastName}`}
-                        </div>
-                      )}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {authors.map((author) => (
-                      <SelectItem key={author.id} value={author.id}>
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4" />
-                          {`${author.firstName} ${author.lastName}`}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
+            <SelectProjectAuthor
+              projectId={editedProject.id}
+              selectedAuthors={editedProject.authors}
+              onAuthorChange={handleAuthorChange}
+            />
           </div>
 
           {/* Date d'échéance */}

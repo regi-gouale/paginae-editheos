@@ -1,8 +1,9 @@
 "use client";
 import InputProjectTitle from "@/components/projects/input-project-title";
+import { SelectProjectAuthor } from "@/components/projects/select-project-author";
 import { SelectProjectStatus } from "@/components/projects/select-project-status";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ProjectStatus } from "@/prisma/generated/prisma";
+import { Author, ProjectStatus } from "@/prisma/generated/prisma";
 import { ProjectWithDetails } from "@/types/kanban";
 import { useEffect, useState } from "react";
 
@@ -35,6 +36,14 @@ export function ProjectDetailDialog({
     }
   };
 
+  const handleAuthorUpdate = (author: Author) => {
+    if (editedProject && onProjectUpdated) {
+      const updatedProject = { ...editedProject, authors: [author] };
+      setEditedProject(updatedProject);
+      onProjectUpdated(updatedProject);
+    }
+  };
+
   useEffect(() => {
     if (project) {
       setEditedProject({ ...project });
@@ -59,6 +68,11 @@ export function ProjectDetailDialog({
               projectId={editedProject.id}
               status={editedProject.status}
               onStatusUpdated={handleStatusUpdate}
+            />
+            <SelectProjectAuthor
+              projectId={editedProject.id}
+              selectedAuthors={editedProject.authors}
+              onAuthorChange={handleAuthorUpdate}
             />
           </div>
         </div>
