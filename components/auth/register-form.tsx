@@ -61,7 +61,6 @@ export function RegisterForm() {
       setLoading(false);
     } else {
       toast.success("Inscription réussie !");
-      window.location.href = "/";
     }
   }
 

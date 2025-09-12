@@ -49,8 +49,7 @@ export function LoginForm() {
       setLoading(false);
       form.reset({ password: "" });
     } else {
-      toast.success("Connexion réussie !");
-      window.location.reload();
+      toast.success(`Connexion réussie ! Redirection...`);
     }
   }
 
