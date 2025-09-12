@@ -1,9 +1,8 @@
 "use client";
 
 import { KanbanColumn } from "@/components/kanban-column";
-import { useToast } from "@/hooks/use-toast";
 import { updateProject } from "@/lib/actions/kanban";
-import { generateRandomId } from "@/lib/utils";
+import { generateRandomId, getProjectStatusFromColumnName } from "@/lib/utils";
 import {
   ProjectStatus,
   RuleActionType,
@@ -17,52 +16,14 @@ import {
 } from "@/types/kanban";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { ProjectDetailDialog } from "./project-detail-dialog";
 
 interface KanbanBoardProps {
   initialColumns: KanbanColumnWithProjects[];
 }
 
-export const geProjectStatusFromColumnName = (
-  columnTitle: string
-): ProjectStatus => {
-  switch (columnTitle) {
-    case "À faire":
-      return ProjectStatus.TODO;
-    case "En cours":
-      return ProjectStatus.IN_PROGRESS;
-    case "Bloqué":
-      return ProjectStatus.BLOCKED;
-    case "Terminé":
-      return ProjectStatus.DONE;
-    case "Rejeté":
-      return ProjectStatus.REJECTED;
-    default:
-      return ProjectStatus.TODO;
-  }
-};
-
-export const getColumnNameFromProjectStatus = (
-  status: ProjectStatus
-): string => {
-  switch (status) {
-    case ProjectStatus.TODO:
-      return "À faire";
-    case ProjectStatus.IN_PROGRESS:
-      return "En cours";
-    case ProjectStatus.BLOCKED:
-      return "Bloqué";
-    case ProjectStatus.DONE:
-      return "Terminé";
-    case ProjectStatus.REJECTED:
-      return "Rejeté";
-    default:
-      return "À faire";
-  }
-};
-
 export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
-  const { toast } = useToast();
   const [columns, setColumns] =
     useState<KanbanColumnWithProjects[]>(initialColumns);
   const [selectedProject, setSelectedProject] =
@@ -230,11 +191,10 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
                 setSelectedProject(project);
               }
 
-              toast({
-                title: "Project moved automatically",
-                description: `"${project.title}" moved to ${
+              toast.info(`Projet déplacé automatiquement`, {
+                description: `"${project.title}" déplacé vers ${
                   newColumns[targetColIndex].title
-                } by rule: ${
+                } par la règle : ${
                   rules.find(
                     (r) =>
                       r.action && r.action.targetColumnId === targetColumnId
@@ -248,7 +208,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
 
       setColumns(newColumns);
     }
-  }, [columns, rules, selectedProject, toast]);
+  }, [columns, rules, selectedProject]);
 
   const handleDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -282,7 +242,10 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     if (!project) return;
 
     // Déterminer le nouveau statut
-    const newStatus = geProjectStatusFromColumnName(destColumn.title);
+    const newStatus = getProjectStatusFromColumnName(destColumn.title);
+    console.log(
+      `Moving project "${project.title}" from "${sourceColumn.title}" to "${destColumn.title}" with new status "${newStatus}"`
+    );
 
     // Appel de l'action server pour mettre à jour le statut en base
     try {
@@ -291,10 +254,8 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
         columnId: destColumn.id,
       });
     } catch (error) {
-      toast({
-        title: "Erreur lors du déplacement",
+      toast.error("Erreur lors du déplacement", {
         description: `Impossible de mettre à jour le projet en base : ${project.title}`,
-        variant: "destructive",
       });
       return;
     }
@@ -322,8 +283,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
       setSelectedProject(updatedProject);
     }
 
-    toast({
-      title: "Projet déplacé",
+    toast.info("Projet déplacé", {
       description: `"${project.title}" déplacé vers ${destColumn.title}`,
     });
   };
@@ -339,8 +299,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
       return column;
     });
     setColumns(newColumns);
-    toast({
-      title: "Project created",
+    toast.info("Projet crééé", {
       description: `"${project.title}" added to ${
         columns.find((col) => col.id === columnId)?.title
       }`,
@@ -353,7 +312,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
       await updateProject(updatedProject.id, {
         title: updatedProject.title,
         description: updatedProject.description ?? undefined,
-        status: geProjectStatusFromColumnName(updatedProject.status),
+        status: getProjectStatusFromColumnName(updatedProject.status),
         dueDate: updatedProject.dueDate || undefined,
         columnId: columns.find((col) =>
           col.projects.some((p) => p.id === updatedProject.id)
@@ -361,10 +320,8 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
         authorIds: updatedProject.authors.map((author) => author.id),
       });
     } catch (error) {
-      toast({
-        title: "Erreur lors de la mise à jour",
+      toast.error("Erreur lors de la mise à jour", {
         description: `Impossible de mettre à jour le projet en base : ${updatedProject.title}`,
-        variant: "destructive",
       });
       return;
     }
@@ -379,8 +336,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     });
     setColumns(newColumns);
     setSelectedProject(updatedProject);
-    toast({
-      title: "Projet mis à jour",
+    toast("Projet mis à jour", {
       description: `"${updatedProject.title}" a été mis à jour`,
     });
   };
@@ -394,37 +350,35 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
     });
     setColumns(newColumns);
     setSelectedProject(null);
-    toast({
-      title: "Project deleted",
-      description: "The project has been deleted",
+    toast("Projet supprimé", {
+      description: "Le projet a été supprimé",
     });
   };
 
-  const duplicateProjectLocal = (
-    project: ProjectWithDetails,
-    columnId?: string
-  ) => {
-    // Create a deep copy of the project with a new ID
-    const duplicatedProject: ProjectWithDetails = {
-      ...JSON.parse(JSON.stringify(project)),
-      id: `project-${generateRandomId()}`,
-      title: `${project.title} (Copy)`,
-      createdAt: new Date().toISOString(),
-    };
+  // const duplicateProjectLocal = (
+  //   project: ProjectWithDetails,
+  //   columnId?: string
+  // ) => {
+  //   // Create a deep copy of the project with a new ID
+  //   const duplicatedProject: ProjectWithDetails = {
+  //     ...JSON.parse(JSON.stringify(project)),
+  //     id: `project-${generateRandomId()}`,
+  //     title: `${project.title} (Copy)`,
+  //     createdAt: new Date().toISOString(),
+  //   };
 
-    // If columnId is provided, add to that column, otherwise add to the same column as the original
-    const targetColumnId =
-      columnId ||
-      columns.find((col) => col.projects.some((p) => p.id === project.id))?.id;
+  //   // If columnId is provided, add to that column, otherwise add to the same column as the original
+  //   const targetColumnId =
+  //     columnId ||
+  //     columns.find((col) => col.projects.some((p) => p.id === project.id))?.id;
 
-    if (targetColumnId) {
-      addProject(targetColumnId, duplicatedProject);
-      toast({
-        title: "Project duplicated",
-        description: `"${duplicatedProject.title}" created`,
-      });
-    }
-  };
+  //   if (targetColumnId) {
+  //     addProject(targetColumnId, duplicatedProject);
+  //     toast.info("Projet dupliqué", {
+  //       description: `"${duplicatedProject.title}" a été créé`,
+  //     });
+  //   }
+  // };
 
   return (
     <div className="flex flex-col items-center mx-auto">
@@ -438,7 +392,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
               onProjectClick={setSelectedProject}
               onDeleteColumn={() => {}}
               onUpdateColumn={() => {}}
-              onDuplicateProject={duplicateProjectLocal}
+              // onDuplicateProject={duplicateProjectLocal}
             />
           ))}
         </div>
@@ -453,7 +407,7 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
         }}
         onUpdate={updateProjectLocal}
         onDelete={deleteProjectLocal}
-        onDuplicate={duplicateProjectLocal}
+        // onDuplicate={duplicateProjectLocal}
         columns={columns}
       />
     </div>

@@ -1,22 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { cn, formatDate } from "@/lib/utils";
 import { ProjectStatus } from "@/prisma/generated/prisma";
 import type { ProjectWithDetails } from "@/types/kanban";
-import { BookUser, Calendar, CheckSquare, Copy, Printer } from "lucide-react";
+import { BookUser, Calendar, CheckSquare, Printer } from "lucide-react";
 
 interface ProjectCardProps {
   project: ProjectWithDetails;
   onClick: () => void;
-  onDuplicate: () => void;
+  // onDuplicate: () => void;
 }
 
 export function ProjectCard({
   project,
   onClick,
-  onDuplicate,
-}: ProjectCardProps) {
+}: // onDuplicate,
+ProjectCardProps) {
   const completedTasks = project.tasks.filter((task) => task.completed).length;
   const totalTasks = project.tasks.length;
 
@@ -26,10 +25,10 @@ export function ProjectCard({
     new Date(project.dueDate) < new Date() &&
     project.status !== ProjectStatus.TODO;
 
-  const handleDuplicate = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    onDuplicate();
-  };
+  // const handleDuplicate = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.stopPropagation();
+  //   // onDuplicate();
+  // };
 
   return (
     <div
@@ -58,15 +57,15 @@ export function ProjectCard({
         <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1 line-clamp-2">
           {project.title}
         </h4>
-        <Button
+        {/* <Button
           variant="ghost"
           size="icon"
           className="size-6 opacity-0 group-hover:opacity-100 transition-opacity"
-          onClick={handleDuplicate}
+          // onClick={handleDuplicate}
           title="Dupliquer le projet"
         >
           <Copy className="size-3" />
-        </Button>
+        </Button> */}
       </div>
 
       {project.description && (

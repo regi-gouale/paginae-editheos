@@ -1,4 +1,4 @@
-import AddProjectDialog from "@/components/add-project-dialog";
+import { AddProjectDialog } from "@/components/add-project-dialog";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { KanbanBoard } from "@/components/kanban-board";
 import { getKanbanData } from "@/lib/actions/kanban";

@@ -77,12 +77,6 @@ export async function getProjectStats() {
       // Total des membres
       prisma.member.count(),
     ]);
-    console.log("Due today count:", dueTodayCount);
-    console.log("Total members count:", membersCount);
-    console.log("Todo projects:", todoCount?.projects);
-    console.log("In Progress projects:", inProgressCount?.projects);
-    console.log("Blocked projects:", blockedCount?.projects);
-    console.log("Completed projects:", completedCount?.projects);
     return {
       todo: todoCount?.projects.length || 0,
       inProgress: inProgressCount?.projects.length || 0,

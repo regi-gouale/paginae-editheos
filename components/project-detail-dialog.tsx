@@ -69,7 +69,7 @@ interface ProjectDetailDialogProps {
   onOpenChange: (open: boolean) => void;
   onUpdate: (project: ProjectWithDetails) => void;
   onDelete: (projectId: string) => void;
-  onDuplicate: (project: ProjectWithDetails) => void;
+  // onDuplicate: (project: ProjectWithDetails) => void;
   columns: KanbanColumnWithProjects[];
 }
 
@@ -79,8 +79,8 @@ export function ProjectDetailDialog({
   onOpenChange,
   onUpdate,
   onDelete,
-  onDuplicate,
-}: ProjectDetailDialogProps) {
+}: // onDuplicate,
+ProjectDetailDialogProps) {
   const [editedProject, setEditedProject] = useState<ProjectWithDetails | null>(
     null
   );
@@ -649,13 +649,13 @@ export function ProjectDetailDialog({
 
           {/* Actions */}
           <div className="flex gap-2 justify-end">
-            <Button
+            {/* <Button
               variant="outline"
               onClick={() => onDuplicate(editedProject)}
             >
               <Copy className="h-4 w-4 mr-1" />
               Dupliquer
-            </Button>
+            </Button> */}
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">
