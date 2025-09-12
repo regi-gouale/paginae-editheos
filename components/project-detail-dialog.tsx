@@ -54,7 +54,6 @@ import { fr } from "date-fns/locale";
 import {
   Calendar,
   CheckSquare,
-  Copy,
   Edit,
   Plus,
   Square,
@@ -649,13 +648,6 @@ ProjectDetailDialogProps) {
 
           {/* Actions */}
           <div className="flex gap-2 justify-end">
-            {/* <Button
-              variant="outline"
-              onClick={() => onDuplicate(editedProject)}
-            >
-              <Copy className="h-4 w-4 mr-1" />
-              Dupliquer
-            </Button> */}
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">
