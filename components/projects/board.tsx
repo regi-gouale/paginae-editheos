@@ -4,7 +4,10 @@ import { KanbanColumn } from "@/components/kanban-column";
 import { ProjectDetailDialog } from "@/components/projects/detail-dialog";
 import { updateProject } from "@/lib/actions/kanban";
 import { getRules } from "@/lib/rules";
-import { getProjectStatusFromColumnName } from "@/lib/utils";
+import {
+  getColumnNameFromProjectStatus,
+  getProjectStatusFromColumnName,
+} from "@/lib/utils";
 import {
   ProjectStatus,
   RuleActionType,
@@ -165,6 +168,62 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
 
   const rules = getRules(columns);
 
+  const handleProjectUpdate = (updatedProject: ProjectWithDetails) => {
+    const newColumns = [...columns];
+
+    // Trouver l'ancienne colonne du projet
+    let sourceColumnIndex = -1;
+    let projectIndex = -1;
+
+    for (let i = 0; i < newColumns.length; i++) {
+      projectIndex = newColumns[i].projects.findIndex(
+        (p) => p.id === updatedProject.id
+      );
+      if (projectIndex !== -1) {
+        sourceColumnIndex = i;
+        break;
+      }
+    }
+
+    if (sourceColumnIndex === -1) return;
+
+    // Trouver la nouvelle colonne basée sur le statut
+    const targetColumnTitle = getColumnNameFromProjectStatus(
+      updatedProject.status
+    );
+    const targetColumnIndex = newColumns.findIndex(
+      (col) => col.title === targetColumnTitle
+    );
+
+    if (targetColumnIndex === -1) return;
+
+    // Si le projet est déjà dans la bonne colonne, juste mettre à jour ses données
+    if (sourceColumnIndex === targetColumnIndex) {
+      newColumns[sourceColumnIndex].projects[projectIndex] = updatedProject;
+    } else {
+      // Retirer le projet de l'ancienne colonne
+      newColumns[sourceColumnIndex] = {
+        ...newColumns[sourceColumnIndex],
+        projects: newColumns[sourceColumnIndex].projects.filter(
+          (p) => p.id !== updatedProject.id
+        ),
+      };
+
+      // Ajouter le projet à la nouvelle colonne
+      newColumns[targetColumnIndex] = {
+        ...newColumns[targetColumnIndex],
+        projects: [...newColumns[targetColumnIndex].projects, updatedProject],
+      };
+    }
+
+    setColumns(newColumns);
+
+    // Mettre à jour le projet sélectionné
+    if (selectedProject && selectedProject.id === updatedProject.id) {
+      setSelectedProject(updatedProject);
+    }
+  };
+
   const handleDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
     // Si pas de destination ou déplacement au même endroit
@@ -263,6 +322,7 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
         onOpenChange={(open) => {
           if (!open) setSelectedProject(null);
         }}
+        onProjectUpdated={handleProjectUpdate}
       />
     </div>
   );

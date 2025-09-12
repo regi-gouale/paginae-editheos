@@ -1,37 +1,39 @@
 "use client";
+import InputProjectTitle from "@/components/projects/input-project-title";
+import { SelectProjectStatus } from "@/components/projects/select-project-status";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ProjectStatus } from "@/prisma/generated/prisma";
 import { ProjectWithDetails } from "@/types/kanban";
-import { useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
-import InputProjectTitle from "./input-project-title";
 
 interface ProjectDetailDialogProps {
   project: ProjectWithDetails | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onProjectUpdated?: (project: ProjectWithDetails) => void;
 }
 
 export function ProjectDetailDialog({
   project,
   open,
   onOpenChange,
+  onProjectUpdated,
 }: ProjectDetailDialogProps) {
-  const [openDetail, setOpenDetail] = useQueryState("openDetail");
-
   const [editedProject, setEditedProject] = useState<ProjectWithDetails | null>(
     null
   );
 
   const handleClose = () => {
-    setOpenDetail(null);
     onOpenChange(false);
   };
 
-  useEffect(() => {
-    if (open) {
-      setOpenDetail("true");
+  const handleStatusUpdate = (newStatus: ProjectStatus) => {
+    if (editedProject && onProjectUpdated) {
+      const updatedProject = { ...editedProject, status: newStatus };
+      setEditedProject(updatedProject);
+      onProjectUpdated(updatedProject);
     }
-  }, [open, setOpenDetail]);
+  };
 
   useEffect(() => {
     if (project) {
@@ -50,6 +52,16 @@ export function ProjectDetailDialog({
           title={editedProject.title}
           projectId={editedProject.id}
         />
+
+        <div className="space-y-4 flex flex-col">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <SelectProjectStatus
+              projectId={editedProject.id}
+              status={editedProject.status}
+              onStatusUpdated={handleStatusUpdate}
+            />
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

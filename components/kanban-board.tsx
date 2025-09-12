@@ -401,12 +401,12 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
         // onDuplicate={duplicateProjectLocal}
         columns={columns}
       /> */}
-      <ProjectDetailDialog
+      {/* <ProjectDetailDialog
         open={!!selectedProject}
         onOpenChange={(open) => {
           if (!open) setSelectedProject(null);
         }}
-      />
+      /> */}
     </div>
   );
 }

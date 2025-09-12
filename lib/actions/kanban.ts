@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { getColumnNameFromProjectStatus } from "@/lib/utils";
 import type { ProjectStatus } from "@/prisma/generated/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -409,10 +410,22 @@ export async function updateProject(
   try {
     const { authorIds, ...updateData } = data;
 
+    // Si le statut est modifié, trouver automatiquement la colonne correspondante
+    let finalUpdateData = { ...updateData };
+    if (updateData.status && !updateData.columnId) {
+      const columnTitle = getColumnNameFromProjectStatus(updateData.status);
+      const targetColumn = await prisma.kanbanColumn.findFirst({
+        where: { title: columnTitle },
+      });
+      if (targetColumn) {
+        finalUpdateData = { ...finalUpdateData, columnId: targetColumn.id };
+      }
+    }
+
     const project = await prisma.project.update({
       where: { id },
       data: {
-        ...updateData,
+        ...finalUpdateData,
         ...(authorIds && {
           authors: {
             set: authorIds.map((authorId) => ({ id: authorId })),
