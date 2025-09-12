@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="fr">
       <body className={`${lato.variable} ${meriweather.variable} antialiased`}>
         <NuqsAdapter>{children}</NuqsAdapter>
-        <Toaster />
+        <Toaster richColors />
         <SpeedInsights />
         <Analytics />
       </body>

@@ -2,144 +2,190 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
+import { registerFormSchema } from "@/lib/schemas/auth-schema";
 import { cn } from "@/lib/utils";
 import { isEmailWhitelisted } from "@/lib/whitelist";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import Link from "next/link";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 export function RegisterForm() {
-  const [email, setEmail] = useQueryState("registerEmail");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useQueryState("registerName");
-  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useQueryState("email");
+  const [name, setName] = useQueryState("name");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    // Vérification de la whitelist
-    const normalizedEmail = email!.trim().toLowerCase();
+  // Create Form object
+  const form = useForm<z.infer<typeof registerFormSchema>>({
+    resolver: zodResolver(registerFormSchema),
+    defaultValues: { name: name || "", email: email || "", password: "" },
+  });
 
+  // Handle form submission
+  async function onSubmit(data: z.infer<typeof registerFormSchema>) {
+    setLoading(true);
+    const normalizedEmail = data.email.trim().toLowerCase();
     const emailIsWhitelisted = isEmailWhitelisted(normalizedEmail);
     if (!emailIsWhitelisted) {
-      setError("Cette adresse email n'est pas autorisée à s'inscrire.");
+      toast.error("Cette adresse email n'est pas autorisée à s'inscrire.");
       setLoading(false);
       return;
     }
 
-    try {
-      const res = await authClient.signUp.email({
-        email: email!,
-        password,
-        name: name!,
-        callbackURL: "/",
-      });
-      if (res?.error) {
-        const error = (res as { error?: string | { message?: string } | null })
-          .error;
-        setError(
-          typeof error === "string"
-            ? error
-            : error?.message || "Erreur lors de l'inscription."
-        );
-      } else {
-        window.location.href = "/";
-      }
-    } catch {
-      setError("Erreur lors de l'inscription.");
-    } finally {
+    const result = await authClient.signUp.email({
+      email: data.email,
+      password: data.password,
+      name: data.name,
+      callbackURL: "/",
+    });
+
+    if (result?.error) {
+      toast.error(
+        "Erreur lors de l'inscription. Veuillez vérifier vos informations et réessayer."
+      );
       setLoading(false);
+    } else {
+      toast.success("Inscription réussie !");
+      window.location.href = "/";
     }
-  };
+  }
 
   return (
     <div className={cn("flex flex-col gap-6")}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col items-center text-center">
-                <h1 className="text-2xl font-bold pb-6">Créez votre compte</h1>
-                <p className="text-muted-foreground text-balance">
-                  Inscrivez-vous sur Paginae
-                </p>
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="name">Nom</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Votre nom"
-                  required
-                  value={name || ""}
-                  onChange={(e) => setName(e.target.value)}
-                  autoComplete="name"
-                  disabled={loading}
-                />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="email@editheos.com"
-                  required
-                  value={email || ""}
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="email"
-                  disabled={loading}
-                />
-              </div>
-              <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Mot de passe</Label>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
-                  >
-                    Mot de passe oublié ?
-                  </a>
+          <Form {...form}>
+            <form
+              className="space-y-4 md:space-y-8 p-8"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col items-center text-center">
+                  <h1 className="text-2xl font-bold pb-6">
+                    Créez votre compte
+                  </h1>
+                  <p className="text-muted-foreground text-balance">
+                    Inscrivez-vous sur Paginae
+                  </p>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  placeholder="************"
-                  value={password || ""}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  disabled={loading}
-                />
-              </div>
-              {error && (
-                <div className="text-red-500 text-sm text-center">{error}</div>
-              )}
-
-              <Button type="submit" className="w-full mt-4" disabled={loading}>
-                {loading ? "Inscription..." : "Inscription"}
-              </Button>
-
-              <div className="text-center text-sm">
-                Vous avez déjà un compte ?{" "}
+                <div className="grid gap-3">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Prénom & Nom</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="John Doe"
+                            {...field}
+                            autoComplete="name"
+                            disabled={loading}
+                            onChange={(e) => {
+                              field.onChange(e);
+                              setName(e.target.value);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid gap-3">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="email@editheos.com"
+                            type="email"
+                            {...field}
+                            autoComplete="email"
+                            disabled={loading}
+                            onChange={(e) => {
+                              field.onChange(e);
+                              setEmail(e.target.value);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid gap-3">
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Mot de passe</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="************"
+                            type="password"
+                            {...field}
+                            autoComplete="current-password"
+                            disabled={loading}
+                          />
+                        </FormControl>
+                        <FormDescription className="flex">
+                          <Link
+                            href="#"
+                            className="ml-auto text-sm underline-offset-2 hover:underline w-full text-right"
+                          >
+                            Mot de passe oublié ?
+                          </Link>
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <Button
-                  variant="link"
-                  className="text-sm p-0"
-                  onClick={() => {
-                    window.location.href = "/auth/login";
-                  }}
+                  type="submit"
+                  className="w-full mt-4"
                   disabled={loading}
-                  type="button"
                 >
-                  Connectez-vous
+                  {loading ? "Inscription..." : "Inscription"}
                 </Button>
+
+                <div className="text-center text-sm">
+                  Vous avez déjà un compte ?{" "}
+                  <Button
+                    variant="link"
+                    className="text-sm p-0"
+                    onClick={() => {
+                      window.location.href = "/auth/login";
+                    }}
+                    disabled={loading}
+                    type="button"
+                  >
+                    Connectez-vous
+                  </Button>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </Form>
           <div className="hidden relative md:block">
             <Image
               fill
@@ -152,8 +198,8 @@ export function RegisterForm() {
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
         En cliquant, vous acceptez nos{" "}
-        <a href="#">Conditions d&apos;utilisation</a> et{" "}
-        <a href="#">Politique de confidentialité</a>.
+        <Link href="#">Conditions d&apos;utilisation</Link> et{" "}
+        <Link href="#">Politique de confidentialité</Link>.
       </div>
     </div>
   );

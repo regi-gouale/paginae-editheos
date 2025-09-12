@@ -6,7 +6,6 @@ export default async function AuthPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  // const { data: session } = authClient.useSession();
 
   if (session) {
     redirect("/");
