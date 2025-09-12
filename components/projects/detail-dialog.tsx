@@ -4,12 +4,14 @@ import { PopoverDueDate } from "@/components/projects/popover-due-date";
 import { SelectProjectAuthor } from "@/components/projects/select-project-author";
 import { SelectProjectStatus } from "@/components/projects/select-project-status";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { getPriorityLabel } from "@/lib/utils";
 import { Author, ProjectStatus } from "@/prisma/generated/prisma";
 import { ProjectWithDetails } from "@/types/kanban";
 import { useEffect, useState } from "react";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Separator } from "../ui/separator";
+import { ProjectDescriptionDialog } from "./project-description-dialog";
 
 interface ProjectDetailDialogProps {
   project: ProjectWithDetails | null;
@@ -102,6 +104,16 @@ export function ProjectDetailDialog({
               />
             </div>
           </div>
+          <div className="space-y-2">
+            <ProjectDescriptionDialog
+              projectId={editedProject.id}
+              description={editedProject.description}
+            />
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4"></div>
         </div>
       </DialogContent>
     </Dialog>
