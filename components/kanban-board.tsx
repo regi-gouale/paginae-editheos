@@ -1,6 +1,7 @@
 "use client";
 
 import { KanbanColumn } from "@/components/kanban-column";
+import { ProjectDetailDialog } from "@/components/project-detail-dialog";
 import { updateProject } from "@/lib/actions/kanban";
 import { generateRandomId, getProjectStatusFromColumnName } from "@/lib/utils";
 import {
@@ -17,7 +18,6 @@ import {
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ProjectDetailDialog } from "./project-detail-dialog";
 
 interface KanbanBoardProps {
   initialColumns: KanbanColumnWithProjects[];
@@ -171,7 +171,9 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
             if (projectIndex !== -1) {
               const project = {
                 ...sourceCol.projects[projectIndex],
-                status: newColumns[targetColIndex].title as ProjectStatus,
+                status: getProjectStatusFromColumnName(
+                  newColumns[targetColIndex].title
+                ) as ProjectStatus,
               };
 
               // Remove from source
@@ -191,16 +193,16 @@ export function KanbanBoard({ initialColumns }: KanbanBoardProps) {
                 setSelectedProject(project);
               }
 
-              toast.info(`Projet déplacé automatiquement`, {
-                description: `"${project.title}" déplacé vers ${
-                  newColumns[targetColIndex].title
-                } par la règle : ${
-                  rules.find(
-                    (r) =>
-                      r.action && r.action.targetColumnId === targetColumnId
-                  )?.name
-                }`,
-              });
+              // toast.info(`Projet déplacé automatiquement`, {
+              //   description: `"${project.title}" déplacé vers ${
+              //     newColumns[targetColIndex].title
+              //   } par la règle : ${
+              //     rules.find(
+              //       (r) =>
+              //         r.action && r.action.targetColumnId === targetColumnId
+              //     )?.name
+              //   }`,
+              // });
             }
           }
         }
