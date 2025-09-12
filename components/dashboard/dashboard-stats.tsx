@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { ProjectGlobalProgressBar } from "@/components/dashboard/project-global-progressbar";
+import { StatsCard } from "@/components/dashboard/stats-card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getProjectStats } from "@/lib/actions/kanban";
 import {
   BookAlert,
@@ -26,6 +26,7 @@ interface DashboardData {
   stats: ProjectStats;
   totalProjects: number;
   totalMembers: number;
+  completed: number;
   completionRate: number;
 }
 
@@ -34,6 +35,7 @@ export default function DashboardStats() {
     stats: { todo: 0, inProgress: 0, blocked: 0, dueToday: 0 },
     totalProjects: 0,
     totalMembers: 0,
+    completed: 0,
     completionRate: 0,
   });
   const [loading, setLoading] = useState(true);
@@ -45,13 +47,15 @@ export default function DashboardStats() {
         const totalProjects = stats.todo + stats.inProgress + stats.blocked;
         const completionRate =
           totalProjects > 0
-            ? Math.round((stats.inProgress / totalProjects) * 100)
+            ? Math.round((stats.completed / totalProjects) * 100)
             : 0;
+        const totalMembers = stats.totalMembers || 0;
 
         setData({
           stats,
           totalProjects,
-          totalMembers: 0, // À implémenter avec une fonction pour compter les membres
+          totalMembers,
+          completed: stats.completed,
           completionRate,
         });
       } catch (error) {
@@ -107,7 +111,7 @@ export default function DashboardStats() {
       color: "text-green-600",
       bgColor: "bg-green-50",
       change: "+12%",
-      changeType: "positive" as const,
+      changeType: "increase" as const,
     },
     {
       title: "Membres de l'équipe",
@@ -116,7 +120,7 @@ export default function DashboardStats() {
       color: "text-indigo-600",
       bgColor: "bg-indigo-50",
       change: "+2",
-      changeType: "positive" as const,
+      changeType: "increase" as const,
     },
     {
       title: "Taux de progression",
@@ -125,7 +129,7 @@ export default function DashboardStats() {
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
       change: "+5%",
-      changeType: "positive" as const,
+      changeType: "increase" as const,
     },
   ];
 
@@ -157,28 +161,7 @@ export default function DashboardStats() {
         </h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {statsCards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <Card
-                key={card.title}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {card.title}
-                  </CardTitle>
-                  <div className={`${card.bgColor} p-2 rounded-lg`}>
-                    <Icon className={`h-4 w-4 ${card.color}`} />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{card.value}</div>
-                  <p className="text-xs text-muted-foreground">
-                    {card.description}
-                  </p>
-                </CardContent>
-              </Card>
-            );
+            return <StatsCard key={card.title} {...card} />;
           })}
         </div>
       </div>
@@ -190,38 +173,7 @@ export default function DashboardStats() {
         </h2>
         <div className="grid gap-4 md:grid-cols-3">
           {overviewCards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <Card
-                key={card.title}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {card.title}
-                  </CardTitle>
-                  <div className={`${card.bgColor} p-2 rounded-lg`}>
-                    <Icon className={`h-4 w-4 ${card.color}`} />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{card.value}</div>
-                  <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                    <Badge
-                      variant={
-                        card.changeType === "positive"
-                          ? "default"
-                          : "destructive"
-                      }
-                      className="text-xs"
-                    >
-                      {card.change}
-                    </Badge>
-                    <span>par rapport au mois dernier</span>
-                  </div>
-                </CardContent>
-              </Card>
-            );
+            return <StatsCard key={card.title} {...card} />;
           })}
         </div>
       </div>
@@ -231,40 +183,10 @@ export default function DashboardStats() {
         <h2 className="text-2xl font-bold tracking-tight mb-4">
           Progression générale
         </h2>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Avancement des projets</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Progression globale</span>
-                <span>{data.completionRate}%</span>
-              </div>
-              <Progress value={data.completionRate} className="h-2" />
-            </div>
-            <div className="grid grid-cols-3 gap-4 text-sm">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">
-                  {data.stats.todo}
-                </div>
-                <div className="text-muted-foreground">À faire</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">
-                  {data.stats.inProgress}
-                </div>
-                <div className="text-muted-foreground">En cours</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-red-600">
-                  {data.stats.blocked}
-                </div>
-                <div className="text-muted-foreground">Bloqués</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <ProjectGlobalProgressBar
+          stats={data.stats}
+          completionRate={data.completionRate}
+        />
       </div>
     </div>
   );

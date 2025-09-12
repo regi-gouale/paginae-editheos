@@ -1,4 +1,4 @@
-import { DashboardHeader } from "@/components/dashboard-header";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { MembersTable } from "@/components/members-table";
 import { getMembers } from "@/lib/actions/members";
 import { auth } from "@/lib/auth";

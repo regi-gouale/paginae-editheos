@@ -12,36 +12,84 @@ export async function getProjectStats() {
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0); // Start of today
 
-    const [todoCount, inProgressCount, blockedCount, dueTodayCount] =
-      await Promise.all([
-        // À relire (projets TODO)
-        prisma.project.count({
-          where: { status: "TODO" },
-        }),
-        // En cours (projets IN_PROGRESS)
-        prisma.project.count({
-          where: { status: "IN_PROGRESS" },
-        }),
-        // Bloqués (projets BLOCKED)
-        prisma.project.count({
-          where: { status: "BLOCKED" },
-        }),
-        // Échéances aujourd'hui
-        prisma.project.count({
-          where: {
-            dueDate: {
-              gte: startOfToday,
-              lte: today,
-            },
+    const [
+      todoCount,
+      inProgressCount,
+      blockedCount,
+      completedCount,
+      dueTodayCount,
+      membersCount,
+    ] = await Promise.all([
+      // À relire (projets TODO)
+      // prisma.project.count({
+      //   where: { status: "TODO" },
+      // }),
+      prisma.kanbanColumn.findFirst({
+        where: { title: "À faire" },
+        include: {
+          projects: {
+            select: { title: true },
           },
-        }),
-      ]);
-
+        },
+      }),
+      // En cours (projets IN_PROGRESS)
+      // prisma.project.count({
+      //   where: { status: "IN_PROGRESS" },
+      // }),
+      prisma.kanbanColumn.findFirst({
+        where: { title: "En cours" },
+        include: {
+          projects: {
+            select: { title: true },
+          },
+        },
+      }),
+      // Bloqués (projets BLOCKED)
+      // prisma.project.count({
+      //   where: { status: "BLOCKED" },
+      // }),
+      prisma.kanbanColumn.findFirst({
+        where: { title: "Bloqué" },
+        include: {
+          projects: {
+            select: { title: true },
+          },
+        },
+      }),
+      // Projets terminés
+      prisma.kanbanColumn.findFirst({
+        where: { title: "Terminé" },
+        include: {
+          projects: {
+            select: { title: true },
+          },
+        },
+      }),
+      // Échéances aujourd'hui
+      prisma.project.count({
+        where: {
+          dueDate: {
+            gte: startOfToday,
+            lte: today,
+          },
+        },
+      }),
+      // Total des membres
+      prisma.member.count(),
+    ]);
+    console.log("Due today count:", dueTodayCount);
+    console.log("Total members count:", membersCount);
+    console.log("Todo projects:", todoCount?.projects);
+    console.log("In Progress projects:", inProgressCount?.projects);
+    console.log("Blocked projects:", blockedCount?.projects);
+    console.log("Completed projects:", completedCount?.projects);
     return {
-      todo: todoCount,
-      inProgress: inProgressCount,
-      blocked: blockedCount,
-      dueToday: dueTodayCount,
+      todo: todoCount?.projects.length || 0,
+      inProgress: inProgressCount?.projects.length || 0,
+      blocked: blockedCount?.projects.length || 0,
+      completed: completedCount?.projects.length || 0,
+      dueToday: dueTodayCount || 0,
+      totalMembers: membersCount,
     };
   } catch (error) {
     console.error("Error getting project stats:", error);
@@ -49,6 +97,7 @@ export async function getProjectStats() {
       todo: 0,
       inProgress: 0,
       blocked: 0,
+      completed: 0,
       dueToday: 0,
     };
   }
