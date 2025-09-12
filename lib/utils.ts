@@ -62,3 +62,14 @@ export const getColumnNameFromProjectStatus = (
       return "À faire";
   }
 };
+
+export function getPriorityLabel(level: keyof typeof priorityLevels) {
+  return priorityLevels[level];
+}
+
+export const priorityLevels = {
+  LOW: "Basse",
+  MEDIUM: "Moyenne",
+  HIGH: "Haute",
+  URGENT: "Urgente",
+};
