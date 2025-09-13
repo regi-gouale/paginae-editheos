@@ -1,34 +1,20 @@
 "use client";
 
-import { cn, formatDate } from "@/lib/utils";
-import { ProjectStatus } from "@/prisma/generated/prisma";
+import { cn, formatDate, isProjectOverdueForDisplay } from "@/lib/utils";
 import type { ProjectWithDetails } from "@/types/kanban";
 import { BookUser, Calendar, CheckSquare, Printer } from "lucide-react";
 
 interface ProjectCardProps {
   project: ProjectWithDetails;
   onClick: () => void;
-  // onDuplicate: () => void;
 }
 
-export function ProjectCard({
-  project,
-  onClick,
-}: // onDuplicate,
-ProjectCardProps) {
+export function ProjectCard({ project, onClick }: ProjectCardProps) {
   const completedTasks = project.tasks.filter((task) => task.completed).length;
   const totalTasks = project.tasks.length;
 
-  // Determine if project is overdue
-  const isOverdue =
-    project.dueDate &&
-    new Date(project.dueDate) < new Date() &&
-    project.status !== ProjectStatus.TODO;
-
-  // const handleDuplicate = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   e.stopPropagation();
-  //   // onDuplicate();
-  // };
+  // Determine if project is overdue for display (exclude DONE projects)
+  const isOverdue = isProjectOverdueForDisplay(project.dueDate, project.status);
 
   return (
     <div
@@ -57,15 +43,6 @@ ProjectCardProps) {
         <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1 line-clamp-2">
           {project.title}
         </h4>
-        {/* <Button
-          variant="ghost"
-          size="icon"
-          className="size-6 opacity-0 group-hover:opacity-100 transition-opacity"
-          // onClick={handleDuplicate}
-          title="Dupliquer le projet"
-        >
-          <Copy className="size-3" />
-        </Button> */}
       </div>
 
       {project.description && (

@@ -3,17 +3,12 @@
 import { KanbanColumn } from "@/components/kanban-column";
 import { ProjectDetailDialog } from "@/components/projects/detail-dialog";
 import { updateProject } from "@/lib/actions/kanban";
-import { getRules } from "@/lib/rules";
+import { getRules, shouldMoveProject } from "@/lib/rules";
 import {
   getColumnNameFromProjectStatus,
   getProjectStatusFromColumnName,
 } from "@/lib/utils";
-import {
-  ProjectStatus,
-  RuleActionType,
-  RuleConditionOperator,
-  RuleConditionType,
-} from "@/prisma/generated/prisma";
+import { ProjectStatus } from "@/prisma/generated/prisma";
 import { KanbanColumnWithProjects, ProjectWithDetails } from "@/types/kanban";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useEffect, useState } from "react";
@@ -40,7 +35,10 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
   useEffect(() => {
     if (columns.length === 0) return;
 
+    const rules = getRules(columns);
     const enabledRules = rules.filter((rule) => rule.enabled);
+
+    if (enabledRules.length === 0) return;
 
     const projectsToMove: {
       projectId: string;
@@ -48,68 +46,22 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
       targetColumnId: string;
     }[] = [];
 
+    // Parcourir tous les projets de toutes les colonnes
     columns.forEach((column) => {
       column.projects.forEach((project) => {
         enabledRules.forEach((rule) => {
-          const { condition, action } = rule;
-          let conditionMet = false;
-
-          // Check if condition is met
-          if (
-            condition &&
-            condition.type === RuleConditionType.DUE_DATE &&
-            condition.operator === RuleConditionOperator.IS_OVERDUE
-          ) {
-            conditionMet = Boolean(
-              project.dueDate &&
-                new Date(project.dueDate) < new Date() &&
-                project.status !== ProjectStatus.DONE
-            );
-          } else if (
-            condition &&
-            condition.type === RuleConditionType.TASKS_COMPLETED &&
-            condition.operator === RuleConditionOperator.ALL_COMPLETED
-          ) {
-            conditionMet =
-              project.tasks.length > 0 &&
-              project.tasks.every((subtask) => subtask.completed);
-          } else if (
-            condition &&
-            condition.type === RuleConditionType.CUSTOM_FIELD &&
-            condition.field
-          ) {
-            const field = project.customFields.find(
-              (f) => f.name === condition.field
-            );
-            if (field) {
-              if (condition.operator === RuleConditionOperator.EQUALS) {
-                conditionMet = field.value === condition.value;
-              } else if (
-                condition.operator === RuleConditionOperator.NOT_EQUALS
-              ) {
-                conditionMet = field.value !== condition.value;
-              } else if (
-                condition.operator === RuleConditionOperator.CONTAINS
-              ) {
-                conditionMet = field.value.includes(condition.value || "");
-              }
-            }
-          }
-
-          // If condition is met and task is not already in the target column
-          if (
-            conditionMet &&
-            action &&
-            action.type === RuleActionType.MOVE_TO_COLUMN
-          ) {
+          // Utiliser la nouvelle fonction shouldMoveProject pour déterminer si le projet doit être déplacé
+          if (shouldMoveProject(project, rule) && rule.action?.targetColumnId) {
             const targetColumn = columns.find(
-              (col) => col.id === action.targetColumnId
+              (col) => col.id === rule.action!.targetColumnId
             );
-            if (targetColumn && project.status !== targetColumn.title) {
+
+            // Vérifier que le projet n'est pas déjà dans la colonne cible
+            if (targetColumn && column.id !== rule.action.targetColumnId) {
               projectsToMove.push({
                 projectId: project.id,
                 sourceColumnId: column.id,
-                targetColumnId: action.targetColumnId,
+                targetColumnId: rule.action.targetColumnId,
               });
             }
           }
@@ -117,11 +69,12 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
       });
     });
 
+    // Appliquer les déplacements si nécessaire
     if (projectsToMove.length > 0) {
       const newColumns = [...columns];
 
       projectsToMove.forEach(
-        ({ projectId: projectId, sourceColumnId, targetColumnId }) => {
+        ({ projectId, sourceColumnId, targetColumnId }) => {
           const sourceColIndex = newColumns.findIndex(
             (col) => col.id === sourceColumnId
           );
@@ -132,7 +85,7 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
           if (sourceColIndex !== -1 && targetColIndex !== -1) {
             const sourceCol = newColumns[sourceColIndex];
             const projectIndex = sourceCol.projects.findIndex(
-              (t) => t.id === projectId
+              (p) => p.id === projectId
             );
 
             if (projectIndex !== -1) {
@@ -143,20 +96,22 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
                 ) as ProjectStatus,
               };
 
-              // Remove from source
+              // Retirer de la colonne source
               newColumns[sourceColIndex] = {
                 ...sourceCol,
                 projects: sourceCol.projects.filter((p) => p.id !== projectId),
               };
 
-              // Add to target
+              // Ajouter à la colonne cible
               newColumns[targetColIndex] = {
                 ...newColumns[targetColIndex],
                 projects: [...newColumns[targetColIndex].projects, project],
               };
 
-              // Note: We don't update selectedProject here to avoid infinite loop
-              // The selectedProject will be updated when user selects it again
+              // Afficher une notification
+              toast.info("Règle d'automatisation appliquée", {
+                description: `"${project.title}" déplacé automatiquement vers ${newColumns[targetColIndex].title}`,
+              });
             }
           }
         }
@@ -164,9 +119,7 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
 
       setColumns(newColumns);
     }
-  }, [selectedProject]);
-
-  const rules = getRules(columns);
+  }, [columns]);
 
   const handleProjectUpdate = (updatedProject: ProjectWithDetails) => {
     const newColumns = [...columns];

@@ -73,3 +73,15 @@ export const priorityLevels = {
   HIGH: "Haute",
   URGENT: "Urgente",
 };
+
+/**
+ * Vérifie si un projet est en retard pour l'affichage
+ * Les projets terminés ne sont jamais considérés comme en retard pour l'affichage
+ */
+export function isProjectOverdueForDisplay(
+  dueDate: Date | string | null | undefined,
+  status?: ProjectStatus
+): boolean {
+  if (!dueDate || status === ProjectStatus.DONE) return false;
+  return new Date(dueDate) < new Date();
+}

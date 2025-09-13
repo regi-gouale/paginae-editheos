@@ -12,6 +12,7 @@ import { ProjectWithDetails } from "@/types/kanban";
 import { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import { ProjectDescriptionDialog } from "./project-description-dialog";
+import { ProjectTaskDialog } from "./project-task-dialog";
 
 interface ProjectDetailDialogProps {
   project: ProjectWithDetails | null;
@@ -113,7 +114,12 @@ export function ProjectDetailDialog({
 
           <Separator />
 
-          <div className="space-y-4"></div>
+          <div className="space-y-4">
+            <ProjectTaskDialog
+              projectId={editedProject.id}
+              tasks={editedProject.tasks}
+            />
+          </div>
         </div>
       </DialogContent>
     </Dialog>
