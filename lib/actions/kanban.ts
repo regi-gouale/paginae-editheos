@@ -21,10 +21,6 @@ export async function getProjectStats() {
       dueTodayCount,
       membersCount,
     ] = await Promise.all([
-      // À relire (projets TODO)
-      // prisma.project.count({
-      //   where: { status: "TODO" },
-      // }),
       prisma.kanbanColumn.findFirst({
         where: { title: "À faire" },
         include: {
@@ -33,10 +29,6 @@ export async function getProjectStats() {
           },
         },
       }),
-      // En cours (projets IN_PROGRESS)
-      // prisma.project.count({
-      //   where: { status: "IN_PROGRESS" },
-      // }),
       prisma.kanbanColumn.findFirst({
         where: { title: "En cours" },
         include: {
@@ -45,10 +37,7 @@ export async function getProjectStats() {
           },
         },
       }),
-      // Bloqués (projets BLOCKED)
-      // prisma.project.count({
-      //   where: { status: "BLOCKED" },
-      // }),
+
       prisma.kanbanColumn.findFirst({
         where: { title: "Bloqué" },
         include: {
