@@ -2,13 +2,12 @@
 
 import { KanbanColumn } from "@/components/kanban-column";
 import { ProjectDetailDialog } from "@/components/projects/detail-dialog";
-import { updateProject } from "@/lib/actions/kanban";
+import { applyAutomationRules, updateProject } from "@/lib/actions/kanban";
 import { getRules, shouldMoveProject } from "@/lib/rules";
 import {
   getColumnNameFromProjectStatus,
   getProjectStatusFromColumnName,
 } from "@/lib/utils";
-import { ProjectStatus } from "@/prisma/generated/prisma";
 import { KanbanColumnWithProjects, ProjectWithDetails } from "@/types/kanban";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useEffect, useState } from "react";
@@ -117,53 +116,34 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
 
     // Appliquer les déplacements si nécessaire
     if (projectsToMove.length > 0) {
-      const newColumns = [...columns];
-
-      projectsToMove.forEach(
-        ({ projectId, sourceColumnId, targetColumnId }) => {
-          const sourceColIndex = newColumns.findIndex(
-            (col) => col.id === sourceColumnId
-          );
-          const targetColIndex = newColumns.findIndex(
-            (col) => col.id === targetColumnId
-          );
-
-          if (sourceColIndex !== -1 && targetColIndex !== -1) {
-            const sourceCol = newColumns[sourceColIndex];
-            const projectIndex = sourceCol.projects.findIndex(
-              (p) => p.id === projectId
-            );
-
-            if (projectIndex !== -1) {
-              const project = {
-                ...sourceCol.projects[projectIndex],
-                status: getProjectStatusFromColumnName(
-                  newColumns[targetColIndex].title
-                ) as ProjectStatus,
-              };
-
-              // Retirer de la colonne source
-              newColumns[sourceColIndex] = {
-                ...sourceCol,
-                projects: sourceCol.projects.filter((p) => p.id !== projectId),
-              };
-
-              // Ajouter à la colonne cible
-              newColumns[targetColIndex] = {
-                ...newColumns[targetColIndex],
-                projects: [...newColumns[targetColIndex].projects, project],
-              };
-
-              // Afficher une notification
-              toast.info("Règle d'automatisation appliquée", {
-                description: `"${project.title}" déplacé automatiquement vers ${newColumns[targetColIndex].title}`,
-              });
-            }
-          }
-        }
+      // Préparer les données pour l'action d'automatisation
+      const automationData = projectsToMove.map(
+        ({ projectId, targetColumnId }) => ({
+          projectId,
+          targetColumnId,
+        })
       );
 
-      setColumns(newColumns);
+      // Appliquer les règles d'automatisation en base de données
+      applyAutomationRules(automationData)
+        .then((results) => {
+          results.forEach((result) => {
+            if (result.success) {
+              toast.info("Règle d'automatisation appliquée", {
+                description: `"${result.project?.title}" déplacé automatiquement vers ${result.targetColumnTitle}`,
+              });
+            } else {
+              toast.error("Erreur lors de l'application de la règle", {
+                description: `Impossible de déplacer le projet : ${result.error}`,
+              });
+            }
+          });
+        })
+        .catch((error) => {
+          toast.error("Erreur lors de l'application des règles", {
+            description: `Erreur générale : ${error.message}`,
+          });
+        });
     }
   }, [columns]);
 

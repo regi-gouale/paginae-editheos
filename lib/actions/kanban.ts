@@ -557,3 +557,66 @@ export async function getMembers() {
     throw new Error("Failed to fetch members");
   }
 }
+
+// Apply automation rules to move projects based on conditions
+export async function applyAutomationRules(
+  projectsToMove: {
+    projectId: string;
+    targetColumnId: string;
+  }[]
+) {
+  try {
+    const results = await Promise.all(
+      projectsToMove.map(async ({ projectId, targetColumnId }) => {
+        try {
+          // Trouver la colonne de destination pour dériver le statut
+          const targetColumn = await prisma.kanbanColumn.findUnique({
+            where: { id: targetColumnId },
+          });
+
+          if (!targetColumn) {
+            throw new Error(
+              `Colonne de destination non trouvée : ${targetColumnId}`
+            );
+          }
+
+          const newStatus = getProjectStatusFromColumnName(targetColumn.title);
+
+          const project = await prisma.project.update({
+            where: { id: projectId },
+            data: {
+              columnId: targetColumnId,
+              status: newStatus,
+            },
+            include: {
+              authors: true,
+              members: true,
+              tasks: true,
+              customFields: true,
+              kanbanColumn: true,
+            },
+          });
+
+          return {
+            success: true,
+            project,
+            targetColumnTitle: targetColumn.title,
+          };
+        } catch (error) {
+          console.error(`Error moving project ${projectId}:`, error);
+          return {
+            success: false,
+            projectId,
+            error: error instanceof Error ? error.message : "Erreur inconnue",
+          };
+        }
+      })
+    );
+
+    revalidatePath("/dashboard/projects");
+    return results;
+  } catch (error) {
+    console.error("Error applying automation rules:", error);
+    throw new Error("Failed to apply automation rules");
+  }
+}
