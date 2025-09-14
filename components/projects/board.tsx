@@ -35,7 +35,7 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
     if (columns.length === 0) return;
 
     let hasInconsistencies = false;
-    const fixPromises: Promise<any>[] = [];
+    const fixPromises: Promise<unknown>[] = [];
 
     columns.forEach((column) => {
       column.projects.forEach((project) => {
@@ -243,7 +243,7 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
         status: newStatus,
         columnId: destColumn.id,
       });
-    } catch (error) {
+    } catch {
       toast.error("Erreur lors du déplacement", {
         description: `Impossible de mettre à jour le projet en base : ${project.title}`,
       });
