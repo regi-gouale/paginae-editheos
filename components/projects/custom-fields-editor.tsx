@@ -136,7 +136,6 @@ export function ProjectCustomFieldsEditor({
               value={newFieldValue}
               onChange={(e) => setNewFieldValue(e.target.value)}
               placeholder="Nouvelle valeur"
-              autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   onAddField();
