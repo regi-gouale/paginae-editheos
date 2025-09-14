@@ -55,7 +55,8 @@ export type RuleConditionOperator =
   | "IS_EMPTY"
   | "IS_NOT_EMPTY"
   | "IS_OVERDUE"
-  | "ALL_COMPLETED";
+  | "ALL_COMPLETED"
+  | "ANY_COMPLETED";
 
 export type RuleActionType = "MOVE_TO_COLUMN";
 

@@ -15,15 +15,29 @@ export const getRules = (columns: KanbanColumnWithProjects[]): KanbanRule[] => {
   // Trouver les colonnes par titre pour plus de robustesse
   const blockedColumn = columns.find((col) => col.title === "Bloqué");
   const doneColumn = columns.find((col) => col.title === "Terminé");
+  const inProgressColumn = columns.find((col) => col.title === "En cours");
 
-  if (!blockedColumn || !doneColumn) {
+  if (!blockedColumn || !doneColumn || !inProgressColumn) {
     console.warn(
-      "Colonnes 'Bloqué' ou 'Terminé' introuvables pour les règles d'automatisation"
+      "Colonnes 'Bloqué', 'Terminé' ou 'En cours' introuvables pour les règles d'automatisation"
     );
     return [];
   }
 
   return [
+    {
+      id: `rule-task-completed-move-to-progress-${generateRandomId()}`,
+      name: "Déplacer vers En cours quand une tâche est complétée (depuis À faire)",
+      enabled: true,
+      condition: {
+        type: RuleConditionType.TASKS_COMPLETED,
+        operator: "ANY_COMPLETED",
+      },
+      action: {
+        type: RuleActionType.MOVE_TO_COLUMN,
+        targetColumnId: inProgressColumn.id,
+      },
+    },
     {
       id: `rule-tasks-completed-${generateRandomId()}`,
       name: "Déplacer vers Terminé quand toutes les tâches sont complétées",
@@ -66,6 +80,15 @@ export const shouldMoveProject = (
 
   switch (condition.type) {
     case RuleConditionType.TASKS_COMPLETED:
+      if (condition.operator === "ANY_COMPLETED") {
+        // Vérifie si le projet a des tâches ET si au moins une est complétée
+        // ET si le projet est actuellement en statut TODO
+        return (
+          project.tasks.length > 0 &&
+          project.tasks.some((task) => task.completed) &&
+          project.status === ProjectStatus.TODO
+        );
+      }
       if (condition.operator === RuleConditionOperator.ALL_COMPLETED) {
         // Vérifie si le projet a des tâches ET si toutes sont complétées
         return (

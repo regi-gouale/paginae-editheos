@@ -119,6 +119,7 @@ enum RuleConditionOperator {
   IS_NOT_EMPTY
   IS_OVERDUE
   ALL_COMPLETED
+  ANY_COMPLETED
 }
 
 enum RuleActionType {
