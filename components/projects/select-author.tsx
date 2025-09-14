@@ -14,19 +14,19 @@ import { Author } from "@/prisma/generated/prisma";
 import { User } from "lucide-react";
 import { useEffect, useState } from "react";
 
-interface SelectProjectAuthorProps {
+interface AuthorSelectionDropdownProps {
   projectId: string;
   selectedAuthors?: Author[];
   onAuthorChange?: (author: Author) => void;
   autoLoad?: boolean;
 }
 
-export function SelectProjectAuthor({
+export function AuthorSelectionDropdown({
   projectId,
   selectedAuthors = [],
   onAuthorChange,
   autoLoad = true,
-}: SelectProjectAuthorProps) {
+}: AuthorSelectionDropdownProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [authors, setAuthors] = useState<Author[]>([]);
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(

@@ -12,17 +12,17 @@ import { updateProject } from "@/lib/actions/kanban";
 import { ProjectStatus } from "@/prisma/generated/prisma";
 import { useEffect, useState } from "react";
 
-interface SelectProjectStatusProps {
+interface ProjectStatusDropdownProps {
   projectId: string;
   status: ProjectStatus;
   onStatusUpdated?: (newStatus: ProjectStatus) => void;
 }
 
-export function SelectProjectStatus({
+export function ProjectStatusDropdown({
   projectId,
   status,
   onStatusUpdated,
-}: SelectProjectStatusProps) {
+}: ProjectStatusDropdownProps) {
   const [selectedStatus, setSelectedStatus] = useState<ProjectStatus>(status);
 
   useEffect(() => {

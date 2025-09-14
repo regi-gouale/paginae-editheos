@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   createProjectTask,
@@ -9,8 +11,6 @@ import {
 import { ProjectTask } from "@/prisma/generated/prisma";
 import { CheckSquare, Plus, Square, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 
 interface ProjectTaskDialogProps {
   projectId: string;
@@ -48,9 +48,7 @@ export function ProjectTaskDialog({
 
     // Mise à jour optimiste de l'état local d'abord
     setEditedTasks((prev) =>
-      prev.map((t) =>
-        t.id === taskId ? { ...t, completed: !t.completed } : t
-      )
+      prev.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t))
     );
 
     try {
@@ -88,7 +86,9 @@ export function ProjectTaskDialog({
         <Label className="text-base font-semibold">
           Tâches{" "}
           {editedTasks.length > 0
-            ? `${editedTasks.filter((t) => t.completed).length}/${editedTasks.length}`
+            ? `${editedTasks.filter((t) => t.completed).length}/${
+                editedTasks.length
+              }`
             : ""}
         </Label>
         <Button variant="outline" size="sm" onClick={() => setIsAdding(true)}>
@@ -114,10 +114,7 @@ export function ProjectTaskDialog({
               }
             }}
           />
-          <Button
-            size="sm"
-            onClick={onAddTask}
-          >
+          <Button size="sm" onClick={onAddTask}>
             Ajouter
           </Button>
           <Button

@@ -1,6 +1,6 @@
 "use client";
 
-import { SelectProjectAuthor } from "@/components/projects/select-project-author";
+import { AuthorSelectionDropdown } from "@/components/projects/select-author";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -328,7 +328,7 @@ ProjectDetailDialogProps) {
             </div>
 
             {/* Auteur */}
-            <SelectProjectAuthor
+            <AuthorSelectionDropdown
               projectId={editedProject.id}
               selectedAuthors={editedProject.authors}
               onAuthorChange={handleAuthorChange}

@@ -13,17 +13,17 @@ import { formatDate } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { Calendar } from "lucide-react";
 
-interface PopoverDueDateProps {
+interface DeadlineSelectorPopoverProps {
   projectId: string;
   dueDate?: Date | null;
   onDueDateChange?: (date: Date | null) => void;
 }
 
-export function PopoverDueDate({
+export function DeadlineSelectorPopover({
   projectId,
   dueDate,
   onDueDateChange,
-}: PopoverDueDateProps) {
+}: DeadlineSelectorPopoverProps) {
   // Conversion du type pour compatibilité avec CalendarComponent
   const handleSelect = async (date: Date | undefined) => {
     if (onDueDateChange && date) {

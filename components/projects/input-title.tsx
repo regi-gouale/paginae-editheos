@@ -7,15 +7,15 @@ import { updateProject } from "@/lib/actions/kanban";
 import { Edit } from "lucide-react";
 import { useEffect, useState } from "react";
 
-interface InputProjectTitleProps {
+interface ProjectTitleEditorProps {
   projectId: string;
   title: string;
 }
 
-export default function InputProjectTitle({
+export default function ProjectTitleEditor({
   title,
   projectId,
-}: InputProjectTitleProps) {
+}: ProjectTitleEditorProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState<string>("");
 
