@@ -12,7 +12,8 @@ import { ProjectWithDetails } from "@/types/kanban";
 import { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import { ProjectDescriptionDialog } from "./description-dialog";
-import { ProjectTaskDialog } from "./task-dialog";
+import { ProjectTasksEditor } from "./tasks-editor";
+import { ProjectCustomFieldsEditor } from "./custom-fields-editor";
 
 interface ProjectDetailDialogProps {
   project: ProjectWithDetails | null;
@@ -115,9 +116,17 @@ export function ProjectDetailDialog({
           <Separator />
 
           <div className="space-y-4">
-            <ProjectTaskDialog
+            <ProjectTasksEditor
               projectId={editedProject.id}
               tasks={editedProject.tasks}
+            />
+          </div>
+
+          <Separator />
+          <div className="space-y-4">
+            <ProjectCustomFieldsEditor
+              projectId={editedProject.id}
+              customFields={editedProject.customFields}
             />
           </div>
         </div>

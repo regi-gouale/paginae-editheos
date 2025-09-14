@@ -12,15 +12,15 @@ import { ProjectTask } from "@/prisma/generated/prisma";
 import { CheckSquare, Plus, Square, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-interface ProjectTaskDialogProps {
+interface ProjectTasksEditorProps {
   projectId: string;
   tasks?: ProjectTask[];
 }
 
-export function ProjectTaskDialog({
+export function ProjectTasksEditor({
   projectId,
   tasks,
-}: ProjectTaskDialogProps) {
+}: ProjectTasksEditorProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [editedTasks, setEditedTasks] = useState<ProjectTask[]>(tasks || []);

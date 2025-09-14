@@ -11,7 +11,8 @@
     "fix-project-status": "tsx scripts/fix-project-status-inconsistency.ts",
     "create-test-project": "tsx scripts/create-test-project.ts",
     "create-overdue-project": "tsx scripts/create-overdue-project.ts",
-    "cleanup-test-projects": "tsx scripts/cleanup-test-projects.ts"
+    "cleanup-test-projects": "tsx scripts/cleanup-test-projects.ts",
+    "create-project-with-custom-fields": "tsx scripts/create-project-with-custom-fields.ts"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
