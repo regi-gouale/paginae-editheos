@@ -1,6 +1,10 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import {
+  getColumnNameFromProjectStatus,
+  getProjectStatusFromColumnName,
+} from "@/lib/utils";
 import type { ProjectStatus } from "@/prisma/generated/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -12,36 +16,67 @@ export async function getProjectStats() {
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0); // Start of today
 
-    const [todoCount, inProgressCount, blockedCount, dueTodayCount] =
-      await Promise.all([
-        // À relire (projets TODO)
-        prisma.project.count({
-          where: { status: "TODO" },
-        }),
-        // En cours (projets IN_PROGRESS)
-        prisma.project.count({
-          where: { status: "IN_PROGRESS" },
-        }),
-        // Bloqués (projets BLOCKED)
-        prisma.project.count({
-          where: { status: "BLOCKED" },
-        }),
-        // Échéances aujourd'hui
-        prisma.project.count({
-          where: {
-            dueDate: {
-              gte: startOfToday,
-              lte: today,
-            },
+    const [
+      todoCount,
+      inProgressCount,
+      blockedCount,
+      completedCount,
+      dueTodayCount,
+      membersCount,
+    ] = await Promise.all([
+      prisma.kanbanColumn.findFirst({
+        where: { title: "À faire" },
+        include: {
+          projects: {
+            select: { title: true },
           },
-        }),
-      ]);
+        },
+      }),
+      prisma.kanbanColumn.findFirst({
+        where: { title: "En cours" },
+        include: {
+          projects: {
+            select: { title: true },
+          },
+        },
+      }),
 
+      prisma.kanbanColumn.findFirst({
+        where: { title: "Bloqué" },
+        include: {
+          projects: {
+            select: { title: true },
+          },
+        },
+      }),
+      // Projets terminés
+      prisma.kanbanColumn.findFirst({
+        where: { title: "Terminé" },
+        include: {
+          projects: {
+            select: { title: true },
+          },
+        },
+      }),
+      // Échéances aujourd'hui
+      prisma.project.count({
+        where: {
+          dueDate: {
+            gte: startOfToday,
+            lte: today,
+          },
+        },
+      }),
+      // Total des membres
+      prisma.member.count(),
+    ]);
     return {
-      todo: todoCount,
-      inProgress: inProgressCount,
-      blocked: blockedCount,
-      dueToday: dueTodayCount,
+      todo: todoCount?.projects.length || 0,
+      inProgress: inProgressCount?.projects.length || 0,
+      blocked: blockedCount?.projects.length || 0,
+      completed: completedCount?.projects.length || 0,
+      dueToday: dueTodayCount || 0,
+      totalMembers: membersCount,
     };
   } catch (error) {
     console.error("Error getting project stats:", error);
@@ -49,6 +84,7 @@ export async function getProjectStats() {
       todo: 0,
       inProgress: 0,
       blocked: 0,
+      completed: 0,
       dueToday: 0,
     };
   }
@@ -366,10 +402,22 @@ export async function updateProject(
   try {
     const { authorIds, ...updateData } = data;
 
+    // Si le statut est modifié, trouver automatiquement la colonne correspondante
+    let finalUpdateData = { ...updateData };
+    if (updateData.status && !updateData.columnId) {
+      const columnTitle = getColumnNameFromProjectStatus(updateData.status);
+      const targetColumn = await prisma.kanbanColumn.findFirst({
+        where: { title: columnTitle },
+      });
+      if (targetColumn) {
+        finalUpdateData = { ...finalUpdateData, columnId: targetColumn.id };
+      }
+    }
+
     const project = await prisma.project.update({
       where: { id },
       data: {
-        ...updateData,
+        ...finalUpdateData,
         ...(authorIds && {
           authors: {
             set: authorIds.map((authorId) => ({ id: authorId })),
@@ -396,9 +444,25 @@ export async function updateProject(
 // Move project to different column
 export async function moveProject(projectId: string, columnId: string | null) {
   try {
+    // Trouver la colonne de destination pour dériver le statut
+    let newStatus: ProjectStatus | undefined;
+
+    if (columnId) {
+      const targetColumn = await prisma.kanbanColumn.findUnique({
+        where: { id: columnId },
+      });
+
+      if (targetColumn) {
+        newStatus = getProjectStatusFromColumnName(targetColumn.title);
+      }
+    }
+
     const project = await prisma.project.update({
       where: { id: projectId },
-      data: { columnId },
+      data: {
+        columnId,
+        ...(newStatus && { status: newStatus }),
+      },
       include: {
         authors: true,
         members: true,
@@ -491,5 +555,68 @@ export async function getMembers() {
   } catch (error) {
     console.error("Error fetching members:", error);
     throw new Error("Failed to fetch members");
+  }
+}
+
+// Apply automation rules to move projects based on conditions
+export async function applyAutomationRules(
+  projectsToMove: {
+    projectId: string;
+    targetColumnId: string;
+  }[]
+) {
+  try {
+    const results = await Promise.all(
+      projectsToMove.map(async ({ projectId, targetColumnId }) => {
+        try {
+          // Trouver la colonne de destination pour dériver le statut
+          const targetColumn = await prisma.kanbanColumn.findUnique({
+            where: { id: targetColumnId },
+          });
+
+          if (!targetColumn) {
+            throw new Error(
+              `Colonne de destination non trouvée : ${targetColumnId}`
+            );
+          }
+
+          const newStatus = getProjectStatusFromColumnName(targetColumn.title);
+
+          const project = await prisma.project.update({
+            where: { id: projectId },
+            data: {
+              columnId: targetColumnId,
+              status: newStatus,
+            },
+            include: {
+              authors: true,
+              members: true,
+              tasks: true,
+              customFields: true,
+              kanbanColumn: true,
+            },
+          });
+
+          return {
+            success: true,
+            project,
+            targetColumnTitle: targetColumn.title,
+          };
+        } catch (error) {
+          console.error(`Error moving project ${projectId}:`, error);
+          return {
+            success: false,
+            projectId,
+            error: error instanceof Error ? error.message : "Erreur inconnue",
+          };
+        }
+      })
+    );
+
+    revalidatePath("/dashboard/projects");
+    return results;
+  } catch (error) {
+    console.error("Error applying automation rules:", error);
+    throw new Error("Failed to apply automation rules");
   }
 }

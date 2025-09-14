@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Lato, Merriweather } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
 
 const lato = Lato({
@@ -30,8 +31,8 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={`${lato.variable} ${meriweather.variable} antialiased`}>
-        {children}
-        <Toaster />
+        <NuqsAdapter>{children}</NuqsAdapter>
+        <Toaster richColors />
         <SpeedInsights />
         <Analytics />
       </body>

@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import { useState, useTransition } from "react";
 
-export default function AddProjectDialog({
+export function AddProjectDialog({
   onProjectAdded,
   isInColumn = false,
 }: {

@@ -1,5 +1,5 @@
-import { DashboardHeader } from "@/components/dashboard-header";
-import DashboardStats from "@/components/dashboard-stats";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import DashboardStats from "@/components/dashboard/dashboard-stats";
 import ProgressChart from "@/components/progress-chart";
 import RecentActivity from "@/components/recent-activity";
 import RecentProjects from "@/components/recent-projects";

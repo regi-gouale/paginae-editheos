@@ -1,6 +1,6 @@
-import AddProjectDialog from "@/components/add-project-dialog";
-import { DashboardHeader } from "@/components/dashboard-header";
-import { KanbanBoard } from "@/components/kanban-board";
+import { AddProjectDialog } from "@/components/add-project-dialog";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { ProjectsBoard } from "@/components/projects/board";
 import { getKanbanData } from "@/lib/actions/kanban";
 import { auth } from "@/lib/auth";
 import { KanbanColumnWithProjects } from "@/types/kanban";
@@ -68,7 +68,8 @@ export default async function ProjectPage() {
             du tableau Kanban.
           </p>
         </div>
-        <KanbanBoard initialColumns={columns} />
+        <ProjectsBoard initialColumns={columns} />
+        {/* <KanbanBoard initialColumns={columns} /> */}
       </main>
     </div>
   );

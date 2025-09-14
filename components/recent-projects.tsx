@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getRecentProjects } from "@/lib/actions/kanban";
-import type {
+import { isProjectOverdueForDisplay } from "@/lib/utils";
+import {
   Priority,
   ProjectStatus,
   ProjectType,
@@ -85,9 +86,8 @@ export default function RecentProjects() {
     }).format(date);
   };
 
-  const isOverdue = (dueDate?: Date) => {
-    if (!dueDate) return false;
-    return new Date() > dueDate;
+  const isOverdue = (dueDate?: Date, status?: ProjectStatus) => {
+    return isProjectOverdueForDisplay(dueDate, status);
   };
 
   if (loading) {
@@ -131,9 +131,10 @@ export default function RecentProjects() {
               <div className="flex-1 space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium leading-none">{project.title}</h4>
-                  {project.dueDate && isOverdue(project.dueDate) && (
-                    <AlertCircle className="h-4 w-4 text-red-500" />
-                  )}
+                  {project.dueDate &&
+                    isOverdue(project.dueDate, project.status) && (
+                      <AlertCircle className="h-4 w-4 text-red-500" />
+                    )}
                 </div>
 
                 <div className="flex items-center space-x-2">
@@ -169,7 +170,7 @@ export default function RecentProjects() {
                       <Calendar className="h-4 w-4" />
                       <span
                         className={
-                          isOverdue(project.dueDate)
+                          isOverdue(project.dueDate, project.status)
                             ? "text-red-600 font-medium"
                             : ""
                         }

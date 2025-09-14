@@ -1,3 +1,4 @@
+import { ProjectStatus } from "@/prisma/generated/prisma";
 import { clsx, type ClassValue } from "clsx";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -22,4 +23,65 @@ export function generateRandomId(length: number = 8): string {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
+}
+
+export const getProjectStatusFromColumnName = (
+  columnTitle: string
+): ProjectStatus => {
+  switch (columnTitle) {
+    case "À faire":
+      return ProjectStatus.TODO;
+    case "En cours":
+      return ProjectStatus.IN_PROGRESS;
+    case "Bloqué":
+      return ProjectStatus.BLOCKED;
+    case "Terminé":
+      return ProjectStatus.DONE;
+    case "Rejeté":
+      return ProjectStatus.REJECTED;
+    default:
+      return ProjectStatus.TODO;
+  }
+};
+
+export const getColumnNameFromProjectStatus = (
+  status: ProjectStatus
+): string => {
+  switch (status) {
+    case ProjectStatus.TODO:
+      return "À faire";
+    case ProjectStatus.IN_PROGRESS:
+      return "En cours";
+    case ProjectStatus.BLOCKED:
+      return "Bloqué";
+    case ProjectStatus.DONE:
+      return "Terminé";
+    case ProjectStatus.REJECTED:
+      return "Rejeté";
+    default:
+      return "À faire";
+  }
+};
+
+export function getPriorityLabel(level: keyof typeof priorityLevels) {
+  return priorityLevels[level];
+}
+
+export const priorityLevels = {
+  LOW: "Basse",
+  MEDIUM: "Moyenne",
+  HIGH: "Haute",
+  URGENT: "Urgente",
+};
+
+/**
+ * Vérifie si un projet est en retard pour l'affichage
+ * Les projets terminés ne sont jamais considérés comme en retard pour l'affichage
+ */
+export function isProjectOverdueForDisplay(
+  dueDate: Date | string | null | undefined,
+  status?: ProjectStatus
+): boolean {
+  if (!dueDate || status === ProjectStatus.DONE) return false;
+  return new Date(dueDate) < new Date();
 }

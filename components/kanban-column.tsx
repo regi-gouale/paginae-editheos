@@ -1,6 +1,6 @@
 "use client";
 
-import AddProjectDialog from "@/components/add-project-dialog";
+import { AddProjectDialog } from "@/components/add-project-dialog";
 import { ProjectCard } from "@/components/project-card";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,7 +42,7 @@ interface KanbanColumnProps {
     columnId: string,
     data: Partial<KanbanColumnWithProjects>
   ) => void;
-  onDuplicateProject: (project: ProjectWithDetails, columnId: string) => void;
+  // onDuplicateProject: (project: ProjectWithDetails, columnId: string) => void;
 }
 
 export function KanbanColumn({
@@ -51,8 +51,8 @@ export function KanbanColumn({
   onProjectClick,
   onDeleteColumn,
   onUpdateColumn,
-  onDuplicateProject,
-}: KanbanColumnProps) {
+}: // onDuplicateProject,
+KanbanColumnProps) {
   // const [isAddingProject, setIsAddingProject] = useState(false);
   // const [newProjectTitle, setNewProjectTitle] = useState("");
   // const [newProjectDescription, setNewProjectDescription] = useState("");
@@ -174,7 +174,7 @@ export function KanbanColumn({
                     <ProjectCard
                       project={project}
                       onClick={() => onProjectClick(project)}
-                      onDuplicate={() => onDuplicateProject(project, column.id)}
+                      // onDuplicate={() => onDuplicateProject(project, column.id)}
                     />
                   </div>
                 )}
