@@ -43,20 +43,54 @@ export function ProjectTaskDialog({
   };
 
   const onToggleTask = async (taskId: string) => {
-    const task = tasks?.find((t) => t.id === taskId);
+    const task = editedTasks.find((t) => t.id === taskId);
     if (!task) return;
 
-    await updateProjectTask(taskId, { completed: !task.completed });
+    // Mise à jour optimiste de l'état local d'abord
+    setEditedTasks((prev) =>
+      prev.map((t) =>
+        t.id === taskId ? { ...t, completed: !t.completed } : t
+      )
+    );
+
+    try {
+      // Puis mise à jour en base de données
+      await updateProjectTask(taskId, { completed: !task.completed });
+    } catch (error) {
+      // En cas d'erreur, revenir à l'état précédent
+      setEditedTasks((prev) =>
+        prev.map((t) =>
+          t.id === taskId ? { ...t, completed: task.completed } : t
+        )
+      );
+      console.error("Erreur lors de la mise à jour de la tâche:", error);
+    }
   };
 
   const onDeleteTask = async (taskId: string) => {
-    await deleteProjectTask(taskId);
+    // Mise à jour optimiste de l'état local d'abord
+    const originalTasks = editedTasks;
+    setEditedTasks((prev) => prev.filter((t) => t.id !== taskId));
+
+    try {
+      // Puis suppression en base de données
+      await deleteProjectTask(taskId);
+    } catch (error) {
+      // En cas d'erreur, restaurer l'état précédent
+      setEditedTasks(originalTasks);
+      console.error("Erreur lors de la suppression de la tâche:", error);
+    }
   };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <Label className="text-base font-semibold">Tâches 3/8</Label>
+        <Label className="text-base font-semibold">
+          Tâches{" "}
+          {editedTasks.length > 0
+            ? `${editedTasks.filter((t) => t.completed).length}/${editedTasks.length}`
+            : ""}
+        </Label>
         <Button variant="outline" size="sm" onClick={() => setIsAdding(true)}>
           <Plus className="size-4 mr-1" />
           Ajouter
@@ -82,11 +116,7 @@ export function ProjectTaskDialog({
           />
           <Button
             size="sm"
-            onClick={() => {
-              // Handle save action here
-              setIsAdding(false);
-              setNewTaskTitle("");
-            }}
+            onClick={onAddTask}
           >
             Ajouter
           </Button>
