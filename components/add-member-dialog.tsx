@@ -55,9 +55,9 @@ export const AddMemberDialog: React.FC<AddMemberDialogProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="font-semibold">
-          <Plus className="h-4 w-4" />
-          Membre
+        <Button className="font-semibold rounded-full md:rounded-xl">
+          <Plus className="size-4" />
+          <span className="hidden md:block md:ml-1">Membre</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
