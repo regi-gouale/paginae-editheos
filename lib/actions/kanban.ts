@@ -1,7 +1,10 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getColumnNameFromProjectStatus } from "@/lib/utils";
+import {
+  getColumnNameFromProjectStatus,
+  getProjectStatusFromColumnName,
+} from "@/lib/utils";
 import type { ProjectStatus } from "@/prisma/generated/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -441,9 +444,25 @@ export async function updateProject(
 // Move project to different column
 export async function moveProject(projectId: string, columnId: string | null) {
   try {
+    // Trouver la colonne de destination pour dériver le statut
+    let newStatus: ProjectStatus | undefined;
+
+    if (columnId) {
+      const targetColumn = await prisma.kanbanColumn.findUnique({
+        where: { id: columnId },
+      });
+
+      if (targetColumn) {
+        newStatus = getProjectStatusFromColumnName(targetColumn.title);
+      }
+    }
+
     const project = await prisma.project.update({
       where: { id: projectId },
-      data: { columnId },
+      data: {
+        columnId,
+        ...(newStatus && { status: newStatus }),
+      },
       include: {
         authors: true,
         members: true,

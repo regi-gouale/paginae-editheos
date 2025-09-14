@@ -35,42 +35,47 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
   useEffect(() => {
     if (columns.length === 0) return;
 
+    let hasInconsistencies = false;
+    const fixPromises: Promise<any>[] = [];
+
     columns.forEach((column) => {
       column.projects.forEach((project) => {
-        if (project.status !== getProjectStatusFromColumnName(column.title)) {
-          toast.warning("Incohérence détectée", {
-            description: `Le projet "${project.title}" a un statut "${project.status}" qui ne correspond pas à la colonne "${column.title}".`,
-          });
-          updateProject(project.id, {
-            status: getProjectStatusFromColumnName(column.title),
-          }).catch((error) => {
-            toast.error("Erreur lors de la correction", {
-              description: `Impossible de corriger le statut du projet "${project.title}" : ${error.message}`,
+        const expectedStatus = getProjectStatusFromColumnName(column.title);
+        if (project.status !== expectedStatus) {
+          hasInconsistencies = true;
+
+          // Créer une promesse de correction pour ce projet
+          const fixPromise = updateProject(project.id, {
+            status: expectedStatus,
+          })
+            .then(() => {
+              toast.success("Incohérence corrigée", {
+                description: `Le statut du projet "${project.title}" a été synchronisé avec la colonne "${column.title}".`,
+              });
+            })
+            .catch((error) => {
+              toast.error("Erreur lors de la correction", {
+                description: `Impossible de corriger le statut du projet "${project.title}" : ${error.message}`,
+              });
             });
-          });
-          // Mettre à jour localement pour éviter les boucles infinies
-          // setColumns((prevColumns) => {
-          //   const newColumns = prevColumns.map((col) => {
-          //     if (col.id === column.id) {
-          //       return {
-          //         ...col,
-          //         projects: col.projects.map((p) =>
-          //           p.id === project.id
-          //             ? {
-          //                 ...p,
-          //                 status: getProjectStatusFromColumnName(column.title),
-          //               }
-          //             : p
-          //         ),
-          //       };
-          //     }
-          //     return col;
-          //   });
-          //   return newColumns;
-          // });
+
+          fixPromises.push(fixPromise);
         }
       });
     });
+
+    // Afficher un message global si des incohérences sont détectées
+    if (hasInconsistencies && fixPromises.length > 0) {
+      toast.warning("Incohérences détectées", {
+        description: `${fixPromises.length} projet(s) avec des statuts incohérents sont en cours de correction...`,
+      });
+
+      // Attendre que toutes les corrections soient terminées
+      Promise.all(fixPromises).then(() => {
+        // Forcer un rafraîchissement de la page pour voir les changements
+        window.location.reload();
+      });
+    }
   }, [columns]);
 
   useEffect(() => {
