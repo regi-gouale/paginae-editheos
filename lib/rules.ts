@@ -82,7 +82,7 @@ export const shouldMoveProject = (
         return Boolean(
           project.dueDate &&
             project.status !== ProjectStatus.DONE &&
-            new Date(project.dueDate) <= new Date()
+            new Date(project.dueDate) < new Date()
         );
       }
       break;
