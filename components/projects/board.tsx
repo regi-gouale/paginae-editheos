@@ -35,6 +35,47 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
   useEffect(() => {
     if (columns.length === 0) return;
 
+    columns.forEach((column) => {
+      column.projects.forEach((project) => {
+        if (project.status !== getProjectStatusFromColumnName(column.title)) {
+          toast.warning("Incohérence détectée", {
+            description: `Le projet "${project.title}" a un statut "${project.status}" qui ne correspond pas à la colonne "${column.title}".`,
+          });
+          updateProject(project.id, {
+            status: getProjectStatusFromColumnName(column.title),
+          }).catch((error) => {
+            toast.error("Erreur lors de la correction", {
+              description: `Impossible de corriger le statut du projet "${project.title}" : ${error.message}`,
+            });
+          });
+          // Mettre à jour localement pour éviter les boucles infinies
+          // setColumns((prevColumns) => {
+          //   const newColumns = prevColumns.map((col) => {
+          //     if (col.id === column.id) {
+          //       return {
+          //         ...col,
+          //         projects: col.projects.map((p) =>
+          //           p.id === project.id
+          //             ? {
+          //                 ...p,
+          //                 status: getProjectStatusFromColumnName(column.title),
+          //               }
+          //             : p
+          //         ),
+          //       };
+          //     }
+          //     return col;
+          //   });
+          //   return newColumns;
+          // });
+        }
+      });
+    });
+  }, [columns]);
+
+  useEffect(() => {
+    if (columns.length === 0) return;
+
     const rules = getRules(columns);
     const enabledRules = rules.filter((rule) => rule.enabled);
 
