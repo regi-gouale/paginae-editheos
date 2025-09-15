@@ -101,7 +101,12 @@ export default function RecentProjects() {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Badge className={statusConfig[project.status].color}>
+                  <Badge
+                    className={
+                      statusConfig[project.status as keyof typeof statusConfig]
+                        .color
+                    }
+                  >
                     {
                       statusConfig[project.status as keyof typeof statusConfig]
                         .label
