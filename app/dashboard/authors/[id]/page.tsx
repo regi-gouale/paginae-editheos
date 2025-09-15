@@ -7,7 +7,13 @@ import { getAuthorById } from "@/lib/actions/authors";
 import { auth } from "@/lib/auth/auth";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { CalendarIcon, GlobeIcon, MailIcon, UserIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  FlagIcon,
+  GlobeIcon,
+  MailIcon,
+  UserIcon,
+} from "lucide-react";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
@@ -52,7 +58,7 @@ export default async function AuthorDetailPage({ params }: Props) {
         {/* En-tête avec avatar et informations principales */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
+            <Avatar className="size-16">
               <AvatarFallback className="text-lg font-semibold">
                 {getInitials(author.firstName, author.lastName)}
               </AvatarFallback>
@@ -78,24 +84,25 @@ export default async function AuthorDetailPage({ params }: Props) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <UserIcon className="h-5 w-5" />
+                <UserIcon className="size-5" />
                 Informations personnelles
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
+              <div className="space-x-2 flex items-center">
                 <div className="flex items-center gap-2">
-                  <MailIcon className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Email</span>
+                  <MailIcon className="size-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Email :</span>
                 </div>
                 <p className="font-medium">{author.email}</p>
               </div>
 
               {author.nationality && (
-                <div className="space-y-2">
+                <div className="space-x-2 flex items-center">
                   <div className="flex items-center gap-2">
+                    <FlagIcon className="size-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
-                      Nationalité
+                      Nationalité :
                     </span>
                   </div>
                   <Badge variant="secondary">{author.nationality}</Badge>
@@ -103,11 +110,11 @@ export default async function AuthorDetailPage({ params }: Props) {
               )}
 
               {author.birthDate && (
-                <div className="space-y-2">
+                <div className="space-x-2 flex items-center">
                   <div className="flex items-center gap-2">
-                    <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+                    <CalendarIcon className="size-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
-                      Date de naissance
+                      Date de naissance :
                     </span>
                   </div>
                   <p className="font-medium">
@@ -121,7 +128,7 @@ export default async function AuthorDetailPage({ params }: Props) {
               {author.website && (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <GlobeIcon className="h-4 w-4 text-muted-foreground" />
+                    <GlobeIcon className="size-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
                       Site web
                     </span>
@@ -159,7 +166,7 @@ export default async function AuthorDetailPage({ params }: Props) {
         </div>
 
         {/* Métadonnées */}
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle>Métadonnées</CardTitle>
           </CardHeader>
@@ -183,7 +190,7 @@ export default async function AuthorDetailPage({ params }: Props) {
               </span>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </main>
     </div>
   );

@@ -54,12 +54,22 @@ async function resolveActionResult<T>(actionPromise: Promise<T>): Promise<T> {
 
 type Props = {
   author: Author;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
-export function EditAuthorDialog({ author }: Props) {
-  const [open, setOpen] = useState(false);
+export function EditAuthorDialog({
+  author,
+  open: externalOpen,
+  onOpenChange,
+}: Props) {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  // Utiliser l'état externe si fourni, sinon l'état interne
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = onOpenChange || setInternalOpen;
 
   const form = useForm<EditAuthorFormData>({
     resolver: zodResolver(editAuthorSchema),
@@ -110,12 +120,18 @@ export function EditAuthorDialog({ author }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <EditIcon className="h-4 w-4 mr-2" />
-          Modifier
-        </Button>
-      </DialogTrigger>
+      {externalOpen === undefined && (
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full md:rounded-xl"
+          >
+            <EditIcon className="size-4" />
+            <span className="hidden md:block md:ml-2">Modifier</span>
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Modifier l&apos;auteur</DialogTitle>

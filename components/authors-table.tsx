@@ -1,5 +1,6 @@
 "use client";
 
+import { EditAuthorDialog } from "@/components/authors/edit-author-dialog";
 import { TablePagination } from "@/components/table-pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -47,8 +54,16 @@ import {
 } from "@/lib/actions/authors";
 import { formatDate } from "@/lib/utils";
 import { fr } from "date-fns/locale";
-import { Filter, Plus, Search, Trash2, User } from "lucide-react";
-import Link from "next/link";
+import {
+  Edit,
+  Filter,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Trash2,
+  User,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -56,13 +71,65 @@ interface AuthorsTableProps {
   initialData: AuthorsResponse;
 }
 
+// Composant pour les actions dropdown
+function AuthorActionsDropdown({
+  author,
+  onEdit,
+  onDelete,
+}: {
+  author: Author;
+  onEdit: (author: Author) => void;
+  onDelete: (id: string) => void;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 w-8 p-0"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <span className="sr-only">Ouvrir le menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit(author);
+          }}
+          className="cursor-pointer"
+        >
+          <Edit className="mr-2 h-4 w-4" />
+          Modifier
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(author.id);
+          }}
+          className="cursor-pointer text-red-600 focus:text-red-600"
+        >
+          <Trash2 className="mr-2 h-4 w-4" />
+          Supprimer
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export function AuthorsTable({ initialData }: AuthorsTableProps) {
   const { showSuccess, showError, confirm } = useAlerts();
+  const router = useRouter();
   const [data, setData] = useState<AuthorsResponse>(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedNationality, setSelectedNationality] = useState("ALL");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
   const [nationalities, setNationalities] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -220,6 +287,15 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         "Une erreur inattendue s'est produite"
       );
     }
+  };
+
+  const handleRowClick = (authorId: string) => {
+    router.push(`/dashboard/authors/${authorId}`);
+  };
+
+  const handleEdit = (author: Author) => {
+    setSelectedAuthor(author);
+    setIsEditDialogOpen(true);
   };
 
   return (
@@ -447,16 +523,15 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
               </TableRow>
             ) : (
               data.authors.map((author: Author) => (
-                <TableRow key={author.id}>
+                <TableRow
+                  key={author.id}
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => handleRowClick(author.id)}
+                >
                   <TableCell className="font-medium">
                     <div>
                       <div>
-                        <Link
-                          href={`/dashboard/authors/${author.id}`}
-                          className="text-primary hover:underline"
-                        >
-                          {author.firstName} {author.lastName}
-                        </Link>
+                        {author.firstName} {author.lastName}
                       </div>
                       {author.website && (
                         <a
@@ -464,6 +539,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:underline text-sm"
+                          onClick={(e) => e.stopPropagation()}
                         >
                           Site web
                         </a>
@@ -486,14 +562,11 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                       : "Non renseignée"}
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDelete(author.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <AuthorActionsDropdown
+                      author={author}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                    />
                   </TableCell>
                 </TableRow>
               ))
@@ -509,6 +582,20 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         hasNextPage={data.hasNextPage}
         onPageChange={handlePageChange}
       />
+
+      {/* Dialog d'édition */}
+      {selectedAuthor && (
+        <EditAuthorDialog
+          author={selectedAuthor}
+          open={isEditDialogOpen}
+          onOpenChange={(open) => {
+            setIsEditDialogOpen(open);
+            if (!open) {
+              setSelectedAuthor(null);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
