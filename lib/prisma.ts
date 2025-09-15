@@ -1,6 +1,5 @@
 import { PrismaClient } from "@/prisma/generated/prisma";
 import { withAccelerate } from "@prisma/extension-accelerate";
-import { withOptimize } from "@prisma/extension-optimize";
 
 // Définir les options du client Prisma pour optimiser les performances
 const prismaClientSingleton = () => {

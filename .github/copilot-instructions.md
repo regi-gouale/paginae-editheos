@@ -2,6 +2,95 @@
 
 Paginae Editheos est une application Next.js full-stack pour la gestion de projets éditoriaux avec un système Kanban intelligent et des règles d'automatisation.
 
+## Critical Development Patterns
+
+### 3. Global Dialog System
+
+```typescript
+import { dialogManager } from "@/features/dialog-manager/dialog-manager";
+
+// For confirmations
+dialogManager.confirm({
+  title: "Delete item",
+  action: { label: "Delete", onClick: async () => await deleteAction() },
+});
+
+// For input collection
+dialogManager.input({
+  title: "Rename item",
+  input: { defaultValue: "current name" },
+  action: { onClick: async (value) => await renameAction(value) },
+});
+```
+
+### 4. Forms with Server Actions
+
+```typescript
+import { useMutation } from "@tanstack/react-query";
+import { resolveActionResult } from "@/lib/actions/actions-utils";
+
+const mutation = useMutation({
+  mutationFn: async (data) => resolveActionResult(updateAction(data)),
+  onSuccess: () => toast.success("Updated!"),
+});
+```
+
+## File Organization & Naming
+
+- **Server Actions**: `*.action.ts` (e.g., `user.action.ts`)
+- **Components**: `src/components/ui/` (shadcn/ui) + `src/components/nowts/` (custom)
+- **Features**: `src/features/[feature]/` for complex functionality
+- **API Routes**: Only in `app/api/` for external integrations, not internal mutations
+
+## Authentication & Authorization
+
+```typescript
+// Server-side
+import { getRequiredUser, getCurrentCache } from "@/lib/auth/*";
+const user = await getRequiredUser(); // Throws if not authenticated
+
+// Client-side
+import { useSession } from "@/lib/auth/auth-client";
+const { data: session } = useSession();
+```
+
+## Database & State Management
+
+- **Database**: Prisma with PostgreSQL
+- **Server State**: TanStack Query for data fetching
+- **URL State**: `nuqs` for search params and filters
+- **Global State**: Zustand (minimal usage, see `dialog-store.ts`)
+
+## TypeScript Conventions
+
+- Use `type` over `interface` (ESLint enforced)
+- No `any` types in strict mode
+- No enums - use const objects/maps instead
+
+## Styling & Components
+
+- **TailwindCSS v4** with mobile-first approach
+- Use `@src/components/ui/typography.tsx` for text elements
+- Prefer `flex flex-col gap-4` over `space-y-4` for spacing
+- Use `@src/components/ui/card.tsx` instead of plain divs
+
+## Development Workflow
+
+**CRITICAL**: Before editing any file, read at least 3 similar files to understand patterns and ensure consistency.
+
+### Commands
+
+- `pnpm dev` - Development with Turbopack
+
+## Key Integration Points
+
+- **Email**: React Email templates in `/emails/`
+- **Database**: Better Auth integration with Prisma
+- **Analytics**: Vercel Analytics in `app/layout.tsx`
+- **External APIs**: Use `@/lib/up-fetch.ts` instead of native `fetch`
+
+Always prioritize type safety, and server-first architecture when suggesting code changes.
+
 ## Architecture Clé
 
 ### Structure Principale

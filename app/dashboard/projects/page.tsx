@@ -2,7 +2,7 @@ import { AddProjectDialog } from "@/components/add-project-dialog";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { ProjectsBoard } from "@/components/projects/board";
 import { getKanbanData } from "@/lib/actions/kanban";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { KanbanColumnWithProjects } from "@/types/kanban";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";

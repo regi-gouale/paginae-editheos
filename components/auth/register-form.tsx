@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { registerFormSchema } from "@/lib/schemas/auth-schema";
 import { cn } from "@/lib/utils";
 import { isEmailWhitelisted } from "@/lib/whitelist";

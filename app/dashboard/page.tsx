@@ -3,7 +3,7 @@ import DashboardStats from "@/components/dashboard/dashboard-stats";
 import ProgressChart from "@/components/progress-chart";
 import RecentActivity from "@/components/recent-activity";
 import RecentProjects from "@/components/recent-projects";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 

@@ -1,11 +1,12 @@
 "use server";
 
-import { z } from "zod";
-import { revalidatePath } from "next/cache";
+import { auth } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@/prisma/generated/prisma";
-import { getCurrentSession } from "@/lib/auth/auth-lib";
+import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
 export type Author = {
   id: string;
@@ -49,7 +50,7 @@ const addAuthorSchema = z.object({
 
 // Server Actions following the pattern from instructions
 export async function addAuthorAction(formData: FormData) {
-  const session = await getCurrentSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/auth");
 
   try {
@@ -82,7 +83,7 @@ export async function addAuthorAction(formData: FormData) {
 }
 
 export async function updateAuthorAction(formData: FormData) {
-  const session = await getCurrentSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/auth");
 
   try {
@@ -117,7 +118,7 @@ export async function updateAuthorAction(formData: FormData) {
 }
 
 export async function deleteAuthorAction(formData: FormData) {
-  const session = await getCurrentSession();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/auth");
 
   try {
@@ -166,26 +167,19 @@ export async function getAuthors(
       where.nationality = nationality;
     }
 
-    // Récupération du nombre total d'éléments
-    const total = await prisma.author.count({
-      where,
-      cacheStrategy: {
-        ttl: 60, // Cache pendant 60 secondes
-      },
-    });
-
-    // Récupération des auteurs avec pagination
-    const authors = await prisma.author.findMany({
-      where,
-      orderBy: {
-        lastName: "asc",
-      },
-      skip,
-      take: limit,
-      cacheStrategy: {
-        ttl: 60, // Cache pendant 60 secondes
-      },
-    });
+    // Exécution des requêtes en parallèle
+    const [authors, total] = await Promise.all([
+      prisma.author.findMany({
+        where,
+        orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+        skip,
+        take: limit,
+        cacheStrategy: {
+          ttl: 60, // Cache pendant 60 secondes
+        },
+      }),
+      prisma.author.count({ where }),
+    ]);
 
     const totalPages = Math.ceil(total / limit);
 
