@@ -51,7 +51,7 @@ export default function ProgressChart() {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="flex items-center space-x-2">
-          <Calendar className="h-5 w-5" />
+          <Calendar className="size-5" />
           <span>Progression mensuelle</span>
         </CardTitle>
         <Badge
@@ -59,9 +59,9 @@ export default function ProgressChart() {
           className="flex items-center space-x-1"
         >
           {data.trend.direction === "up" ? (
-            <TrendingUp className="h-3 w-3" />
+            <TrendingUp className="size-3" />
           ) : (
-            <TrendingDown className="h-3 w-3" />
+            <TrendingDown className="size-3" />
           )}
           <span>
             {data.trend.direction === "up" ? "+" : "-"}

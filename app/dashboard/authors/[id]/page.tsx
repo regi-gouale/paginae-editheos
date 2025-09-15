@@ -2,12 +2,14 @@ import { EditAuthorDialog } from "@/components/authors/edit-author-dialog";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAuthorById } from "@/lib/actions/authors";
 import { auth } from "@/lib/auth/auth";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
+  ArrowLeft,
   CalendarIcon,
   FlagIcon,
   GlobeIcon,
@@ -15,6 +17,7 @@ import {
   UserIcon,
 } from "lucide-react";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 type Props = {
@@ -56,23 +59,30 @@ export default async function AuthorDetailPage({ params }: Props) {
       <DashboardHeader breadcrumbs={breadcrumbs} />
       <main className="flex flex-1 flex-col mx-auto p-6 space-y-6 max-w-4xl pt-24">
         {/* En-tête avec avatar et informations principales */}
-        <div className="flex items-start justify-between">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Avatar className="size-16">
-              <AvatarFallback className="text-lg font-semibold">
-                {getInitials(author.firstName, author.lastName)}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h1
-                className="text-3xl font-extrabold tracking-tight"
-                style={{
-                  fontFamily: "var(--font-lato)",
-                }}
-              >
-                {author.firstName} {author.lastName}
-              </h1>
-              <p className="text-muted-foreground">{author.email}</p>
+            <Link href="/dashboard/authors">
+              <Button variant="ghost" size="icon">
+                <ArrowLeft className="size-4" />
+              </Button>
+            </Link>
+            <div className="flex items-center gap-4">
+              <Avatar className="size-16">
+                <AvatarFallback className="text-lg font-semibold">
+                  {getInitials(author.firstName, author.lastName)}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h1
+                  className="text-3xl font-extrabold tracking-tight"
+                  style={{
+                    fontFamily: "var(--font-lato)",
+                  }}
+                >
+                  {author.firstName} {author.lastName}
+                </h1>
+                <p className="text-muted-foreground">{author.email}</p>
+              </div>
             </div>
           </div>
           <EditAuthorDialog author={author} />

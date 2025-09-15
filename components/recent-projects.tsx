@@ -79,7 +79,7 @@ export default function RecentProjects() {
         <CardTitle>Projets récents</CardTitle>
         <Button variant="outline" size="sm" asChild>
           <Link href="/dashboard/projects">
-            <ExternalLink className="h-4 w-4 mr-2" />
+            <ExternalLink className="size-4 mr-2" />
             Voir tous
           </Link>
         </Button>
@@ -96,7 +96,7 @@ export default function RecentProjects() {
                   <h4 className="font-medium leading-none">{project.title}</h4>
                   {project.dueDate &&
                     isOverdue(project.dueDate, project.status) && (
-                      <AlertCircle className="h-4 w-4 text-red-500" />
+                      <AlertCircle className="size-4 text-red-500" />
                     )}
                 </div>
 
@@ -127,7 +127,7 @@ export default function RecentProjects() {
                 <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                   {project.author && (
                     <div className="flex items-center space-x-2">
-                      <Avatar className="h-5 w-5">
+                      <Avatar className="size-5">
                         <AvatarImage src={project.author.image} />
                         <AvatarFallback className="text-xs">
                           {project.author.name
@@ -142,7 +142,7 @@ export default function RecentProjects() {
 
                   {project.dueDate && (
                     <div className="flex items-center space-x-1">
-                      <Calendar className="h-4 w-4" />
+                      <Calendar className="size-4" />
                       <span
                         className={
                           isOverdue(
@@ -159,7 +159,7 @@ export default function RecentProjects() {
                   )}
 
                   <div className="flex items-center space-x-1">
-                    <Clock className="h-4 w-4" />
+                    <Clock className="size-4" />
                     <span>Modifié {formatDate(project.updatedAt)}</span>
                   </div>
                 </div>

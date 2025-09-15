@@ -294,7 +294,7 @@ ProjectDetailDialogProps) {
                   size="sm"
                   onClick={() => setIsEditingTitle(true)}
                 >
-                  <Edit className="h-4 w-4" />
+                  <Edit className="size-4" />
                 </Button>
               </div>
             )}
@@ -344,7 +344,7 @@ ProjectDetailDialogProps) {
                   variant="outline"
                   className="w-full justify-start text-left font-normal"
                 >
-                  <Calendar className="mr-2 h-4 w-4" />
+                  <Calendar className="mr-2 size-4" />
                   {editedProject.dueDate
                     ? formatDate(editedProject.dueDate)
                     : "Aucune date définie"}
@@ -427,7 +427,7 @@ ProjectDetailDialogProps) {
                 variant="outline"
                 onClick={() => setIsAddingTask(true)}
               >
-                <Plus className="h-4 w-4 mr-1" />
+                <Plus className="size-4 mr-1" />
                 Ajouter
               </Button>
             </div>
@@ -474,12 +474,12 @@ ProjectDetailDialogProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => toggleTask(task.id)}
-                    className="p-1 h-6 w-6"
+                    className="p-1 size-6"
                   >
                     {task.completed ? (
-                      <CheckSquare className="h-4 w-4 text-green-600" />
+                      <CheckSquare className="size-4 text-green-600" />
                     ) : (
-                      <Square className="h-4 w-4" />
+                      <Square className="size-4" />
                     )}
                   </Button>
                   <span
@@ -493,9 +493,9 @@ ProjectDetailDialogProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => deleteTask(task.id)}
-                    className="p-1 h-6 w-6 opacity-0 group-hover:opacity-100"
+                    className="p-1 size-6 opacity-0 group-hover:opacity-100"
                   >
-                    <Trash2 className="h-4 w-4 text-destructive" />
+                    <Trash2 className="size-4 text-destructive" />
                   </Button>
                 </div>
               ))}
@@ -515,7 +515,7 @@ ProjectDetailDialogProps) {
                 variant="outline"
                 onClick={() => setIsAddingCustomField(true)}
               >
-                <Plus className="h-4 w-4 mr-1" />
+                <Plus className="size-4 mr-1" />
                 Ajouter
               </Button>
             </div>
@@ -571,9 +571,9 @@ ProjectDetailDialogProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => deleteCustomFieldLocal(field.id)}
-                    className="p-1 h-6 w-6 opacity-0 group-hover:opacity-100"
+                    className="p-1 size-6 opacity-0 group-hover:opacity-100"
                   >
-                    <Trash2 className="h-4 w-4 text-destructive" />
+                    <Trash2 className="size-4 text-destructive" />
                   </Button>
                 </div>
               ))}
@@ -587,7 +587,7 @@ ProjectDetailDialogProps) {
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="destructive">
-                  <Trash2 className="h-4 w-4 mr-1" />
+                  <Trash2 className="size-4 mr-1" />
                   Supprimer
                 </Button>
               </AlertDialogTrigger>

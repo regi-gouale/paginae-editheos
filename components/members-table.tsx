@@ -1,10 +1,17 @@
 "use client";
 
 import { AddMemberDialog } from "@/components/add-member-dialog";
+import { EditMemberDialog } from "@/components/edit-member-dialog";
 import { TablePagination } from "@/components/table-pagination";
 import { TableSearchFilter } from "@/components/table-search-filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -21,7 +28,7 @@ import {
   Member,
   MembersResponse,
 } from "@/lib/actions/members";
-import { Trash2 } from "lucide-react";
+import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -151,6 +158,20 @@ export function MembersTable({ initialData }: MembersTableProps) {
     }
   };
 
+  const handleRowClick = (memberId: string) => {
+    window.location.href = `/dashboard/team/${memberId}`;
+  };
+
+  const refreshData = async () => {
+    const refreshedData = await getMembers({
+      search: searchTerm,
+      role: selectedRole as MemberRole | "ALL",
+      page: currentPage,
+      limit: 10,
+    });
+    setData(refreshedData);
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -218,7 +239,11 @@ export function MembersTable({ initialData }: MembersTableProps) {
               </TableRow>
             ) : (
               data.members.map((member: Member) => (
-                <TableRow key={member.id}>
+                <TableRow
+                  key={member.id}
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => handleRowClick(member.id)}
+                >
                   <TableCell className="font-medium ml-2">
                     {member.name}
                   </TableCell>
@@ -229,14 +254,40 @@ export function MembersTable({ initialData }: MembersTableProps) {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDelete(member.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
+                        asChild
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="size-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <EditMemberDialog
+                          member={member}
+                          onSuccess={refreshData}
+                        >
+                          <DropdownMenuItem
+                            onSelect={(e) => e.preventDefault()}
+                            className="cursor-pointer"
+                          >
+                            <Edit className="size-4 mr-2" />
+                            Modifier
+                          </DropdownMenuItem>
+                        </EditMemberDialog>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(member.id);
+                          }}
+                          className="text-red-600 hover:text-red-800 cursor-pointer"
+                        >
+                          <Trash2 className="size-4 mr-2" />
+                          Supprimer
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))

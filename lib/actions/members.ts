@@ -112,6 +112,54 @@ export async function addMember(data: {
   }
 }
 
+export async function getMemberById(
+  id: string
+): Promise<{ success: boolean; member?: Member; error?: string }> {
+  try {
+    const member = await prisma.member.findUnique({
+      where: { id },
+      cacheStrategy: {
+        ttl: 60, // Cache pendant 60 secondes
+      },
+    });
+
+    if (!member) {
+      return { success: false, error: "Membre non trouvé" };
+    }
+
+    return { success: true, member };
+  } catch (error) {
+    console.error("Error fetching member:", error);
+    return {
+      success: false,
+      error: "Erreur lors de la récupération du membre",
+    };
+  }
+}
+
+export async function updateMember(
+  id: string,
+  data: {
+    name?: string;
+    email?: string;
+    role?: "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST";
+  }
+): Promise<{ success: boolean; member?: Member; error?: string }> {
+  try {
+    const member = await prisma.member.update({
+      where: { id },
+      data,
+    });
+    return { success: true, member };
+  } catch (error) {
+    console.error("Error updating member:", error);
+    return {
+      success: false,
+      error: "Erreur lors de la modification du membre",
+    };
+  }
+}
+
 export async function deleteMember(
   id: string
 ): Promise<{ success: boolean; error?: string }> {

@@ -26,7 +26,7 @@ export const TableSearchFilter: React.FC<TableSearchFilterProps> = ({
     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
       <div className="flex-1">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4" />
           <Input
             placeholder="Rechercher par nom ou email..."
             value={searchValue}
@@ -36,7 +36,7 @@ export const TableSearchFilter: React.FC<TableSearchFilterProps> = ({
         </div>
       </div>
       <div className="flex gap-2 items-center">
-        <Filter className="h-4 w-4 text-gray-400" />
+        <Filter className="size-4 text-gray-400" />
         <Select value={selectedRole} onValueChange={onRoleChange}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filtrer par rôle" />

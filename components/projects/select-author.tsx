@@ -103,7 +103,7 @@ export function AuthorSelectionDropdown({
             <SelectValue placeholder="Sélectionner un auteur">
               {selectedAuthor && (
                 <div className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
+                  <User className="size-4" />
                   {`${selectedAuthor.firstName} ${selectedAuthor.lastName}`}
                 </div>
               )}
@@ -113,7 +113,7 @@ export function AuthorSelectionDropdown({
             {authors.map((author) => (
               <SelectItem key={author.id} value={author.id}>
                 <div className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
+                  <User className="size-4" />
                   {`${author.firstName} ${author.lastName}`}
                 </div>
               </SelectItem>

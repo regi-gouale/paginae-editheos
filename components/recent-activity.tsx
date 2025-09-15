@@ -180,7 +180,7 @@ export default function RecentActivity() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <Clock className="h-5 w-5" />
+          <Clock className="size-5" />
           <span>Activité récente</span>
         </CardTitle>
       </CardHeader>
@@ -200,7 +200,7 @@ export default function RecentActivity() {
                 }`}
               >
                 <div className={`${config.bgColor} p-2 rounded-full`}>
-                  <Icon className={`h-4 w-4 ${config.color}`} />
+                  <Icon className={`size-4 ${config.color}`} />
                 </div>
 
                 <div className="flex-1 space-y-1">
@@ -217,7 +217,7 @@ export default function RecentActivity() {
 
                   {activity.user && (
                     <div className="flex items-center space-x-2 mt-2">
-                      <Avatar className="h-5 w-5">
+                      <Avatar className="size-5">
                         <AvatarImage src={activity.user.image} />
                         <AvatarFallback className="text-xs">
                           {activity.user.name
