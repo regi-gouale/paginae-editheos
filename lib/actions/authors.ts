@@ -1,11 +1,11 @@
 "use server";
 
-import { z } from "zod";
-import { revalidatePath } from "next/cache";
+import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@/prisma/generated/prisma";
-import { getCurrentSession } from "@/lib/auth/auth-lib";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
 export type Author = {
   id: string;
@@ -110,6 +110,7 @@ export async function updateAuthorAction(formData: FormData) {
     });
 
     revalidatePath("/dashboard/authors");
+    revalidatePath(`/dashboard/authors/${id}`);
   } catch (error) {
     console.error("Error updating author:", error);
     throw error;
@@ -280,5 +281,22 @@ export async function getNationalities(): Promise<string[]> {
   } catch (error) {
     console.error("Error fetching nationalities:", error);
     return [];
+  }
+}
+
+// Fonction pour récupérer un auteur par ID
+export async function getAuthorById(id: string): Promise<Author | null> {
+  const session = await getCurrentSession();
+  if (!session) redirect("/auth");
+
+  try {
+    const author = await prisma.author.findUnique({
+      where: { id },
+    });
+
+    return author;
+  } catch (error) {
+    console.error("Error fetching author:", error);
+    return null;
   }
 }

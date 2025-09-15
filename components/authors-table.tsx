@@ -48,6 +48,7 @@ import {
 import { formatDate } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { Filter, Plus, Search, Trash2, User } from "lucide-react";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -450,7 +451,12 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                   <TableCell className="font-medium">
                     <div>
                       <div>
-                        {author.firstName} {author.lastName}
+                        <Link
+                          href={`/dashboard/authors/${author.id}`}
+                          className="text-primary hover:underline"
+                        >
+                          {author.firstName} {author.lastName}
+                        </Link>
                       </div>
                       {author.website && (
                         <a
