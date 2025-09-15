@@ -57,7 +57,7 @@ export function KanbanColumn({
   const headerColorClass = column.color || "bg-white dark:bg-gray-800";
 
   return (
-    <div className="shrink-0 w-full flex flex-col bg-muted rounded-lg shadow-sm max-w-92">
+    <div className="shrink-0 w-full flex flex-col bg-muted rounded-xl shadow-sm max-w-92">
       {/* En-tête de colonne */}
       <div
         className={`p-4 flex justify-between items-center border-b rounded-t-lg ${headerColorClass}`}
@@ -86,7 +86,7 @@ export function KanbanColumn({
                   {COLUMN_COLORS.map((color) => (
                     <Button
                       key={color.value}
-                      className={`h-8 w-full rounded-md ${color.value} border hover:opacity-80 transition-opacity`}
+                      className={`h-8 w-full rounded-xl ${color.value} border hover:opacity-80 transition-opacity`}
                       onClick={() => handleColorChange(color.value)}
                       title={color.name}
                     />

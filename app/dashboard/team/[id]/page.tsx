@@ -75,7 +75,7 @@ export default async function MemberDetailPage({
             </div>
           </div>
           <EditMemberDialog member={member}>
-            <Button variant={"outline"} className="rounded-full md-rounded-xl">
+            <Button variant={"outline"} className="rounded-full md:rounded-xl">
               <Edit className="size-4" />
               <span className="hidden md:ml-2 md:block">Modifier</span>
             </Button>

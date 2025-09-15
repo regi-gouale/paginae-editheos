@@ -25,7 +25,7 @@ export default function MemberNotFound() {
 
         <Card className="text-center py-12">
           <CardHeader>
-            <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
+            <div className="mx-auto size-12 rounded-full bg-muted flex items-center justify-center mb-4">
               <UserX className="size-6 text-muted-foreground" />
             </div>
             <CardTitle className="text-2xl font-bold">

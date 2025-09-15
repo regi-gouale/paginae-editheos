@@ -400,7 +400,7 @@ ProjectDetailDialogProps) {
             ) : (
               <div className="space-y-2">
                 <div
-                  className="min-h-[60px] p-3 border rounded-md cursor-pointer hover:bg-muted/50"
+                  className="min-h-[60px] p-3 border rounded-xl cursor-pointer hover:bg-muted/50"
                   onClick={() => setIsEditingDescription(true)}
                 >
                   {editedProject.description || (

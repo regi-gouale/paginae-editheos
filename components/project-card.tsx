@@ -82,7 +82,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           {project.authors.map((author) => (
             <div
               key={author.id}
-              className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-md"
+              className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl"
             >
               {author.firstName} {author.lastName}
             </div>
@@ -117,7 +117,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
               isOverdue
                 ? "text-red-600 dark:text-red-400"
                 : "text-gray-500 dark:text-gray-400",
-              "bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-md"
+              "bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl"
             )}
           >
             <Calendar className="size-3 mr-1" />
@@ -126,7 +126,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
         )}
 
         {totalTasks > 0 && (
-          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-md">
+          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl">
             <CheckSquare className="size-3 mr-1" />
             {completedTasks}/{totalTasks}
           </div>
@@ -137,7 +137,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
             field.value && (
               <div
                 key={field.id}
-                className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-md"
+                className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl"
               >
                 {field.name}:{" "}
                 {field.value.toString().length > 10

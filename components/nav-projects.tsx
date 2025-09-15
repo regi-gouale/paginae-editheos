@@ -33,11 +33,11 @@ export function NavProjects({
               </a>
             </SidebarMenuButton>
             {item.numberOfTasks ? (
-              <span className="ml-auto rounded-md bg-muted px-2 py-0.5 text-xs font-medium tabular-nums">
+              <span className="ml-auto rounded-xl bg-muted px-2 py-0.5 text-xs font-medium tabular-nums">
                 {item.numberOfTasks}
               </span>
             ) : (
-              <span className="ml-auto rounded-md bg-muted px-2 py-0.5 text-xs font-medium tabular-nums">
+              <span className="ml-auto rounded-xl bg-muted px-2 py-0.5 text-xs font-medium tabular-nums">
                 0
               </span>
             )}

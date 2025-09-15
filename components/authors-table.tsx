@@ -500,11 +500,11 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         </div>
       </div>
 
-      <div className="border rounded-lg">
+      <div className="border rounded-xl overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nom complet</TableHead>
+              <TableHead className="ml-2">Nom complet</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Nationalité</TableHead>
               <TableHead>Date de naissance</TableHead>

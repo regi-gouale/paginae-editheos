@@ -217,7 +217,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
         </div>
       </div>
 
-      <div className="border rounded-lg">
+      <div className="border rounded-xl overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
