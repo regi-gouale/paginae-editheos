@@ -4,32 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getRecentProjects } from "@/lib/actions/kanban";
+import { useRecentProjects } from "@/hooks/projects/use-recent-projects";
 import { isProjectOverdueForDisplay } from "@/lib/utils";
-import {
-  Priority,
-  ProjectStatus,
-  ProjectType,
-} from "@/prisma/generated/prisma";
+import { ProjectStatus } from "@/prisma/generated/prisma";
 import { AlertCircle, Calendar, Clock, ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
-// Interface pour les projets récents
-interface RecentProject {
-  id: string;
-  title: string;
-  status: ProjectStatus;
-  priority: Priority;
-  type: ProjectType;
-  dueDate?: Date | null;
-  author?: {
-    name: string;
-    email: string;
-    image?: string;
-  };
-  updatedAt: Date;
-}
 
 const statusConfig = {
   TODO: { label: "À faire", color: "bg-blue-100 text-blue-800" },
@@ -52,23 +31,7 @@ const typeConfig = {
 };
 
 export default function RecentProjects() {
-  const [projects, setProjects] = useState<RecentProject[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const projectsData = await getRecentProjects(5);
-        setProjects(projectsData);
-      } catch (error) {
-        console.error("Erreur lors du chargement des projets:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
+  const { projects, loading } = useRecentProjects(5);
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat("fr-FR", {
@@ -139,13 +102,20 @@ export default function RecentProjects() {
 
                 <div className="flex items-center space-x-2">
                   <Badge className={statusConfig[project.status].color}>
-                    {statusConfig[project.status].label}
+                    {
+                      statusConfig[project.status as keyof typeof statusConfig]
+                        .label
+                    }
                   </Badge>
                   <Badge className={priorityConfig[project.priority].color}>
-                    {priorityConfig[project.priority].label}
+                    {
+                      priorityConfig[
+                        project.priority as keyof typeof priorityConfig
+                      ].label
+                    }
                   </Badge>
                   <Badge className={typeConfig[project.type].color}>
-                    {typeConfig[project.type].label}
+                    {typeConfig[project.type as keyof typeof typeConfig].label}
                   </Badge>
                 </div>
 
@@ -170,7 +140,10 @@ export default function RecentProjects() {
                       <Calendar className="h-4 w-4" />
                       <span
                         className={
-                          isOverdue(project.dueDate, project.status)
+                          isOverdue(
+                            project.dueDate,
+                            project.status as ProjectStatus
+                          )
                             ? "text-red-600 font-medium"
                             : ""
                         }

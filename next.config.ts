@@ -7,6 +7,9 @@ const withBundleAnalyzer = require("next-bundle-analyzer")({
 const nextConfig: NextConfig = {
   /* config options here */
   typedRoutes: true,
+  turbopack: {
+    resolveExtensions: [".mdx", ".tsx", ".ts", ".jsx", ".js", ".mjs", ".json"],
+  },
 };
 
 export default withBundleAnalyzer(nextConfig);

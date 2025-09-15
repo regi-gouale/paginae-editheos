@@ -28,10 +28,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { getProjectStats } from "@/lib/actions/kanban";
+import { useProjectStats } from "@/hooks/projects/use-project-stats";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
-import { useEffect } from "react";
 
 const data = {
   user: {
@@ -100,25 +99,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = authClient.useSession();
-  const [stats, setStats] = React.useState({
-    todo: 0,
-    inProgress: 0,
-    blocked: 0,
-    dueToday: 0,
-  });
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const projectStats = await getProjectStats();
-        setStats(projectStats);
-      } catch (error) {
-        console.error("Erreur lors du chargement des statistiques:", error);
-      }
-    };
-
-    fetchStats();
-  }, []);
+  const stats = useProjectStats();
 
   const dynamicStats = [
     {
