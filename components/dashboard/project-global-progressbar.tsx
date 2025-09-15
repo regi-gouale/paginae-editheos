@@ -5,7 +5,7 @@ interface ProjectStats {
   todo: number;
   inProgress: number;
   blocked: number;
-  dueToday: number;
+  dueSoon: number;
 }
 
 interface ProjectGlobalProgressBarProps {

@@ -1,4 +1,4 @@
-import { AuthorsTable } from "@/components/authors-table";
+import { AuthorsTable } from "@/components/authors/authors-table";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { getAuthors } from "@/lib/actions/authors";
 import { auth } from "@/lib/auth/auth";

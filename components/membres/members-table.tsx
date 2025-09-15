@@ -1,7 +1,7 @@
 "use client";
 
-import { AddMemberDialog } from "@/components/add-member-dialog";
-import { EditMemberDialog } from "@/components/edit-member-dialog";
+import { AddMemberDialog } from "@/components/membres/add-member-dialog";
+import { EditMemberDialog } from "@/components/membres/edit-member-dialog";
 import { TablePagination } from "@/components/table-pagination";
 import { TableSearchFilter } from "@/components/table-search-filter";
 import { Badge } from "@/components/ui/badge";

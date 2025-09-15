@@ -47,6 +47,21 @@ export function filterProjects(
       }
     }
 
+    // Filtre par recherche de nom (insensible à la casse)
+    if (filters.search && filters.search.trim().length > 0) {
+      const searchTerm = filters.search.trim().toLowerCase();
+      const projectTitle = project.title.toLowerCase();
+      const projectDescription = (project.description || "").toLowerCase();
+
+      // Recherche dans le titre et la description
+      if (
+        !projectTitle.includes(searchTerm) &&
+        !projectDescription.includes(searchTerm)
+      ) {
+        return false;
+      }
+    }
+
     return true;
   });
 }

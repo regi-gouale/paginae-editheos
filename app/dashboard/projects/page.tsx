@@ -1,5 +1,5 @@
-import { AddProjectDialog } from "@/components/add-project-dialog";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { AddProjectDialog } from "@/components/projects/add-project-dialog";
 import { ProjectsBoard } from "@/components/projects/board";
 import { getKanbanData } from "@/lib/actions/kanban";
 import { auth } from "@/lib/auth/auth";
@@ -58,15 +58,6 @@ export default async function ProjectPage() {
             </h1>
             <AddProjectDialog />
           </div>
-          <p
-            className="px-4 sm:px-6 lg:px-8 text-muted-foreground"
-            style={{
-              fontFamily: "var(--font-merriweather)",
-            }}
-          >
-            Visualisez et gérez l&apos;avancement de vos projets à l&apos;aide
-            du tableau Kanban.
-          </p>
         </div>
         <ProjectsBoard initialColumns={columns} />
         {/* <KanbanBoard initialColumns={columns} /> */}

@@ -1,7 +1,7 @@
 "use client";
 
-import { AddProjectDialog } from "@/components/add-project-dialog";
 import { ProjectCard } from "@/components/project-card";
+import { AddProjectDialog } from "@/components/projects/add-project-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

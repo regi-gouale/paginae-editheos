@@ -14,13 +14,6 @@ import {
   Users,
 } from "lucide-react";
 
-// interface ProjectStats {
-//   todo: number;
-//   inProgress: number;
-//   blocked: number;
-//   dueToday: number;
-// }
-
 export default function DashboardStats() {
   const { data, loading } = useDashboardStats();
 
@@ -51,7 +44,7 @@ export default function DashboardStats() {
     },
     {
       title: "Échéances aujourd'hui",
-      value: data.stats.dueToday,
+      value: data.stats.dueSoon,
       icon: BookAlert,
       color: "text-purple-600",
       bgColor: "bg-purple-50",

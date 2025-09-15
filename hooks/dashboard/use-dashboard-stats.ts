@@ -5,7 +5,7 @@ interface ProjectStats {
   todo: number;
   inProgress: number;
   blocked: number;
-  dueToday: number;
+  dueSoon: number;
   completed?: number;
   totalMembers?: number;
 }
@@ -20,7 +20,7 @@ interface DashboardData {
 
 export function useDashboardStats() {
   const [data, setData] = useState<DashboardData>({
-    stats: { todo: 0, inProgress: 0, blocked: 0, dueToday: 0 },
+    stats: { todo: 0, inProgress: 0, blocked: 0, dueSoon: 0 },
     totalProjects: 0,
     totalMembers: 0,
     completed: 0,

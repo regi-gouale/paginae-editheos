@@ -10,12 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Priority,
   ProjectStatus,
   ProjectType,
 } from "@/prisma/generated/prisma";
-import { Filter, Share2, X } from "lucide-react";
+import { Filter, Search, Share2, X } from "lucide-react";
 import { toast } from "sonner";
 
 export interface ProjectFilters {
@@ -23,6 +24,7 @@ export interface ProjectFilters {
   types: ProjectType[];
   dueDays: number[];
   priorities: Priority[];
+  search: string;
 }
 
 interface ProjectFiltersProps {
@@ -66,7 +68,8 @@ export function ProjectFilters({
     filters.statuses.length > 0 ||
     filters.types.length > 0 ||
     filters.dueDays.length > 0 ||
-    filters.priorities.length > 0;
+    filters.priorities.length > 0 ||
+    filters.search.trim().length > 0;
 
   const clearAllFilters = () => {
     onFiltersChange({
@@ -74,6 +77,7 @@ export function ProjectFilters({
       types: [],
       dueDays: [],
       priorities: [],
+      search: "",
     });
   };
 
@@ -105,12 +109,17 @@ export function ProjectFilters({
     onFiltersChange({ ...filters, priorities: newPriorities });
   };
 
+  const updateSearch = (search: string) => {
+    onFiltersChange({ ...filters, search });
+  };
+
   const getFilterCount = () => {
     return (
       filters.statuses.length +
       filters.types.length +
       filters.dueDays.length +
-      filters.priorities.length
+      filters.priorities.length +
+      (filters.search.trim().length > 0 ? 1 : 0)
     );
   };
 
@@ -136,8 +145,20 @@ export function ProjectFilters({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 mb-6">
-      <div className="flex flex-wrap gap-2 ml-auto">
+    <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-center">
+      {/* Search Input */}
+      <div className="relative flex-1 max-w-md">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder="Rechercher un projet..."
+          value={filters.search}
+          onChange={(e) => updateSearch(e.target.value)}
+          className="pl-10"
+        />
+      </div>
+
+      <div className="flex flex-wrap gap-2">
         {/* Status Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

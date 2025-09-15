@@ -3,7 +3,7 @@
 import { ProjectDetailDialog } from "@/components/projects/detail-dialog";
 import { KanbanColumn } from "@/components/projects/kanban-column";
 import { ProjectFilters } from "@/components/projects/project-filters";
-import { useProjectFilters } from "@/hooks/use-project-filters";
+import { useProjectFilters } from "@/hooks/projects/use-project-filters";
 import { applyAutomationRules, updateProject } from "@/lib/actions/kanban";
 import { filterKanbanColumns } from "@/lib/project-filters";
 import { getRules, shouldMoveProject } from "@/lib/rules";

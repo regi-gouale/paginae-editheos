@@ -9,6 +9,7 @@ import {
 import {
   createSerializer,
   parseAsArrayOf,
+  parseAsString,
   parseAsStringEnum,
   useQueryStates,
 } from "nuqs";
@@ -19,6 +20,7 @@ interface ProjectFiltersState {
   types: ProjectType[];
   priorities: Priority[];
   dueDays: string[];
+  search: string;
 }
 
 // Définir les parsers pour chaque type de filtre
@@ -58,12 +60,15 @@ const dueDaysParser = parseAsArrayOf(
   parseAsStringEnum(["7", "15", "30"])
 ).withDefault([]);
 
+const searchParser = parseAsString.withDefault("");
+
 // Schéma complet des filtres pour nuqs
 const filtersSchema = {
   statuses: statusParser,
   types: typeParser,
   priorities: priorityParser,
   dueDays: dueDaysParser,
+  search: searchParser,
 };
 
 // Hook personnalisé pour gérer les filtres avec nuqs
@@ -79,6 +84,7 @@ export function useProjectFilters() {
   const filters: ProjectFilters = {
     ...filtersState,
     dueDays: filtersState.dueDays.map(Number),
+    search: filtersState.search,
   };
 
   // Fonction pour mettre à jour tous les filtres
@@ -88,6 +94,7 @@ export function useProjectFilters() {
       types: newFilters.types,
       priorities: newFilters.priorities,
       dueDays: newFilters.dueDays.map(String),
+      search: newFilters.search,
     });
   };
 
@@ -98,6 +105,7 @@ export function useProjectFilters() {
       types: [],
       priorities: [],
       dueDays: [],
+      search: "",
     });
   };
 
@@ -119,5 +127,6 @@ export function useProjectFilters() {
     setPriorities: (priorities: Priority[]) => setFiltersState({ priorities }),
     setDueDays: (dueDays: number[]) =>
       setFiltersState({ dueDays: dueDays.map(String) }),
+    setSearch: (search: string) => setFiltersState({ search }),
   };
 }
