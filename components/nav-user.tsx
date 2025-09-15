@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard } from "lucide-react";
+import { BadgeCheck, Bell, ChevronsUpDown } from "lucide-react";
 
 import { SignOutButton } from "@/components/auth/signout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,6 +19,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 export function NavUser({
   user,
@@ -40,7 +41,7 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="size-8 rounded-lg">
+              <Avatar className="size-8 rounded-full">
                 <AvatarImage src={user.image} alt={user.name} />
                 <AvatarFallback className="rounded-lg">
                   {user.name
@@ -67,7 +68,11 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="size-8 rounded-full font-semibold">
-                  <AvatarImage src={user.image} alt={user.name} />
+                  <AvatarImage
+                    src={user.image}
+                    alt={user.name}
+                    className="rounded-full"
+                  />
                   <AvatarFallback className="rounded-full">
                     {user.name
                       .split(" ")
@@ -87,8 +92,13 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck />
-                Profil
+                <Link
+                  href="/dashboard/profile"
+                  className="w-full justify-start p-0 m-0 flex gap-2 items-center"
+                >
+                  <BadgeCheck />
+                  Profil
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />

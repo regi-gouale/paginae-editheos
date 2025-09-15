@@ -1,3 +1,4 @@
+import { ReactQueryProvider } from "@/components/providers/react-query-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -76,7 +77,9 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={`${lato.variable} ${meriweather.variable} antialiased`}>
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <ReactQueryProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </ReactQueryProvider>
         <Toaster richColors />
         <SpeedInsights />
         <Analytics />
