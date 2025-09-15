@@ -70,7 +70,7 @@ export default function DashboardStats() {
 
   const statsCards = [
     {
-      title: "Projets à relire",
+      title: "Projets à faire",
       value: data.stats.todo,
       icon: BookOpen,
       color: "text-blue-600",

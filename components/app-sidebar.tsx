@@ -122,7 +122,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const dynamicStats = [
     {
-      name: "À relire",
+      name: "À faire",
       url: "/dashboard/projects?status=TODO",
       numberOfTasks: stats.todo,
       icon: BookOpen,
