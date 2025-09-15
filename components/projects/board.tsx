@@ -84,11 +84,19 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
           results.forEach((result) => {
             if (result.success) {
               toast.info("Règle d'automatisation appliquée", {
-                description: `"${result.project?.title}" déplacé automatiquement vers ${result.targetColumnTitle}`,
+                description: `"${
+                  "project" in result ? result.project?.title : "Projet"
+                }" déplacé automatiquement vers ${
+                  "targetColumnTitle" in result
+                    ? result.targetColumnTitle
+                    : "nouvelle colonne"
+                }`,
               });
             } else {
               toast.error("Erreur lors de l'application de la règle", {
-                description: `Impossible de déplacer le projet : ${result.error}`,
+                description: `Impossible de déplacer le projet : ${
+                  "error" in result ? result.error : "Erreur inconnue"
+                }`,
               });
             }
           });
