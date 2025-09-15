@@ -2,7 +2,10 @@
 
 import { ProjectDetailDialog } from "@/components/projects/detail-dialog";
 import { KanbanColumn } from "@/components/projects/kanban-column";
+import { ProjectFilters } from "@/components/projects/project-filters";
+import { useProjectFilters } from "@/hooks/use-project-filters";
 import { applyAutomationRules, updateProject } from "@/lib/actions/kanban";
+import { filterKanbanColumns } from "@/lib/project-filters";
 import { getRules, shouldMoveProject } from "@/lib/rules";
 import {
   getColumnNameFromProjectStatus,
@@ -10,7 +13,7 @@ import {
 } from "@/lib/utils";
 import { KanbanColumnWithProjects, ProjectWithDetails } from "@/types/kanban";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 interface ProjectsBoardProps {
@@ -22,6 +25,14 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
     useState<KanbanColumnWithProjects[]>(initialColumns);
   const [selectedProject, setSelectedProject] =
     useState<ProjectWithDetails | null>(null);
+
+  // Utiliser le hook nuqs pour les filtres
+  const { filters, updateFilters, getFilteredUrl } = useProjectFilters();
+
+  // Appliquer les filtres aux colonnes
+  const filteredColumns = useMemo(() => {
+    return filterKanbanColumns(columns, filters);
+  }, [columns, filters]);
 
   // Define some example rules
   // In a real application, these would likely come from props or context
@@ -242,9 +253,32 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
 
   return (
     <div className="flex flex-col items-center mx-auto">
+      <div className="w-full mb-6">
+        <ProjectFilters
+          filters={filters}
+          onFiltersChange={updateFilters}
+          onShareUrl={() => {
+            const url = getFilteredUrl();
+            navigator.clipboard
+              .writeText(url)
+              .then(() => {
+                toast.success("URL copiée !", {
+                  description:
+                    "Le lien avec les filtres a été copié dans le presse-papiers",
+                });
+              })
+              .catch(() => {
+                toast.error("Erreur", {
+                  description: "Impossible de copier l'URL",
+                });
+              });
+          }}
+        />
+      </div>
+
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className={`grid grid-cols-1 md:grid-cols-5 gap-4 h-fit mx-auto`}>
-          {columns.map((column) => (
+          {filteredColumns.map((column) => (
             <KanbanColumn
               key={column.id}
               column={column}

@@ -104,26 +104,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const dynamicStats = [
     {
       name: "À faire",
-      url: "/dashboard/projects?status=TODO",
+      url: "/dashboard/projects?statuses=TODO",
       numberOfTasks: stats.todo,
       icon: BookOpen,
     },
     {
       name: "En cours",
-      url: "/dashboard/projects?status=IN_PROGRESS",
+      url: "/dashboard/projects?statuses=IN_PROGRESS",
       numberOfTasks: stats.inProgress,
       icon: BookAudio,
     },
     {
       name: "Bloqués",
-      url: "/dashboard/projects?status=BLOCKED",
+      url: "/dashboard/projects?statuses=BLOCKED",
       numberOfTasks: stats.blocked,
       icon: BookLock,
     },
     {
-      name: "Échéances aujourd'hui",
-      url: "/dashboard/projects?dueToday=true",
-      numberOfTasks: stats.dueToday,
+      name: "Échéances bientôt",
+      url: "/dashboard/projects?dueDays=7",
+      numberOfTasks: stats.dueSoon,
       icon: BookAlert,
     },
   ];

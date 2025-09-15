@@ -15,6 +15,9 @@ export async function getProjectStats() {
     today.setHours(23, 59, 59, 999); // End of today
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0); // Start of today
+    const todayPlus7 = new Date();
+    todayPlus7.setDate(todayPlus7.getDate() + 7);
+    todayPlus7.setHours(23, 59, 59, 999); // End of the day in 7 days
 
     // Optimisation 1: Exécution groupée pour les colonnes avec comptage
     const columns = await prisma.$transaction([
@@ -37,13 +40,13 @@ export async function getProjectStats() {
     ]);
 
     // Optimisation 2: Exécution en parallèle pour les comptages indépendants
-    const [dueTodayCount, membersCount] = await Promise.all([
-      // Échéances aujourd'hui
+    const [dueSoonCount, membersCount] = await Promise.all([
+      // Échéances bientôt
       prisma.project.count({
         where: {
           dueDate: {
             gte: startOfToday,
-            lte: today,
+            lte: todayPlus7,
           },
         },
       }),
@@ -60,7 +63,7 @@ export async function getProjectStats() {
       inProgress: inProgressColumn?._count?.projects || 0,
       blocked: blockedColumn?._count?.projects || 0,
       completed: completedColumn?._count?.projects || 0,
-      dueToday: dueTodayCount || 0,
+      dueSoon: dueSoonCount || 0,
       totalMembers: membersCount,
     };
   } catch (error) {
@@ -70,7 +73,7 @@ export async function getProjectStats() {
       inProgress: 0,
       blocked: 0,
       completed: 0,
-      dueToday: 0,
+      dueSoon: 0,
     };
   }
 }

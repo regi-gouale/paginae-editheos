@@ -6,7 +6,7 @@ export function useProjectStats() {
     todo: 0,
     inProgress: 0,
     blocked: 0,
-    dueToday: 0,
+    dueSoon: 0,
   });
 
   useEffect(() => {
