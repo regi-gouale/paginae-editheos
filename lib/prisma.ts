@@ -4,11 +4,21 @@ import { withOptimize } from "@prisma/extension-optimize";
 
 // Définir les options du client Prisma pour optimiser les performances
 const prismaClientSingleton = () => {
-  return new PrismaClient({
+  const client = new PrismaClient({
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
-  })
-    .$extends(withAccelerate())
-    .$extends(withOptimize({ apiKey: process.env.OPTIMIZE_API_KEY || "" }));
+  }).$extends(withAccelerate());
+
+  const optimizeApiKey = process.env.OPTIMIZE_API_KEY;
+  if (optimizeApiKey) {
+    return client.$extends(withOptimize({ apiKey: optimizeApiKey }));
+  } else {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("OPTIMIZE_API_KEY is required in production for Prisma Optimize extension.");
+    }
+    // Optionally, log a warning in development
+    // console.warn("OPTIMIZE_API_KEY is not set. Prisma Optimize extension will not be applied.");
+    return client;
+  }
 };
 
 // Assurer qu'une seule instance de PrismaClient est créée en développement
