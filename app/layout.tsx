@@ -19,9 +19,54 @@ const meriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "Paginae - Editheos",
-  description: "Gestion de projets éditoriaux",
+  title: {
+    default: "Paginae - Editheos",
+    template: "%s | Paginae - Editheos",
+  },
+  description:
+    "Gestion de projets éditoriaux — Kanban, automatisation et collaboration pour équipes éditoriales.",
+  keywords: [
+    "édition",
+    "projets éditoriaux",
+    "kanban",
+    "collaboration",
+    "gestion de projet",
+    "Editheos",
+    "Paginae",
+  ],
+  authors: [{ name: "Editheos" }],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Paginae - Editheos",
+    description:
+      "Gestion de projets éditoriaux — Kanban, automatisation et collaboration pour équipes éditoriales.",
+    siteName: "Paginae",
+    type: "website",
+    images: [
+      {
+        url: "/logo-editheos.webp",
+        alt: "Paginae - Editheos",
+      },
+    ],
+  },
+  twitter: {
+    title: "Paginae - Editheos",
+    card: "summary_large_image",
+    description:
+      "Gestion de projets éditoriaux — Kanban, automatisation et collaboration pour équipes éditoriales.",
+    images: ["/logo-editheos.webp"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
+
+export const metadataBase = new URL(
+  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+);
 
 export default function RootLayout({
   children,

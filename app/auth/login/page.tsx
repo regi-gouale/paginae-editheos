@@ -1,5 +1,12 @@
 import { LoginForm } from "@/components/auth/login-form";
+import type { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Connexion — Paginae",
+  description: "Se connecter à Paginae — gestion de projets éditoriaux.",
+  alternates: { canonical: "/auth/login" },
+};
 
 export default function LoginPage() {
   return (
