@@ -16,48 +16,28 @@ export async function getProjectStats() {
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0); // Start of today
 
-    const [
-      todoCount,
-      inProgressCount,
-      blockedCount,
-      completedCount,
-      dueTodayCount,
-      membersCount,
-    ] = await Promise.all([
+    // Optimisation 1: Exécution groupée pour les colonnes avec comptage
+    const columns = await prisma.$transaction([
       prisma.kanbanColumn.findFirst({
         where: { title: "À faire" },
-        include: {
-          projects: {
-            select: { title: true },
-          },
-        },
+        include: { _count: { select: { projects: true } } },
       }),
       prisma.kanbanColumn.findFirst({
         where: { title: "En cours" },
-        include: {
-          projects: {
-            select: { title: true },
-          },
-        },
+        include: { _count: { select: { projects: true } } },
       }),
-
       prisma.kanbanColumn.findFirst({
         where: { title: "Bloqué" },
-        include: {
-          projects: {
-            select: { title: true },
-          },
-        },
+        include: { _count: { select: { projects: true } } },
       }),
-      // Projets terminés
       prisma.kanbanColumn.findFirst({
         where: { title: "Terminé" },
-        include: {
-          projects: {
-            select: { title: true },
-          },
-        },
+        include: { _count: { select: { projects: true } } },
       }),
+    ]);
+
+    // Optimisation 2: Exécution en parallèle pour les comptages indépendants
+    const [dueTodayCount, membersCount] = await Promise.all([
       // Échéances aujourd'hui
       prisma.project.count({
         where: {
@@ -70,11 +50,16 @@ export async function getProjectStats() {
       // Total des membres
       prisma.member.count(),
     ]);
+
+    // Extraire les comptages des colonnes
+    const [todoColumn, inProgressColumn, blockedColumn, completedColumn] =
+      columns;
+
     return {
-      todo: todoCount?.projects.length || 0,
-      inProgress: inProgressCount?.projects.length || 0,
-      blocked: blockedCount?.projects.length || 0,
-      completed: completedCount?.projects.length || 0,
+      todo: todoColumn?._count?.projects || 0,
+      inProgress: inProgressColumn?._count?.projects || 0,
+      blocked: blockedColumn?._count?.projects || 0,
+      completed: completedColumn?._count?.projects || 0,
       dueToday: dueTodayCount || 0,
       totalMembers: membersCount,
     };
@@ -93,16 +78,33 @@ export async function getProjectStats() {
 // Get recent projects for the dashboard
 export async function getRecentProjects(limit = 5) {
   try {
+    // Optimisation : Sélection précise des champs requis + cache
     const projects = await prisma.project.findMany({
       take: limit,
       orderBy: {
         updatedAt: "desc",
       },
-      include: {
-        authors: true,
+      select: {
+        id: true,
+        title: true,
+        status: true,
+        priority: true,
+        type: true,
+        dueDate: true,
+        updatedAt: true,
+        authors: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+          take: 1, // Optimisation : Ne récupérer que le premier auteur directement
+        },
       },
+      cacheStrategy: { ttl: 60, swr: 120 }, // Cache pour 1 minute, stale while revalidate pour 2 minutes
     });
 
+    // Transformer les données au format attendu
     return projects.map((project) => ({
       id: project.id,
       title: project.title,
@@ -174,24 +176,40 @@ export async function deleteCustomField(id: string) {
 // Get all columns with their projects
 export async function getKanbanData() {
   try {
+    // Optimisation : utiliser select pour limiter les champs retournés
     const columns = await prisma.kanbanColumn.findMany({
       orderBy: { position: "asc" },
       include: {
         projects: {
           include: {
-            authors: true,
-            members: true,
-            tasks: true,
-            customFields: true,
-            kanbanColumn: true,
+            authors: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                // Exclure les champs moins utilisés comme biography, website, etc.
+              },
+            },
+            members: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+              },
+            },
+            tasks: true, // Nécessaire pour les règles d'automatisation
+            customFields: true, // Nécessaire pour l'affichage
+            // Optimisation : Ne pas re-inclure kanbanColumn car nous avons déjà cette information
           },
         },
       },
     });
 
     if (columns.length === 0) {
-      // Crée les colonnes Kanban
-      await Promise.all([
+      // Optimisation : Utiliser une transaction pour créer toutes les colonnes en une seule opération DB
+      await prisma.$transaction([
         prisma.kanbanColumn.create({
           data: {
             title: "À faire",
@@ -228,21 +246,35 @@ export async function getKanbanData() {
           },
         }),
       ]);
-      const newColumns = await prisma.kanbanColumn.findMany({
+
+      // Récupérer les colonnes nouvellement créées
+      return await prisma.kanbanColumn.findMany({
         orderBy: { position: "asc" },
         include: {
           projects: {
             include: {
-              authors: true,
-              members: true,
+              authors: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                  email: true,
+                },
+              },
+              members: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  role: true,
+                },
+              },
               tasks: true,
               customFields: true,
-              kanbanColumn: true,
             },
           },
         },
       });
-      return newColumns;
     }
 
     return columns;
@@ -534,11 +566,20 @@ export async function deleteProjectTask(id: string) {
   }
 }
 
-// Get all authors for project assignment
+// Get all authors for project assignment with caching
 export async function getAuthors() {
   try {
+    // Utilisation d'Accelerate pour le cache
     return await prisma.author.findMany({
       orderBy: { lastName: "asc" },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        // Exclure les champs moins utilisés pour réduire la taille des données
+      },
+      cacheStrategy: { ttl: 300, swr: 600 }, // Cache pour 5 minutes, stale while revalidate pour 10 minutes
     });
   } catch (error) {
     console.error("Error fetching authors:", error);
@@ -546,11 +587,19 @@ export async function getAuthors() {
   }
 }
 
-// Get all members for project assignment
+// Get all members for project assignment with caching
 export async function getMembers() {
   try {
+    // Utilisation d'Accelerate pour le cache
     return await prisma.member.findMany({
       orderBy: { name: "asc" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      },
+      cacheStrategy: { ttl: 300, swr: 600 }, // Cache pour 5 minutes, stale while revalidate pour 10 minutes
     });
   } catch (error) {
     console.error("Error fetching members:", error);
@@ -566,52 +615,71 @@ export async function applyAutomationRules(
   }[]
 ) {
   try {
-    const results = await Promise.all(
-      projectsToMove.map(async ({ projectId, targetColumnId }) => {
-        try {
-          // Trouver la colonne de destination pour dériver le statut
-          const targetColumn = await prisma.kanbanColumn.findUnique({
-            where: { id: targetColumnId },
-          });
+    // Optimisation 1: Récupérer toutes les colonnes cibles en une seule requête
+    const targetColumnIds = [
+      ...new Set(projectsToMove.map((p) => p.targetColumnId)),
+    ];
 
-          if (!targetColumn) {
-            throw new Error(
-              `Colonne de destination non trouvée : ${targetColumnId}`
-            );
-          }
+    const targetColumns = await prisma.kanbanColumn.findMany({
+      where: { id: { in: targetColumnIds } },
+      select: { id: true, title: true },
+    });
 
-          const newStatus = getProjectStatusFromColumnName(targetColumn.title);
+    const columnMap = targetColumns.reduce((map, column) => {
+      map[column.id] = column;
+      return map;
+    }, {} as Record<string, { id: string; title: string }>);
 
-          const project = await prisma.project.update({
+    // Optimisation 2: Exécuter les mises à jour dans une transaction
+    const projectUpdates = projectsToMove.map(
+      ({ projectId, targetColumnId }) => {
+        const targetColumn = columnMap[targetColumnId];
+
+        if (!targetColumn) {
+          return {
+            success: false,
+            projectId,
+            error: `Colonne de destination non trouvée : ${targetColumnId}`,
+          };
+        }
+
+        const newStatus = getProjectStatusFromColumnName(targetColumn.title);
+
+        return prisma.project
+          .update({
             where: { id: projectId },
             data: {
               columnId: targetColumnId,
               status: newStatus,
             },
-            include: {
-              authors: true,
-              members: true,
-              tasks: true,
-              customFields: true,
-              kanbanColumn: true,
+            select: {
+              id: true,
+              title: true,
+              status: true,
+              // Sélection plus limitée pour améliorer les performances
+              authors: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
             },
-          });
-
-          return {
+          })
+          .then((project) => ({
             success: true,
             project,
             targetColumnTitle: targetColumn.title,
-          };
-        } catch (error) {
-          console.error(`Error moving project ${projectId}:`, error);
-          return {
+          }))
+          .catch((error) => ({
             success: false,
             projectId,
             error: error instanceof Error ? error.message : "Erreur inconnue",
-          };
-        }
-      })
+          }));
+      }
     );
+
+    const results = await Promise.all(projectUpdates);
 
     revalidatePath("/dashboard/projects");
     return results;

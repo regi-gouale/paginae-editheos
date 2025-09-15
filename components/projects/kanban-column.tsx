@@ -35,55 +35,20 @@ const COLUMN_COLORS = [
 
 interface KanbanColumnProps {
   column: KanbanColumnWithProjects;
-  // onAddProject: (columnId: string, project: ProjectWithDetails) => void;
   onProjectClick: (project: ProjectWithDetails) => void;
   onDeleteColumn: () => void;
   onUpdateColumn: (
     columnId: string,
     data: Partial<KanbanColumnWithProjects>
   ) => void;
-  // onDuplicateProject: (project: ProjectWithDetails, columnId: string) => void;
 }
 
 export function KanbanColumn({
   column,
-  // onAddProject,
   onProjectClick,
   onDeleteColumn,
   onUpdateColumn,
-}: // onDuplicateProject,
-KanbanColumnProps) {
-  // const [isAddingProject, setIsAddingProject] = useState(false);
-  // const [newProjectTitle, setNewProjectTitle] = useState("");
-  // const [newProjectDescription, setNewProjectDescription] = useState("");
-
-  // const { showSuccess, showError } = useAlerts();
-
-  // const handleAddProject = async () => {
-  //   if (!newProjectTitle.trim()) return;
-
-  //   const newProject: ProjectWithDetails = {
-  //     id: `project-${randomUUID()}`,
-  //     title: newProjectTitle,
-  //     description: newProjectDescription || "",
-  //     columnId: column.id,
-  //     authors: [],
-  //     members: [],
-  //     tasks: [],
-  //     customFields: [],
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-
-  //     status: ProjectStatus.TODO,
-  //     dueDate: null,
-  //   };
-
-  //   onAddProject(column.id, newProject);
-  //   setNewProjectTitle("");
-  //   setNewProjectDescription("");
-  //   // setIsAddingProject(false);
-  // };
-
+}: KanbanColumnProps) {
   const handleColorChange = (color: string) => {
     onUpdateColumn(column.id, { color });
   };
@@ -174,7 +139,6 @@ KanbanColumnProps) {
                     <ProjectCard
                       project={project}
                       onClick={() => onProjectClick(project)}
-                      // onDuplicate={() => onDuplicateProject(project, column.id)}
                     />
                   </div>
                 )}

@@ -1,7 +1,7 @@
 "use client";
 
-import { KanbanColumn } from "@/components/kanban-column";
 import { ProjectDetailDialog } from "@/components/projects/detail-dialog";
+import { KanbanColumn } from "@/components/projects/kanban-column";
 import { applyAutomationRules, updateProject } from "@/lib/actions/kanban";
 import { getRules, shouldMoveProject } from "@/lib/rules";
 import {
@@ -30,52 +30,6 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
     if (initialColumns.length === 0) return;
     setColumns(initialColumns);
   }, [initialColumns]);
-
-  useEffect(() => {
-    if (columns.length === 0) return;
-
-    let hasInconsistencies = false;
-    const fixPromises: Promise<unknown>[] = [];
-
-    columns.forEach((column) => {
-      column.projects.forEach((project) => {
-        const expectedStatus = getProjectStatusFromColumnName(column.title);
-        if (project.status !== expectedStatus) {
-          hasInconsistencies = true;
-
-          // Créer une promesse de correction pour ce projet
-          const fixPromise = updateProject(project.id, {
-            status: expectedStatus,
-          })
-            .then(() => {
-              toast.success("Incohérence corrigée", {
-                description: `Le statut du projet "${project.title}" a été synchronisé avec la colonne "${column.title}".`,
-              });
-            })
-            .catch((error) => {
-              toast.error("Erreur lors de la correction", {
-                description: `Impossible de corriger le statut du projet "${project.title}" : ${error.message}`,
-              });
-            });
-
-          fixPromises.push(fixPromise);
-        }
-      });
-    });
-
-    // Afficher un message global si des incohérences sont détectées
-    if (hasInconsistencies && fixPromises.length > 0) {
-      toast.warning("Incohérences détectées", {
-        description: `${fixPromises.length} projet(s) avec des statuts incohérents sont en cours de correction...`,
-      });
-
-      // Attendre que toutes les corrections soient terminées
-      Promise.all(fixPromises).then(() => {
-        // Forcer un rafraîchissement de la page pour voir les changements
-        window.location.reload();
-      });
-    }
-  }, [columns]);
 
   useEffect(() => {
     if (columns.length === 0) return;
@@ -130,11 +84,19 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
           results.forEach((result) => {
             if (result.success) {
               toast.info("Règle d'automatisation appliquée", {
-                description: `"${result.project?.title}" déplacé automatiquement vers ${result.targetColumnTitle}`,
+                description: `"${
+                  "project" in result ? result.project?.title : "Projet"
+                }" déplacé automatiquement vers ${
+                  "targetColumnTitle" in result
+                    ? result.targetColumnTitle
+                    : "nouvelle colonne"
+                }`,
               });
             } else {
               toast.error("Erreur lors de l'application de la règle", {
-                description: `Impossible de déplacer le projet : ${result.error}`,
+                description: `Impossible de déplacer le projet : ${
+                  "error" in result ? result.error : "Erreur inconnue"
+                }`,
               });
             }
           });
