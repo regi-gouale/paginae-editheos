@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAuthorBySlug } from "@/lib/actions/authors";
-import { auth } from "@/lib/auth/auth";
+import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
@@ -16,21 +16,16 @@ import {
   MailIcon,
   UserIcon,
 } from "lucide-react";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-type Props = {
-  params: Promise<{
-    slug: string;
-  }>;
-};
-
-export default async function AuthorDetailPage({ params }: Props) {
+export default async function AuthorDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const resolvedParams = await params;
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getCurrentSession();
 
   if (!session) {
     redirect("/auth");

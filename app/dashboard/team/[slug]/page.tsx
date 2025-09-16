@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { getMemberBySlug } from "@/lib/actions/members";
-import { auth } from "@/lib/auth/auth";
+import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { formatDate } from "@/lib/utils";
 import { ArrowLeft, Calendar, Edit, Mail, User } from "lucide-react";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
@@ -31,17 +30,16 @@ const roleColors = {
 export default async function MemberDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getCurrentSession();
 
   if (!session) {
     redirect("/auth");
   }
 
-  const result = await getMemberBySlug(params.slug);
+  const resolvedParams = await params;
+  const result = await getMemberBySlug(resolvedParams.slug);
 
   if (!result.success || !result.member) {
     notFound();
