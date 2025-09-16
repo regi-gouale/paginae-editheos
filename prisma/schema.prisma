@@ -166,6 +166,7 @@ model Project {
   dueDate     DateTime?
   priority    Priority      @default(LOW)
   type        ProjectType   @default(EDITION)
+  fileUrl     String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
