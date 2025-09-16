@@ -11,7 +11,7 @@ export default function ProjectNotFound() {
         </CardHeader>
         <CardContent className="space-y-4 text-center">
           <p className="text-muted-foreground">
-            Le projet demandé n'existe pas ou a été supprimé.
+            Le projet demandé n&apos;existe pas ou a été supprimé.
           </p>
           <Button asChild>
             <Link href="/dashboard/projects">Retour aux projets</Link>

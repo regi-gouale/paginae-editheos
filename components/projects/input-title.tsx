@@ -21,25 +21,24 @@ export default function ProjectTitleEditor({
   const [editedTitle, setEditedTitle] = useState<string>("");
   const [slug, setSlug] = useState<string>("");
 
-  const getProjectSlug = async () => {
-    const project = await getProjectById(projectId);
-    if (project && project.slug) {
-      setSlug(project.slug);
-    } else {
-      const newSlug = `${title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")}-${Math.random()
-        .toString(36)
-        .substring(2, 8)}`;
-      setSlug(newSlug);
-      await updateProject(projectId, { slug: newSlug });
-    }
-  };
-
   useEffect(() => {
+    const getProjectSlug = async () => {
+      const project = await getProjectById(projectId);
+      if (project && project.slug) {
+        setSlug(project.slug);
+      } else {
+        const newSlug = `${title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")}-${Math.random()
+          .toString(36)
+          .substring(2, 8)}`;
+        setSlug(newSlug);
+        await updateProject(projectId, { slug: newSlug });
+      }
+    };
     setEditedTitle(title);
     getProjectSlug();
-  }, [title]);
+  }, [title, projectId]);
 
   const onSave = async () => {
     if (editedTitle.trim()) {

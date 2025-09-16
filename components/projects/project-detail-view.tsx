@@ -121,7 +121,7 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
                 {project.dueDate && (
                   <div>
                     <Label className="text-sm font-medium text-muted-foreground">
-                      Date d'échéance
+                      Date d&apos;échéance
                     </Label>
                     <div className="flex items-center gap-2">
                       <CalendarIcon className="h-4 w-4" />
