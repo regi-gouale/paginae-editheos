@@ -263,7 +263,7 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
               <ProjectFileUrlEditor
                 projectId={project.id}
                 fileUrl={project.fileUrl || ""}
-                isDetailView
+                // isDetailView
               />
               <div>
                 <Label className="text-sm font-medium text-muted-foreground">

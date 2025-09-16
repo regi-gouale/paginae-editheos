@@ -29,6 +29,8 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
   // Determine if project is overdue for display (exclude DONE projects)
   const isOverdue = isProjectOverdueForDisplay(project.dueDate, project.status);
 
+  const isCompleted = project.status === "DONE";
+
   return (
     <div
       className={cn(
@@ -38,7 +40,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
       onClick={onClick}
     >
       {project.authors.length > 0 && (
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-1 gap-2">
           {project.type === "EDITION" ? (
             <BookUser className="size-3 text-blue-600 dark:text-blue-400 mx-2" />
           ) : (
@@ -55,28 +57,30 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           ))}
         </div>
       )}
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start mt-1">
         <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1 line-clamp-2">
           {project.title}
         </h4>
-        <div
-          className={cn(
-            "text-xs px-2 py-1 rounded-full font-medium ml-2 shrink-0",
-            getPriorityBadgeStyle(project.priority)
-          )}
-        >
-          {getPriorityLabel(project.priority)}
-        </div>
+        {!isCompleted && (
+          <div
+            className={cn(
+              "text-xs px-2 py-1 rounded-full font-medium ml-2 shrink-0",
+              getPriorityBadgeStyle(project.priority)
+            )}
+          >
+            {getPriorityLabel(project.priority)}
+          </div>
+        )}
       </div>
 
-      {project.description && (
+      {project.description && !isCompleted && (
         <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 line-clamp-3">
           {project.description}
         </p>
       )}
 
       <div className="flex flex-wrap gap-2 mt-2">
-        {project.dueDate && (
+        {project.dueDate && !isCompleted && (
           <div
             className={cn(
               "flex flex-1 items-center text-xs",
@@ -91,14 +95,14 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           </div>
         )}
 
-        {totalTasks > 0 && (
+        {totalTasks > 0 && !isCompleted && (
           <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl">
             <CheckSquare className="size-3 mr-1" />
             {completedTasks}/{totalTasks}
           </div>
         )}
 
-        {project.customFields.length > 0 && (
+        {project.customFields.length > 0 && !isCompleted && (
           <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl gap-2">
             <SquareAsteriskIcon className="size-3 text-gray-500 dark:text-gray-400" />
             <span>{project.customFields.length} champs</span>

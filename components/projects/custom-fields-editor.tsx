@@ -193,7 +193,7 @@ export function ProjectCustomFieldsEditor({
                 {editingFieldId === field.id ? (
                   <Input
                     value={field.value}
-                    className="bg-gray-100 h-8"
+                    className="bg-gray-100 dark:bg-gray-800 h-8"
                     autoFocus
                     onChange={(e) =>
                       handleFieldValueChange(field.id, e.target.value)
@@ -220,7 +220,7 @@ export function ProjectCustomFieldsEditor({
                 ) : (
                   <Badge
                     variant={"outline"}
-                    className="p-1 cursor-pointer hover:bg-gray-100"
+                    className="px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
                     onClick={() => setEditingFieldId(field.id)}
                   >
                     {field.value}

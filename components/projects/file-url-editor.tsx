@@ -9,14 +9,14 @@ import { Input } from "../ui/input";
 type FileUrlEditorProps = {
   projectId: string;
   fileUrl: string | null;
-  isDetailView?: boolean;
+  // isDetailView?: boolean;
 };
 
 export function ProjectFileUrlEditor({
   projectId,
   fileUrl,
-  isDetailView = false,
-}: FileUrlEditorProps) {
+}: // isDetailView = false,
+FileUrlEditorProps) {
   const [editedFileUrl, setEditedFileUrl] = useState<string | null>(fileUrl);
   const [isEditing, setIsEditing] = useState(false);
 

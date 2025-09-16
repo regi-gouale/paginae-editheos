@@ -2,56 +2,43 @@
 
 import { ProjectCard } from "@/components/project-card";
 import { AddProjectDialog } from "@/components/projects/add-project-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import type {
   KanbanColumnWithProjects,
   ProjectWithDetails,
 } from "@/types/kanban";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
-import { MoreHorizontal, Palette, Trash2 } from "lucide-react";
 
 // Couleurs prédéfinies pour les colonnes
-const COLUMN_COLORS = [
-  { name: "Défaut", value: "bg-white dark:bg-gray-800" },
-  { name: "Bleu", value: "bg-blue-50 dark:bg-blue-900/30" },
-  { name: "Vert", value: "bg-green-50 dark:bg-green-900/30" },
-  { name: "Jaune", value: "bg-yellow-50 dark:bg-yellow-900/30" },
-  { name: "Violet", value: "bg-purple-50 dark:bg-purple-900/30" },
-  { name: "Rose", value: "bg-pink-50 dark:bg-pink-900/30" },
-  { name: "Orange", value: "bg-orange-50 dark:bg-orange-900/30" },
-  { name: "Cyan", value: "bg-cyan-50 dark:bg-cyan-900/30" },
-];
+// const COLUMN_COLORS = [
+//   { name: "Défaut", value: "bg-white dark:bg-gray-800" },
+//   { name: "Bleu", value: "bg-blue-50 dark:bg-blue-900/30" },
+//   { name: "Vert", value: "bg-green-50 dark:bg-green-900/30" },
+//   { name: "Jaune", value: "bg-yellow-50 dark:bg-yellow-900/30" },
+//   { name: "Violet", value: "bg-purple-50 dark:bg-purple-900/30" },
+//   { name: "Rose", value: "bg-pink-50 dark:bg-pink-900/30" },
+//   { name: "Orange", value: "bg-orange-50 dark:bg-orange-900/30" },
+//   { name: "Cyan", value: "bg-cyan-50 dark:bg-cyan-900/30" },
+// ];
 
 interface KanbanColumnProps {
   column: KanbanColumnWithProjects;
   onProjectClick: (project: ProjectWithDetails) => void;
-  onDeleteColumn: () => void;
-  onUpdateColumn: (
-    columnId: string,
-    data: Partial<KanbanColumnWithProjects>
-  ) => void;
+  // onDeleteColumn: () => void;
+  // onUpdateColumn: (
+  //   columnId: string,
+  //   data: Partial<KanbanColumnWithProjects>
+  // ) => void;
 }
 
 export function KanbanColumn({
   column,
   onProjectClick,
-  onDeleteColumn,
-  onUpdateColumn,
-}: KanbanColumnProps) {
-  const handleColorChange = (color: string) => {
-    onUpdateColumn(column.id, { color });
-  };
+}: // onDeleteColumn,
+// onUpdateColumn,
+KanbanColumnProps) {
+  // const handleColorChange = (color: string) => {
+  //   onUpdateColumn(column.id, { color });
+  // };
 
   // Couleur d'en-tête ou par défaut
   const headerColorClass = column.color || "bg-white dark:bg-gray-800";
@@ -73,7 +60,7 @@ export function KanbanColumn({
 
         <div className="flex items-center gap-1">
           {/* Sélecteur de couleur */}
-          <Popover>
+          {/* <Popover>
             <PopoverTrigger asChild>
               <Button variant="ghost" size="sm" className="size-8 p-0">
                 <Palette className="size-4" />
@@ -94,10 +81,10 @@ export function KanbanColumn({
                 </div>
               </div>
             </PopoverContent>
-          </Popover>
+          </Popover> */}
 
           {/* Menu d'actions */}
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="size-8 p-0">
                 <MoreHorizontal className="size-4" />
@@ -112,7 +99,7 @@ export function KanbanColumn({
                 Supprimer la colonne
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
 

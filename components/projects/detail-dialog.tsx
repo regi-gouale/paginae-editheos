@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { getPriorityLabel } from "@/lib/utils";
-import { Author } from "@/prisma/generated/prisma";
 import { ProjectWithDetails } from "@/types/kanban";
 import { useEffect, useState } from "react";
 
@@ -24,14 +23,12 @@ interface ProjectDetailDialogProps {
   project: ProjectWithDetails | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onProjectUpdated?: (project: ProjectWithDetails) => void;
 }
 
 export function ProjectDetailDialog({
   project,
   open,
   onOpenChange,
-  onProjectUpdated,
 }: ProjectDetailDialogProps) {
   const [editedProject, setEditedProject] = useState<ProjectWithDetails | null>(
     null
@@ -39,22 +36,6 @@ export function ProjectDetailDialog({
 
   const handleClose = () => {
     onOpenChange(false);
-  };
-
-  const handleAuthorUpdate = (author: Author) => {
-    if (editedProject && onProjectUpdated) {
-      const updatedProject = { ...editedProject, authors: [author] };
-      setEditedProject(updatedProject);
-      onProjectUpdated(updatedProject);
-    }
-  };
-
-  const handleDueDateUpdate = (date: Date | null) => {
-    if (editedProject && onProjectUpdated) {
-      const updatedProject = { ...editedProject, dueDate: date };
-      setEditedProject(updatedProject);
-      onProjectUpdated(updatedProject);
-    }
   };
 
   useEffect(() => {
@@ -89,19 +70,17 @@ export function ProjectDetailDialog({
             <AuthorSelectionDropdown
               projectId={editedProject.id}
               selectedAuthors={editedProject.authors}
-              onAuthorChange={handleAuthorUpdate}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DeadlineSelectorPopover
               projectId={editedProject.id}
               dueDate={editedProject.dueDate}
-              // onDueDateChange={handleDueDateUpdate}
             />
             <div className="space-y-2">
               <Label>Priorité</Label>
               <Input
-                className="border mx-auto p-2"
+                className="border mx-auto p-2 rounded-xl"
                 value={getPriorityLabel(editedProject.priority)}
                 disabled
               />
