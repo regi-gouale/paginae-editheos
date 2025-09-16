@@ -17,14 +17,14 @@ import { useEffect, useState } from "react";
 interface AuthorSelectionDropdownProps {
   projectId: string;
   selectedAuthors?: Author[];
-  onAuthorChange?: (author: Author) => void;
+  // onAuthorChange?: (author: Author) => void;
   autoLoad?: boolean;
 }
 
 export function AuthorSelectionDropdown({
   projectId,
   selectedAuthors = [],
-  onAuthorChange,
+  // onAuthorChange,
   autoLoad = true,
 }: AuthorSelectionDropdownProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -79,9 +79,9 @@ export function AuthorSelectionDropdown({
       setSelectedAuthor(author);
 
       // Appeler le callback si fourni
-      if (onAuthorChange) {
-        onAuthorChange(author);
-      }
+      // if (onAuthorChange) {
+      //   onAuthorChange(author);
+      // }
     } catch (error) {
       console.error("Erreur lors de la mise à jour de l'auteur:", error);
     }
@@ -99,7 +99,7 @@ export function AuthorSelectionDropdown({
           value={selectedAuthor?.id || ""}
           onValueChange={handleAuthorChange}
         >
-          <SelectTrigger>
+          <SelectTrigger className="w-full rounded-xl">
             <SelectValue placeholder="Sélectionner un auteur">
               {selectedAuthor && (
                 <div className="flex items-center gap-2">

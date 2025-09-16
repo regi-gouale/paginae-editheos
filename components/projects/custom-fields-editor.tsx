@@ -13,14 +13,120 @@ import { CustomField } from "@/prisma/generated/prisma";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+// Composant réutilisable pour le bouton d'ajout de champs personnalisés
+type AddCustomFieldButtonProps = {
+  onAddClick: () => void;
+  isDetailView?: boolean;
+};
+
+function AddCustomFieldButton({
+  onAddClick,
+  isDetailView = false,
+}: AddCustomFieldButtonProps) {
+  if (isDetailView) {
+    return (
+      <div className="flex items-center justify-end mb-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onAddClick}
+          className="rounded-xl"
+        >
+          <Plus className="size-4 mr-1" />
+          Ajouter
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center justify-between mb-2">
+      <Label className="text-base font-semibold">Champs personnalisés</Label>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onAddClick}
+        className="rounded-xl"
+      >
+        <Plus className="size-4 mr-1" />
+        Ajouter
+      </Button>
+    </div>
+  );
+}
+
+// Composant réutilisable pour le formulaire d'ajout de champs personnalisés
+type CustomFieldAdderProps = {
+  newFieldName: string;
+  setNewFieldName: (name: string) => void;
+  newFieldValue: string;
+  setNewFieldValue: (value: string) => void;
+  onAddField: () => void;
+  onCancel: () => void;
+};
+
+function CustomFieldAdder({
+  newFieldName,
+  setNewFieldName,
+  newFieldValue,
+  setNewFieldValue,
+  onAddField,
+  onCancel,
+}: CustomFieldAdderProps) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      onAddField();
+    } else if (e.key === "Escape") {
+      onCancel();
+    }
+  };
+
+  return (
+    <div className="space-y-2 p-3 border rounded-xl mb-4">
+      <div className="grid grid-cols-2 gap-2 mb-2">
+        <Input
+          value={newFieldName}
+          onChange={(e) => setNewFieldName(e.target.value)}
+          placeholder="Nouveau champ"
+          autoFocus
+          onKeyDown={handleKeyDown}
+          className="rounded-xl"
+        />
+        <Input
+          value={newFieldValue}
+          onChange={(e) => setNewFieldValue(e.target.value)}
+          placeholder="Nouvelle valeur"
+          onKeyDown={handleKeyDown}
+          className="rounded-xl flex-1"
+        />
+      </div>
+      <div className="flex gap-2 justify-end">
+        <Button size="sm" onClick={onAddField} className="rounded-xl">
+          Ajouter
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={onCancel}
+          className="rounded-xl"
+        >
+          Annuler
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 interface ProjectCustomFieldsEditorProps {
   projectId: string;
   customFields?: CustomField[];
+  isDetailView?: boolean;
 }
 
 export function ProjectCustomFieldsEditor({
   projectId,
   customFields,
+  isDetailView = false,
 }: ProjectCustomFieldsEditorProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [editingFieldId, setEditingFieldId] = useState<string | null>(null);
@@ -47,9 +153,16 @@ export function ProjectCustomFieldsEditor({
 
     setEditedFields((prev) => [...prev, createdField]);
 
+    // Réinitialiser les états après ajout
     setNewFieldName("");
     setNewFieldValue("");
     setIsAdding(false);
+  };
+
+  const handleCancelAdd = () => {
+    setIsAdding(false);
+    setNewFieldName("");
+    setNewFieldValue("");
   };
 
   const updateFieldValue = async (fieldId: string, newValue: string) => {
@@ -105,67 +218,28 @@ export function ProjectCustomFieldsEditor({
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-2">
-        <Label className="text-base font-semibold">Champs personnalisés</Label>
-        <Button variant="outline" size="sm" onClick={() => setIsAdding(true)}>
-          <Plus className="size-4 mr-1" />
-          Ajouter
-        </Button>
-      </div>
-      {isAdding && (
-        <div className="space-y-2 p-3 border rounded-xl mb-4">
-          <div className="flex flex-row gap-2 mb-2">
-            <Input
-              value={newFieldName}
-              onChange={(e) => setNewFieldName(e.target.value)}
-              placeholder="Nouveau champ"
-              autoFocus
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  onAddField();
-                  setIsAdding(false);
-                  setNewFieldName("");
-                } else if (e.key === "Escape") {
-                  setIsAdding(false);
-                  setNewFieldName("");
-                }
-              }}
-            />
-            <Input
-              value={newFieldValue}
-              onChange={(e) => setNewFieldValue(e.target.value)}
-              placeholder="Nouvelle valeur"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  onAddField();
-                  setIsAdding(false);
-                  setNewFieldName("");
-                } else if (e.key === "Escape") {
-                  setIsAdding(false);
-                  setNewFieldName("");
-                }
-              }}
-            />
-          </div>
-          <div className="flex gap-2">
-            <Button size="sm" onClick={onAddField}>
-              Ajouter
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                setIsAdding(false);
-                setNewFieldName("");
-                setNewFieldValue("");
-              }}
-            >
-              Annuler
-            </Button>
-          </div>
-        </div>
+    <div className="space-y-4">
+      {/* Bouton d'ajout conditionnel */}
+      {!isAdding && (
+        <AddCustomFieldButton
+          onAddClick={() => setIsAdding(true)}
+          isDetailView={isDetailView}
+        />
       )}
+
+      {/* Formulaire d'ajout de champ personnalisé */}
+      {isAdding && (
+        <CustomFieldAdder
+          newFieldName={newFieldName}
+          setNewFieldName={setNewFieldName}
+          newFieldValue={newFieldValue}
+          setNewFieldValue={setNewFieldValue}
+          onAddField={onAddField}
+          onCancel={handleCancelAdd}
+        />
+      )}
+
+      {/* Liste des champs personnalisés */}
       <div className="mt-4 space-y-2">
         {editedFields &&
           editedFields.map((field) => (
@@ -179,7 +253,7 @@ export function ProjectCustomFieldsEditor({
                 {editingFieldId === field.id ? (
                   <Input
                     value={field.value}
-                    className="bg-gray-100 h-8"
+                    className="bg-gray-100 dark:bg-gray-800 h-8"
                     autoFocus
                     onChange={(e) =>
                       handleFieldValueChange(field.id, e.target.value)
@@ -206,7 +280,7 @@ export function ProjectCustomFieldsEditor({
                 ) : (
                   <Badge
                     variant={"outline"}
-                    className="p-1 cursor-pointer hover:bg-gray-100"
+                    className="px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
                     onClick={() => setEditingFieldId(field.id)}
                   >
                     {field.value}

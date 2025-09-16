@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
 interface ProjectDescriptionDialogProps {
   projectId: string;
   description: string | null;
+  isDetailView?: boolean;
 }
 
 export function ProjectDescriptionDialog({
   projectId,
   description,
+  isDetailView = false,
 }: ProjectDescriptionDialogProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedDescription, setEditedDescription] = useState(description);
@@ -38,7 +40,9 @@ export function ProjectDescriptionDialog({
 
   return (
     <div className="space-y-2">
-      <Label>Description</Label>
+      <Label className={`${isDetailView ? "hidden" : "block"}`}>
+        Description
+      </Label>
       {isEditing ? (
         <div className="space-y-2">
           <Textarea
@@ -51,12 +55,18 @@ export function ProjectDescriptionDialog({
                 onCancel();
               }
             }}
+            className="rounded-xl max-h-96 overflow-y-auto"
           />
           <div className="flex gap-2">
-            <Button size={"sm"} onClick={onSave}>
+            <Button size={"sm"} onClick={onSave} className="rounded-xl">
               Enregistrer
             </Button>
-            <Button size={"sm"} variant={"outline"} onClick={onCancel}>
+            <Button
+              size={"sm"}
+              variant={"outline"}
+              onClick={onCancel}
+              className="rounded-xl"
+            >
               Annuler
             </Button>
           </div>
@@ -64,7 +74,11 @@ export function ProjectDescriptionDialog({
       ) : (
         <div className="space-y-2">
           <div
-            className="min-h-[60px] p-3 border rounded-xl cursor-pointer hover:bg-muted/50 text-sm"
+            className={`${
+              isDetailView
+                ? "text-muted-foreground text-lg mx-auto p-4 rounded-xl"
+                : "min-h-[60px] p-3 border rounded-xl hover:bg-muted/50 text-sm"
+            } cursor-pointer hover:bg-muted/50 max-h-96 overflow-y-auto`}
             onClick={() => setIsEditing(true)}
           >
             {editedDescription || (

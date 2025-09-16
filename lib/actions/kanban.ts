@@ -176,6 +176,180 @@ export async function deleteCustomField(id: string) {
   }
 }
 
+// Get a specific project by ID with all details
+export async function getProjectById(id: string) {
+  try {
+    const project = await prisma.project.findUnique({
+      where: { id },
+      include: {
+        authors: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            biography: true,
+            website: true,
+            nationality: true,
+            birthDate: true,
+            slug: true,
+          },
+        },
+        members: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            slug: true,
+          },
+        },
+        tasks: {
+          orderBy: { createdAt: "asc" },
+        },
+        customFields: {
+          orderBy: { name: "asc" },
+        },
+        kanbanColumn: {
+          select: {
+            id: true,
+            title: true,
+            color: true,
+            position: true,
+          },
+        },
+      },
+    });
+
+    if (!project) {
+      throw new Error("Project not found");
+    }
+    return project;
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    throw new Error("Failed to fetch project");
+  }
+}
+
+export async function getProjectBySlug(slug: string) {
+  try {
+    const project = await prisma.project.findUnique({
+      where: { slug },
+      include: {
+        authors: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            biography: true,
+            website: true,
+            createdAt: true,
+            updatedAt: true,
+            slug: true,
+            nationality: true,
+            birthDate: true,
+          },
+        },
+        members: {
+          select: {
+            id: true,
+            email: true,
+            slug: true,
+            name: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        tasks: {
+          orderBy: { createdAt: "asc" },
+        },
+        customFields: {
+          orderBy: { name: "asc" },
+        },
+        kanbanColumn: {
+          select: {
+            id: true,
+            title: true,
+            color: true,
+            position: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+      },
+    });
+
+    if (!project) {
+      throw new Error("Project not found");
+    }
+    return project;
+  } catch (error) {
+    console.error("Error fetching project by slug:", error);
+    throw new Error("Failed to fetch project by slug");
+  }
+}
+
+// Ensure a project has a slug, creating one if necessary
+export async function ensureProjectSlug(projectId: string): Promise<string> {
+  try {
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { slug: true, title: true },
+    });
+
+    if (!project) {
+      throw new Error("Project not found");
+    }
+
+    // Return existing slug if it exists
+    if (project.slug) {
+      return project.slug;
+    }
+
+    // Generate new slug if none exists
+    const { generateProjectSlug } = await import("@/lib/utils");
+    let newSlug = generateProjectSlug(project.title);
+
+    // Ensure uniqueness
+    let isUnique = false;
+    let attempts = 0;
+
+    while (!isUnique && attempts < 10) {
+      const existingProject = await prisma.project.findUnique({
+        where: { slug: newSlug },
+      });
+
+      if (!existingProject) {
+        isUnique = true;
+      } else {
+        attempts++;
+        const { generateRandomId } = await import("@/lib/utils");
+        newSlug = `${project.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")}-${generateRandomId(6)}`;
+      }
+    }
+
+    if (!isUnique) {
+      throw new Error("Unable to generate unique slug after 10 attempts");
+    }
+
+    // Update project with new slug
+    await prisma.project.update({
+      where: { id: projectId },
+      data: { slug: newSlug },
+    });
+
+    revalidatePath("/dashboard/projects");
+    return newSlug;
+  } catch (error) {
+    console.error("Error ensuring project slug:", error);
+    throw new Error("Failed to ensure project slug");
+  }
+}
+
 // Get all columns with their projects
 export async function getKanbanData() {
   try {
@@ -404,6 +578,11 @@ export async function createProject(data: {
             }
           : undefined,
         columnId: columnTodo?.id,
+        slug: `${data.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")}-${Math.random()
+          .toString(36)
+          .substring(2, 8)}`,
       },
       include: {
         authors: true,
@@ -432,13 +611,47 @@ export async function updateProject(
     dueDate?: Date;
     columnId?: string;
     authorIds?: string[];
+    slug?: string;
+    fileUrl?: string;
   }
 ) {
   try {
     const { authorIds, ...updateData } = data;
 
-    // Si le statut est modifié, trouver automatiquement la colonne correspondante
+    // Préparer les données de mise à jour
     let finalUpdateData = { ...updateData };
+
+    // Si le titre est modifié, générer un nouveau slug si nécessaire
+    if (updateData.title && !updateData.slug) {
+      const { generateProjectSlug } = await import("@/lib/utils");
+      let newSlug = generateProjectSlug(updateData.title);
+
+      // Vérifier l'unicité du slug
+      let isUnique = false;
+      let attempts = 0;
+
+      while (!isUnique && attempts < 10) {
+        const existingProject = await prisma.project.findUnique({
+          where: { slug: newSlug },
+        });
+
+        if (!existingProject || existingProject.id === id) {
+          isUnique = true;
+        } else {
+          attempts++;
+          const { generateRandomId } = await import("@/lib/utils");
+          newSlug = `${updateData.title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")}-${generateRandomId(6)}`;
+        }
+      }
+
+      if (isUnique) {
+        finalUpdateData.slug = newSlug;
+      }
+    }
+
+    // Si le statut est modifié, trouver automatiquement la colonne correspondante
     if (updateData.status && !updateData.columnId) {
       const columnTitle = getColumnNameFromProjectStatus(updateData.status);
       const targetColumn = await prisma.kanbanColumn.findFirst({

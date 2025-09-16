@@ -158,8 +158,8 @@ export function MembersTable({ initialData }: MembersTableProps) {
     }
   };
 
-  const handleRowClick = (memberId: string) => {
-    window.location.href = `/dashboard/team/${memberId}`;
+  const handleRowClick = (memberSlug: string) => {
+    window.location.href = `/dashboard/team/${memberSlug}`;
   };
 
   const refreshData = async () => {
@@ -242,7 +242,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
                 <TableRow
                   key={member.id}
                   className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => handleRowClick(member.id)}
+                  onClick={() => member.slug && handleRowClick(member.slug)}
                 >
                   <TableCell className="font-medium ml-2">
                     {member.name}

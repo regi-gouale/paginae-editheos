@@ -6,12 +6,16 @@ import { DeadlineSelectorPopover } from "@/components/projects/popover-due-date"
 import { AuthorSelectionDropdown } from "@/components/projects/select-author";
 import { ProjectStatusDropdown } from "@/components/projects/select-project-status";
 import { ProjectTasksEditor } from "@/components/projects/tasks-editor";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { getPriorityLabel } from "@/lib/utils";
-import { Author, ProjectStatus } from "@/prisma/generated/prisma";
 import { ProjectWithDetails } from "@/types/kanban";
 import { useEffect, useState } from "react";
 
@@ -19,14 +23,12 @@ interface ProjectDetailDialogProps {
   project: ProjectWithDetails | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onProjectUpdated?: (project: ProjectWithDetails) => void;
 }
 
 export function ProjectDetailDialog({
   project,
   open,
   onOpenChange,
-  onProjectUpdated,
 }: ProjectDetailDialogProps) {
   const [editedProject, setEditedProject] = useState<ProjectWithDetails | null>(
     null
@@ -34,30 +36,6 @@ export function ProjectDetailDialog({
 
   const handleClose = () => {
     onOpenChange(false);
-  };
-
-  const handleStatusUpdate = (newStatus: ProjectStatus) => {
-    if (editedProject && onProjectUpdated) {
-      const updatedProject = { ...editedProject, status: newStatus };
-      setEditedProject(updatedProject);
-      onProjectUpdated(updatedProject);
-    }
-  };
-
-  const handleAuthorUpdate = (author: Author) => {
-    if (editedProject && onProjectUpdated) {
-      const updatedProject = { ...editedProject, authors: [author] };
-      setEditedProject(updatedProject);
-      onProjectUpdated(updatedProject);
-    }
-  };
-
-  const handleDueDateUpdate = (date: Date | null) => {
-    if (editedProject && onProjectUpdated) {
-      const updatedProject = { ...editedProject, dueDate: date };
-      setEditedProject(updatedProject);
-      onProjectUpdated(updatedProject);
-    }
   };
 
   useEffect(() => {
@@ -72,35 +50,38 @@ export function ProjectDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <ProjectTitleEditor
-          title={editedProject.title}
-          projectId={editedProject.id}
-        />
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <ProjectTitleEditor
+              title={editedProject.title}
+              projectId={editedProject.id}
+              slug={editedProject.slug || undefined}
+            />
+          </DialogTitle>
+        </DialogHeader>
 
         <div className="space-y-6 flex flex-col">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <ProjectStatusDropdown
               projectId={editedProject.id}
               status={editedProject.status}
-              onStatusUpdated={handleStatusUpdate}
+              // onStatusUpdated={handleStatusUpdate}
             />
             <AuthorSelectionDropdown
               projectId={editedProject.id}
               selectedAuthors={editedProject.authors}
-              onAuthorChange={handleAuthorUpdate}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DeadlineSelectorPopover
               projectId={editedProject.id}
               dueDate={editedProject.dueDate}
-              onDueDateChange={handleDueDateUpdate}
             />
             <div className="space-y-2">
               <Label>Priorité</Label>
               <Input
-                className="border mx-auto p-2"
+                className="border mx-auto p-2 rounded-xl"
                 value={getPriorityLabel(editedProject.priority)}
                 disabled
               />

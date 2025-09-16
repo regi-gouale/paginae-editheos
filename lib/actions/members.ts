@@ -1,12 +1,14 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { generateMemberSlug } from "@/lib/utils";
 import { Prisma } from "@/prisma/generated/prisma";
 
 export interface Member {
   id: string;
   name: string;
   email: string;
+  slug: string | null;
   role: "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST";
   createdAt: Date;
   updatedAt: Date;
@@ -103,7 +105,10 @@ export async function addMember(data: {
 }): Promise<{ success: boolean; member?: Member; error?: string }> {
   try {
     const member = await prisma.member.create({
-      data,
+      data: {
+        ...data,
+        slug: generateMemberSlug(data.name),
+      },
     });
     return { success: true, member };
   } catch (error) {
@@ -130,6 +135,31 @@ export async function getMemberById(
     return { success: true, member };
   } catch (error) {
     console.error("Error fetching member:", error);
+    return {
+      success: false,
+      error: "Erreur lors de la récupération du membre",
+    };
+  }
+}
+
+export async function getMemberBySlug(
+  slug: string
+): Promise<{ success: boolean; member?: Member; error?: string }> {
+  try {
+    const member = await prisma.member.findUnique({
+      where: { slug },
+      cacheStrategy: {
+        ttl: 60, // Cache pendant 60 secondes
+      },
+    });
+
+    if (!member) {
+      return { success: false, error: "Membre non trouvé" };
+    }
+
+    return { success: true, member };
+  } catch (error) {
+    console.error("Error fetching member by slug:", error);
     return {
       success: false,
       error: "Erreur lors de la récupération du membre",

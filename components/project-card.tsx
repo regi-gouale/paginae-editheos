@@ -1,9 +1,21 @@
 "use client";
 
-import { cn, formatDate, isProjectOverdueForDisplay } from "@/lib/utils";
-import { Priority } from "@/prisma/generated/prisma";
+import {
+  cn,
+  formatDate,
+  getPriorityBadgeStyle,
+  getPriorityBorderStyle,
+  getPriorityLabel,
+  isProjectOverdueForDisplay,
+} from "@/lib/utils";
 import type { ProjectWithDetails } from "@/types/kanban";
-import { BookUser, Calendar, CheckSquare, Printer } from "lucide-react";
+import {
+  BookUser,
+  Calendar,
+  CheckSquare,
+  Printer,
+  SquareAsteriskIcon,
+} from "lucide-react";
 
 interface ProjectCardProps {
   project: ProjectWithDetails;
@@ -17,51 +29,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
   // Determine if project is overdue for display (exclude DONE projects)
   const isOverdue = isProjectOverdueForDisplay(project.dueDate, project.status);
 
-  // Get priority-based styling
-  const getPriorityBorderStyle = (priority: Priority) => {
-    switch (priority) {
-      case "URGENT":
-        return "border-l-4 border-l-red-500";
-      case "HIGH":
-        return "border-l-4 border-l-orange-500";
-      case "MEDIUM":
-        return "border-l-4 border-l-yellow-500";
-      case "LOW":
-        return "border-l-4 border-l-green-500";
-      default:
-        return "border-l-4 border-l-gray-300";
-    }
-  };
-
-  const getPriorityBadgeStyle = (priority: Priority) => {
-    switch (priority) {
-      case "URGENT":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
-      case "HIGH":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300";
-      case "MEDIUM":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
-      case "LOW":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300";
-    }
-  };
-
-  const getPriorityLabel = (priority: Priority) => {
-    switch (priority) {
-      case "URGENT":
-        return "Urgente";
-      case "HIGH":
-        return "Élevée";
-      case "MEDIUM":
-        return "Moyenne";
-      case "LOW":
-        return "Faible";
-      default:
-        return "Non définie";
-    }
-  };
+  const isCompleted = project.status === "DONE";
 
   return (
     <div
@@ -72,7 +40,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
       onClick={onClick}
     >
       {project.authors.length > 0 && (
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-1 gap-2">
           {project.type === "EDITION" ? (
             <BookUser className="size-3 text-blue-600 dark:text-blue-400 mx-2" />
           ) : (
@@ -89,28 +57,30 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           ))}
         </div>
       )}
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start mt-1">
         <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1 line-clamp-2">
           {project.title}
         </h4>
-        <div
-          className={cn(
-            "text-xs px-2 py-1 rounded-full font-medium ml-2 shrink-0",
-            getPriorityBadgeStyle(project.priority)
-          )}
-        >
-          {getPriorityLabel(project.priority)}
-        </div>
+        {!isCompleted && (
+          <div
+            className={cn(
+              "text-xs px-2 py-1 rounded-full font-medium ml-2 shrink-0",
+              getPriorityBadgeStyle(project.priority)
+            )}
+          >
+            {getPriorityLabel(project.priority)}
+          </div>
+        )}
       </div>
 
-      {project.description && (
+      {project.description && !isCompleted && (
         <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 line-clamp-3">
           {project.description}
         </p>
       )}
 
       <div className="flex flex-wrap gap-2 mt-2">
-        {project.dueDate && (
+        {project.dueDate && !isCompleted && (
           <div
             className={cn(
               "flex flex-1 items-center text-xs",
@@ -125,26 +95,18 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           </div>
         )}
 
-        {totalTasks > 0 && (
+        {totalTasks > 0 && !isCompleted && (
           <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl">
             <CheckSquare className="size-3 mr-1" />
             {completedTasks}/{totalTasks}
           </div>
         )}
 
-        {project.customFields.map(
-          (field) =>
-            field.value && (
-              <div
-                key={field.id}
-                className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl"
-              >
-                {field.name}:{" "}
-                {field.value.toString().length > 10
-                  ? field.value.toString().slice(0, 10) + "..."
-                  : field.value.toString()}
-              </div>
-            )
+        {project.customFields.length > 0 && !isCompleted && (
+          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl gap-2">
+            <SquareAsteriskIcon className="size-3 text-gray-500 dark:text-gray-400" />
+            <span>{project.customFields.length} champs</span>
+          </div>
         )}
       </div>
     </div>

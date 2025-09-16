@@ -4,8 +4,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAuthorById } from "@/lib/actions/authors";
-import { auth } from "@/lib/auth/auth";
+import { getAuthorBySlug } from "@/lib/actions/authors";
+import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
@@ -16,27 +16,22 @@ import {
   MailIcon,
   UserIcon,
 } from "lucide-react";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-type Props = {
-  params: Promise<{
-    id: string;
-  }>;
-};
-
-export default async function AuthorDetailPage({ params }: Props) {
+export default async function AuthorDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const resolvedParams = await params;
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getCurrentSession();
 
   if (!session) {
     redirect("/auth");
   }
 
-  const author = await getAuthorById(resolvedParams.id);
+  const author = await getAuthorBySlug(resolvedParams.slug);
 
   if (!author) {
     notFound();
@@ -46,7 +41,7 @@ export default async function AuthorDetailPage({ params }: Props) {
     { label: "Auteurs", href: "/dashboard/authors" },
     {
       label: `${author.firstName} ${author.lastName}`,
-      href: `/dashboard/authors/${author.id}`,
+      href: `/dashboard/authors/${author.slug}`,
     },
   ];
 

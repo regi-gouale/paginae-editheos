@@ -15,14 +15,14 @@ import { useEffect, useState } from "react";
 interface ProjectStatusDropdownProps {
   projectId: string;
   status: ProjectStatus;
-  onStatusUpdated?: (newStatus: ProjectStatus) => void;
+  // onStatusUpdated?: (newStatus: ProjectStatus) => void;
 }
 
 export function ProjectStatusDropdown({
   projectId,
   status,
-  onStatusUpdated,
-}: ProjectStatusDropdownProps) {
+}: // onStatusUpdated,
+ProjectStatusDropdownProps) {
   const [selectedStatus, setSelectedStatus] = useState<ProjectStatus>(status);
 
   useEffect(() => {
@@ -32,11 +32,6 @@ export function ProjectStatusDropdown({
   const onValueChange = async (value: ProjectStatus) => {
     setSelectedStatus(value);
     await updateProject(projectId, { status: value });
-
-    // Appeler le callback pour notifier le changement
-    if (onStatusUpdated) {
-      onStatusUpdated(value);
-    }
   };
 
   return (
@@ -46,7 +41,7 @@ export function ProjectStatusDropdown({
         value={selectedStatus}
         onValueChange={(value) => onValueChange(value as ProjectStatus)}
       >
-        <SelectTrigger>
+        <SelectTrigger className="w-full rounded-xl">
           <SelectValue placeholder="Sélectionner un statut" />
         </SelectTrigger>
         <SelectContent>

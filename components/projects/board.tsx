@@ -7,10 +7,7 @@ import { useProjectFilters } from "@/hooks/projects/use-project-filters";
 import { applyAutomationRules, updateProject } from "@/lib/actions/kanban";
 import { filterKanbanColumns } from "@/lib/project-filters";
 import { getRules, shouldMoveProject } from "@/lib/rules";
-import {
-  getColumnNameFromProjectStatus,
-  getProjectStatusFromColumnName,
-} from "@/lib/utils";
+import { getProjectStatusFromColumnName } from "@/lib/utils";
 import { KanbanColumnWithProjects, ProjectWithDetails } from "@/types/kanban";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { useEffect, useMemo, useState } from "react";
@@ -120,61 +117,61 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
     }
   }, [columns]);
 
-  const handleProjectUpdate = (updatedProject: ProjectWithDetails) => {
-    const newColumns = [...columns];
+  // const handleProjectUpdate = (updatedProject: ProjectWithDetails) => {
+  //   const newColumns = [...columns];
 
-    // Trouver l'ancienne colonne du projet
-    let sourceColumnIndex = -1;
-    let projectIndex = -1;
+  //   // Trouver l'ancienne colonne du projet
+  //   let sourceColumnIndex = -1;
+  //   let projectIndex = -1;
 
-    for (let i = 0; i < newColumns.length; i++) {
-      projectIndex = newColumns[i].projects.findIndex(
-        (p) => p.id === updatedProject.id
-      );
-      if (projectIndex !== -1) {
-        sourceColumnIndex = i;
-        break;
-      }
-    }
+  //   for (let i = 0; i < newColumns.length; i++) {
+  //     projectIndex = newColumns[i].projects.findIndex(
+  //       (p) => p.id === updatedProject.id
+  //     );
+  //     if (projectIndex !== -1) {
+  //       sourceColumnIndex = i;
+  //       break;
+  //     }
+  //   }
 
-    if (sourceColumnIndex === -1) return;
+  //   if (sourceColumnIndex === -1) return;
 
-    // Trouver la nouvelle colonne basée sur le statut
-    const targetColumnTitle = getColumnNameFromProjectStatus(
-      updatedProject.status
-    );
-    const targetColumnIndex = newColumns.findIndex(
-      (col) => col.title === targetColumnTitle
-    );
+  //   // Trouver la nouvelle colonne basée sur le statut
+  //   const targetColumnTitle = getColumnNameFromProjectStatus(
+  //     updatedProject.status
+  //   );
+  //   const targetColumnIndex = newColumns.findIndex(
+  //     (col) => col.title === targetColumnTitle
+  //   );
 
-    if (targetColumnIndex === -1) return;
+  //   if (targetColumnIndex === -1) return;
 
-    // Si le projet est déjà dans la bonne colonne, juste mettre à jour ses données
-    if (sourceColumnIndex === targetColumnIndex) {
-      newColumns[sourceColumnIndex].projects[projectIndex] = updatedProject;
-    } else {
-      // Retirer le projet de l'ancienne colonne
-      newColumns[sourceColumnIndex] = {
-        ...newColumns[sourceColumnIndex],
-        projects: newColumns[sourceColumnIndex].projects.filter(
-          (p) => p.id !== updatedProject.id
-        ),
-      };
+  //   // Si le projet est déjà dans la bonne colonne, juste mettre à jour ses données
+  //   if (sourceColumnIndex === targetColumnIndex) {
+  //     newColumns[sourceColumnIndex].projects[projectIndex] = updatedProject;
+  //   } else {
+  //     // Retirer le projet de l'ancienne colonne
+  //     newColumns[sourceColumnIndex] = {
+  //       ...newColumns[sourceColumnIndex],
+  //       projects: newColumns[sourceColumnIndex].projects.filter(
+  //         (p) => p.id !== updatedProject.id
+  //       ),
+  //     };
 
-      // Ajouter le projet à la nouvelle colonne
-      newColumns[targetColumnIndex] = {
-        ...newColumns[targetColumnIndex],
-        projects: [...newColumns[targetColumnIndex].projects, updatedProject],
-      };
-    }
+  //     // Ajouter le projet à la nouvelle colonne
+  //     newColumns[targetColumnIndex] = {
+  //       ...newColumns[targetColumnIndex],
+  //       projects: [...newColumns[targetColumnIndex].projects, updatedProject],
+  //     };
+  //   }
 
-    setColumns(newColumns);
+  //   setColumns(newColumns);
 
-    // Mettre à jour le projet sélectionné
-    if (selectedProject && selectedProject.id === updatedProject.id) {
-      setSelectedProject(updatedProject);
-    }
-  };
+  //   // Mettre à jour le projet sélectionné
+  //   if (selectedProject && selectedProject.id === updatedProject.id) {
+  //     setSelectedProject(updatedProject);
+  //   }
+  // };
 
   const handleDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -284,8 +281,8 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
               column={column}
               // onAddProject={addProject}
               onProjectClick={setSelectedProject}
-              onDeleteColumn={() => {}}
-              onUpdateColumn={() => {}}
+              // onDeleteColumn={() => {}}
+              // onUpdateColumn={() => {}}
             />
           ))}
         </div>
@@ -297,7 +294,7 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
         onOpenChange={(open) => {
           if (!open) setSelectedProject(null);
         }}
-        onProjectUpdated={handleProjectUpdate}
+        // onProjectUpdated={handleProjectUpdate}
       />
     </div>
   );
