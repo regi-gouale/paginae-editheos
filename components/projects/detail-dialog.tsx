@@ -56,6 +56,7 @@ export function ProjectDetailDialog({
             <ProjectTitleEditor
               title={editedProject.title}
               projectId={editedProject.id}
+              slug={editedProject.slug || undefined}
             />
           </DialogTitle>
         </DialogHeader>

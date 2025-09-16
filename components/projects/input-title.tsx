@@ -2,43 +2,43 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getProjectById, updateProject } from "@/lib/actions/kanban";
+import { ensureProjectSlug, updateProject } from "@/lib/actions/kanban";
 import { Edit3Icon, Link2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface ProjectTitleEditorProps {
   projectId: string;
   title: string;
+  slug?: string; // Passé depuis le parent au lieu d'être récupéré côté client
   isDetailView?: boolean;
 }
 
 export default function ProjectTitleEditor({
   title,
   projectId,
+  slug: initialSlug,
   isDetailView = false,
 }: ProjectTitleEditorProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState<string>("");
-  const [slug, setSlug] = useState<string>("");
+  const [slug, setSlug] = useState<string>(initialSlug || "");
 
   useEffect(() => {
-    const getProjectSlug = async () => {
-      const project = await getProjectById(projectId);
-      if (project && project.slug) {
-        setSlug(project.slug);
-      } else {
-        const newSlug = `${title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")}-${Math.random()
-          .toString(36)
-          .substring(2, 8)}`;
-        setSlug(newSlug);
-        await updateProject(projectId, { slug: newSlug });
-      }
-    };
     setEditedTitle(title);
-    getProjectSlug();
-  }, [title, projectId]);
+
+    // Si aucun slug n'est fourni, demander au serveur de s'assurer qu'il en existe un
+    if (!initialSlug) {
+      ensureProjectSlug(projectId)
+        .then((generatedSlug) => {
+          setSlug(generatedSlug);
+        })
+        .catch((error) => {
+          console.error("Failed to ensure project slug:", error);
+        });
+    } else {
+      setSlug(initialSlug);
+    }
+  }, [title, projectId, initialSlug]);
 
   const onSave = async () => {
     if (editedTitle.trim()) {

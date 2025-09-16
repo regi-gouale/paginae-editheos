@@ -56,6 +56,18 @@ export function generateMemberSlug(name: string): string {
   return `${cleanName}-${randomId}`;
 }
 
+/**
+ * Génère un slug pour un projet à partir de son titre
+ */
+export function generateProjectSlug(title: string): string {
+  const cleanTitle = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-") // Remplace les espaces et caractères spéciaux par des tirets
+    .replace(/^-+|-+$/g, ""); // Supprime les tirets en début et fin
+  const randomId = generateRandomId(6);
+  return `${cleanTitle}-${randomId}`;
+}
+
 export const getProjectStatusFromColumnName = (
   columnTitle: string
 ): ProjectStatus => {

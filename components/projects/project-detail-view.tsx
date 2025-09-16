@@ -69,6 +69,7 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
             <ProjectTitleEditor
               title={project.title}
               projectId={project.id}
+              slug={project.slug || undefined}
               isDetailView
             />
           </div>
