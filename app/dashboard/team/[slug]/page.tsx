@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { getMemberBySlug } from "@/lib/actions/members";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
-import { formatDate } from "@/lib/utils";
+import { formatDateLong } from "@/lib/utils";
 import { ArrowLeft, Calendar, Edit, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -145,13 +145,17 @@ export default async function MemberDetailPage({
                   <Label className="text-sm font-medium text-muted-foreground">
                     Membre depuis
                   </Label>
-                  <p className="text-base">{formatDate(member.createdAt)}</p>
+                  <p className="text-base">
+                    {formatDateLong(member.createdAt)}
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-muted-foreground">
                     Dernière modification
                   </Label>
-                  <p className="text-base">{formatDate(member.updatedAt)}</p>
+                  <p className="text-base">
+                    {formatDateLong(member.updatedAt)}
+                  </p>
                 </div>
               </div>
             </CardContent>

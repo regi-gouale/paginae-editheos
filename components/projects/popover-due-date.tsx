@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { updateProject } from "@/lib/actions/kanban";
-import { formatDate } from "@/lib/utils";
+import { formatDateLong } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import { Calendar } from "lucide-react";
 
@@ -34,7 +34,7 @@ export function DeadlineSelectorPopover({
   };
   function PopoverDueDateLabel() {
     if (dueDate instanceof Date) {
-      return formatDate(dueDate);
+      return formatDateLong(dueDate);
     }
     return "Sélectionner une date";
   }

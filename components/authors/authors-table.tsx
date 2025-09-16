@@ -52,7 +52,7 @@ import {
   getAuthors,
   getNationalities,
 } from "@/lib/actions/authors";
-import { formatDate } from "@/lib/utils";
+import { formatDateLong } from "@/lib/utils";
 import { fr } from "date-fns/locale";
 import {
   Edit,
@@ -386,7 +386,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                         className="w-full justify-start text-left font-normal"
                       >
                         {formData.birthDate
-                          ? formatDate(new Date(formData.birthDate))
+                          ? formatDateLong(new Date(formData.birthDate))
                           : "Sélectionner une date"}
                       </Button>
                     </PopoverTrigger>
@@ -558,7 +558,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                   </TableCell>
                   <TableCell className="text-sm">
                     {author.birthDate
-                      ? formatDate(author.birthDate)
+                      ? formatDateLong(author.birthDate)
                       : "Non renseignée"}
                   </TableCell>
                   <TableCell className="text-right">

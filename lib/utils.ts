@@ -8,11 +8,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(dateString: string | Date) {
+export function formatDateLong(dateString: string | Date) {
   if (typeof dateString === "string") {
     dateString = new Date(dateString);
   }
   return format(dateString, "PPPP", { locale: fr });
+}
+
+export function formatDate(dateString: string | Date) {
+  if (typeof dateString === "string") {
+    dateString = new Date(dateString);
+  }
+  return format(dateString, "PPP", { locale: fr });
 }
 
 export function generateRandomId(length: number = 8): string {

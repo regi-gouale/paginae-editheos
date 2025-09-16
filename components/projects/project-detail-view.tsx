@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import {
-  formatDate,
+  formatDateLong,
   getColumnNameFromProjectStatus,
   getPriorityLabel,
   getStatusVariant,
@@ -285,13 +285,13 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
                 <Label className="text-sm font-medium text-muted-foreground">
                   Créé le
                 </Label>
-                <p className="text-sm">{formatDate(project.createdAt)}</p>
+                <p className="text-sm">{formatDateLong(project.createdAt)}</p>
               </div>
               <div>
                 <Label className="text-sm font-medium text-muted-foreground">
                   Dernière modification
                 </Label>
-                <p className="text-sm">{formatDate(project.updatedAt)}</p>
+                <p className="text-sm">{formatDateLong(project.updatedAt)}</p>
               </div>
             </CardContent>
           </Card>
