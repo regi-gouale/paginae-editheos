@@ -16,11 +16,13 @@ import { useEffect, useState } from "react";
 interface ProjectCustomFieldsEditorProps {
   projectId: string;
   customFields?: CustomField[];
+  isDetailView?: boolean;
 }
 
 export function ProjectCustomFieldsEditor({
   projectId,
   customFields,
+  isDetailView = false,
 }: ProjectCustomFieldsEditorProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [editingFieldId, setEditingFieldId] = useState<string | null>(null);
@@ -105,17 +107,26 @@ export function ProjectCustomFieldsEditor({
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-2">
-        <Label className="text-base font-semibold">Champs personnalisés</Label>
-        <Button variant="outline" size="sm" onClick={() => setIsAdding(true)}>
-          <Plus className="size-4 mr-1" />
-          Ajouter
-        </Button>
-      </div>
-      {isAdding && (
+    <div className="space-y-4">
+      {!isDetailView && (
+        <div className="flex items-center justify-between mb-2">
+          <Label className="text-base font-semibold">
+            Champs personnalisés
+          </Label>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsAdding(true)}
+            className="rounded-xl"
+          >
+            <Plus className="size-4 mr-1" />
+            Ajouter
+          </Button>
+        </div>
+      )}
+      {isAdding && !isDetailView && (
         <div className="space-y-2 p-3 border rounded-xl mb-4">
-          <div className="flex flex-row gap-2 mb-2">
+          <div className="grid grid-cols-2 gap-2 mb-2">
             <Input
               value={newFieldName}
               onChange={(e) => setNewFieldName(e.target.value)}
@@ -131,6 +142,7 @@ export function ProjectCustomFieldsEditor({
                   setNewFieldName("");
                 }
               }}
+              className="rounded-xl"
             />
             <Input
               value={newFieldValue}
@@ -146,10 +158,11 @@ export function ProjectCustomFieldsEditor({
                   setNewFieldName("");
                 }
               }}
+              className="rounded-xl flex-1"
             />
           </div>
-          <div className="flex gap-2">
-            <Button size="sm" onClick={onAddField}>
+          <div className="flex gap-2 justify-end">
+            <Button size="sm" onClick={onAddField} className="rounded-xl">
               Ajouter
             </Button>
             <Button
@@ -160,6 +173,7 @@ export function ProjectCustomFieldsEditor({
                 setNewFieldName("");
                 setNewFieldValue("");
               }}
+              className="rounded-xl"
             >
               Annuler
             </Button>
@@ -224,6 +238,75 @@ export function ProjectCustomFieldsEditor({
             </div>
           ))}
       </div>
+      {isAdding && isDetailView && (
+        <div className="space-y-2 p-3 border rounded-xl mb-4">
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <Input
+              value={newFieldName}
+              onChange={(e) => setNewFieldName(e.target.value)}
+              placeholder="Nouveau champ"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onAddField();
+                  setIsAdding(false);
+                  setNewFieldName("");
+                } else if (e.key === "Escape") {
+                  setIsAdding(false);
+                  setNewFieldName("");
+                }
+              }}
+              className="rounded-xl"
+            />
+            <Input
+              value={newFieldValue}
+              onChange={(e) => setNewFieldValue(e.target.value)}
+              placeholder="Nouvelle valeur"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onAddField();
+                  setIsAdding(false);
+                  setNewFieldName("");
+                } else if (e.key === "Escape") {
+                  setIsAdding(false);
+                  setNewFieldName("");
+                }
+              }}
+              className="rounded-xl flex-1"
+            />
+          </div>
+          <div className="flex gap-2 justify-end">
+            <Button size="sm" onClick={onAddField} className="rounded-xl">
+              Ajouter
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                setIsAdding(false);
+                setNewFieldName("");
+                setNewFieldValue("");
+              }}
+              className="rounded-xl"
+            >
+              Annuler
+            </Button>
+          </div>
+        </div>
+      )}
+      {isDetailView && (
+        <div className="flex items-center justify-end mb-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsAdding(true)}
+            className="rounded-xl"
+          >
+            <Plus className="size-4 mr-1" />
+            Ajouter
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

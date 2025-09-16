@@ -176,6 +176,121 @@ export async function deleteCustomField(id: string) {
   }
 }
 
+// Get a specific project by ID with all details
+export async function getProjectById(id: string) {
+  try {
+    const project = await prisma.project.findUnique({
+      where: { id },
+      include: {
+        authors: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            biography: true,
+            website: true,
+            nationality: true,
+            birthDate: true,
+            slug: true,
+          },
+        },
+        members: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            slug: true,
+          },
+        },
+        tasks: {
+          orderBy: { createdAt: "asc" },
+        },
+        customFields: {
+          orderBy: { name: "asc" },
+        },
+        kanbanColumn: {
+          select: {
+            id: true,
+            title: true,
+            color: true,
+            position: true,
+          },
+        },
+      },
+    });
+
+    if (!project) {
+      throw new Error("Project not found");
+    }
+    return project;
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    throw new Error("Failed to fetch project");
+  }
+}
+
+export async function getProjectBySlug(slug: string) {
+  try {
+    const project = await prisma.project.findUnique({
+      where: { slug },
+      include: {
+        authors: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            biography: true,
+            website: true,
+            createdAt: true,
+            updatedAt: true,
+            slug: true,
+            nationality: true,
+            birthDate: true,
+          },
+        },
+        members: {
+          select: {
+            id: true,
+            email: true,
+            slug: true,
+            name: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        tasks: {
+          orderBy: { createdAt: "asc" },
+        },
+        customFields: {
+          orderBy: { name: "asc" },
+        },
+        kanbanColumn: {
+          select: {
+            id: true,
+            title: true,
+            color: true,
+            position: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+      },
+    });
+
+    if (!project) {
+      throw new Error("Project not found");
+    }
+    return project;
+  } catch (error) {
+    console.error("Error fetching project by slug:", error);
+    throw new Error("Failed to fetch project by slug");
+  }
+}
+
 // Get all columns with their projects
 export async function getKanbanData() {
   try {
@@ -404,6 +519,11 @@ export async function createProject(data: {
             }
           : undefined,
         columnId: columnTodo?.id,
+        slug: `${data.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")}-${Math.random()
+          .toString(36)
+          .substring(2, 8)}`,
       },
       include: {
         authors: true,
@@ -432,6 +552,7 @@ export async function updateProject(
     dueDate?: Date;
     columnId?: string;
     authorIds?: string[];
+    slug?: string;
   }
 ) {
   try {

@@ -91,6 +91,51 @@ async function generateSlugsForExistingData() {
       }
     }
 
+    // Générer des slugs pour les projets qui n'en ont pas
+    const projectsWithoutSlug = await prisma.project.findMany({
+      where: {
+        slug: null,
+      },
+    });
+
+    console.log(`Trouvé ${projectsWithoutSlug.length} projets sans slug`);
+    for (const project of projectsWithoutSlug) {
+      let slug = project.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .substring(0, 50); // Limiter la longueur du slug à 50 caractères
+
+      // Vérifier l'unicité et générer un nouveau slug si nécessaire
+      let isUnique = false;
+      let attempts = 0;
+
+      while (!isUnique && attempts < 10) {
+        const existingProject = await prisma.project.findUnique({
+          where: { slug },
+        });
+
+        if (!existingProject) {
+          isUnique = true;
+        } else {
+          slug = `${slug}-${Math.floor(Math.random() * 1000)}`; // Ajouter un suffixe aléatoire
+          attempts++;
+        }
+      }
+
+      if (isUnique) {
+        await prisma.project.update({
+          where: { id: project.id },
+          data: { slug },
+        });
+        console.log(`Slug généré pour le projet ${project.title}: ${slug}`);
+      } else {
+        console.error(
+          `Impossible de générer un slug unique pour le projet ${project.title}`
+        );
+      }
+    }
+
     console.log("Migration des slugs terminée avec succès!");
   } catch (error) {
     console.error("Erreur lors de la génération des slugs:", error);

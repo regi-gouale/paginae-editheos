@@ -6,7 +6,12 @@ import { DeadlineSelectorPopover } from "@/components/projects/popover-due-date"
 import { AuthorSelectionDropdown } from "@/components/projects/select-author";
 import { ProjectStatusDropdown } from "@/components/projects/select-project-status";
 import { ProjectTasksEditor } from "@/components/projects/tasks-editor";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -72,11 +77,15 @@ export function ProjectDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <ProjectTitleEditor
-          title={editedProject.title}
-          projectId={editedProject.id}
-        />
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <ProjectTitleEditor
+              title={editedProject.title}
+              projectId={editedProject.id}
+            />
+          </DialogTitle>
+        </DialogHeader>
 
         <div className="space-y-6 flex flex-col">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

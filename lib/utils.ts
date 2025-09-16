@@ -1,4 +1,4 @@
-import { ProjectStatus } from "@/prisma/generated/prisma";
+import { Priority, ProjectStatus } from "@/prisma/generated/prisma";
 import { clsx, type ClassValue } from "clsx";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -12,7 +12,7 @@ export function formatDate(dateString: string | Date) {
   if (typeof dateString === "string") {
     dateString = new Date(dateString);
   }
-  return format(dateString, "PPP", { locale: fr });
+  return format(dateString, "PPPP", { locale: fr });
 }
 
 export function generateRandomId(length: number = 8): string {
@@ -86,15 +86,16 @@ export const getColumnNameFromProjectStatus = (
   }
 };
 
-export function getPriorityLabel(level: keyof typeof priorityLevels) {
-  return priorityLevels[level];
-}
-
 export const priorityLevels = {
   LOW: "Basse",
   MEDIUM: "Moyenne",
   HIGH: "Haute",
   URGENT: "Urgente",
+};
+
+export const projectTypes = {
+  EDITION: "Édition",
+  PRINTING: "Impression",
 };
 
 /**
@@ -108,3 +109,63 @@ export function isProjectOverdueForDisplay(
   if (!dueDate || status === ProjectStatus.DONE) return false;
   return new Date(dueDate) < new Date();
 }
+// Get priority-based styling
+export const getPriorityBorderStyle = (priority: Priority) => {
+  switch (priority) {
+    case "URGENT":
+      return "border-l-4 border-l-red-500";
+    case "HIGH":
+      return "border-l-4 border-l-orange-500";
+    case "MEDIUM":
+      return "border-l-4 border-l-yellow-500";
+    case "LOW":
+      return "border-l-4 border-l-green-500";
+    default:
+      return "border-l-4 border-l-gray-300";
+  }
+};
+
+export const getPriorityBadgeStyle = (priority: Priority) => {
+  switch (priority) {
+    case "URGENT":
+      return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
+    case "HIGH":
+      return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300";
+    case "MEDIUM":
+      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
+    case "LOW":
+      return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
+    default:
+      return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300";
+  }
+};
+
+export const getPriorityLabel = (priority: Priority) => {
+  switch (priority) {
+    case "URGENT":
+      return "Urgente";
+    case "HIGH":
+      return "Élevée";
+    case "MEDIUM":
+      return "Moyenne";
+    case "LOW":
+      return "Faible";
+    default:
+      return "Non définie";
+  }
+};
+
+export const getStatusVariant = (status: ProjectStatus) => {
+  switch (status) {
+    case ProjectStatus.DONE:
+      return "default";
+    case ProjectStatus.IN_PROGRESS:
+      return "secondary";
+    case ProjectStatus.BLOCKED:
+      return "destructive";
+    case ProjectStatus.REJECTED:
+      return "outline";
+    default:
+      return "secondary";
+  }
+};

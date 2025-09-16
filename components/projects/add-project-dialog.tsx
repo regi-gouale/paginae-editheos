@@ -88,7 +88,7 @@ export function AddProjectDialog({
           </span>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Ajouter un nouveau projet</DialogTitle>
           <DialogDescription>
