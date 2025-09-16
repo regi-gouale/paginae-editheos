@@ -161,6 +161,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        {/* <div className="flex justify-end px-2 py-1">
+          <SidebarActions />
+        </div> */}
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

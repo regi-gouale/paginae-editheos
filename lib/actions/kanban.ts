@@ -1,5 +1,10 @@
 "use server";
 
+import { getCurrentSession } from "@/lib/auth/auth-lib";
+import {
+  createProjectNotificationForMembers,
+  createUserNotification,
+} from "@/lib/notifications-helpers";
 import { prisma } from "@/lib/prisma";
 import {
   getColumnNameFromProjectStatus,
@@ -593,7 +598,32 @@ export async function createProject(data: {
       },
     });
 
+    // Créer des notifications pour les membres du projet
+    const session = await getCurrentSession();
+
+    if (memberIds && memberIds.length > 0) {
+      await createProjectNotificationForMembers(
+        project.id,
+        "PROJECT_CREATED",
+        `📋 Nouveau projet : ${project.title}`,
+        `Un nouveau projet "${project.title}" a été créé et vous y avez été assigné(e).`,
+        session?.user?.id // Exclure le créateur
+      );
+    }
+
+    // Créer une notification pour le créateur du projet (pour confirmation)
+    if (session?.user?.id) {
+      await createUserNotification(
+        session.user.id,
+        "PROJECT_CREATED",
+        `✅ Projet créé : ${project.title}`,
+        `Votre projet "${project.title}" a été créé avec succès.`,
+        project.id
+      );
+    }
+
     revalidatePath("/dashboard/projects");
+    revalidatePath("/dashboard"); // Pour revalider aussi le dashboard principal
     return project;
   } catch (error) {
     console.error("Error creating project:", error);
@@ -617,6 +647,12 @@ export async function updateProject(
 ) {
   try {
     const { authorIds, ...updateData } = data;
+
+    // Récupérer le projet actuel pour comparaison
+    const currentProject = await prisma.project.findUnique({
+      where: { id },
+      include: { members: true },
+    });
 
     // Préparer les données de mise à jour
     let finalUpdateData = { ...updateData };
@@ -681,6 +717,24 @@ export async function updateProject(
       },
     });
 
+    // Créer une notification si des changements significatifs ont été apportés
+    if (
+      currentProject &&
+      (updateData.title ||
+        updateData.description ||
+        updateData.dueDate ||
+        updateData.status)
+    ) {
+      const session = await getCurrentSession();
+      await createProjectNotificationForMembers(
+        project.id,
+        "PROJECT_UPDATED",
+        `✏️ Projet mis à jour : ${project.title}`,
+        `Le projet "${project.title}" a été modifié.`,
+        session?.user?.id // Exclure la personne qui a fait la modification
+      );
+    }
+
     revalidatePath("/dashboard/projects");
     return project;
   } catch (error) {
@@ -692,11 +746,18 @@ export async function updateProject(
 // Move project to different column
 export async function moveProject(projectId: string, columnId: string | null) {
   try {
+    // Récupérer le projet actuel pour comparaison
+    const currentProject = await prisma.project.findUnique({
+      where: { id: projectId },
+      include: { kanbanColumn: true },
+    });
+
     // Trouver la colonne de destination pour dériver le statut
     let newStatus: ProjectStatus | undefined;
+    let targetColumn = null;
 
     if (columnId) {
-      const targetColumn = await prisma.kanbanColumn.findUnique({
+      targetColumn = await prisma.kanbanColumn.findUnique({
         where: { id: columnId },
       });
 
@@ -719,6 +780,22 @@ export async function moveProject(projectId: string, columnId: string | null) {
         kanbanColumn: true,
       },
     });
+
+    // Créer une notification si le projet a changé de colonne
+    if (
+      currentProject &&
+      targetColumn &&
+      currentProject.columnId !== columnId
+    ) {
+      const session = await getCurrentSession();
+      await createProjectNotificationForMembers(
+        project.id,
+        "PROJECT_MOVED",
+        `📋 Projet déplacé : ${project.title}`,
+        `Le projet "${project.title}" a été déplacé vers "${targetColumn.title}".`,
+        session?.user?.id // Exclure la personne qui a fait le déplacement
+      );
+    }
 
     revalidatePath("/dashboard/projects");
     return project;

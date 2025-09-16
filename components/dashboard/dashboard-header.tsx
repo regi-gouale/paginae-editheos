@@ -1,4 +1,3 @@
-import { ThemeToggle } from "@/components/theme-toggle";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,6 +8,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarActions } from "../sidebar-actions";
 
 interface DashboardHeaderProps {
   breadcrumbs?: { label: string; href: string }[];
@@ -64,8 +64,11 @@ export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
         </Breadcrumb>
       </div>
       <div className="flex-1" />
-      <div className="gap-4 mr-auto md:mr-64 lg:mr-72 flex items-center">
+      {/* <div className="gap-4 mr-auto md:mr-64 lg:mr-72 flex items-center">
         <ThemeToggle />
+      </div> */}
+      <div className="gap-4 mr-auto md:mr-64 lg:mr-72 flex items-center">
+        <SidebarActions />
       </div>
     </header>
   );
