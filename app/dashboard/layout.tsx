@@ -28,7 +28,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SidebarProvider>
+    <SidebarProvider className="min-h-screen w-screen">
       <AppSidebar />
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
