@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { ThemeToggle } from "../theme-toggle";
 
 interface DashboardHeaderProps {
   breadcrumbs?: { label: string; href: string }[];
@@ -16,7 +17,7 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
   return (
     <header
-      className="flex h-16 shrink-0 items-center gap-2 w-full shadow-sm fixed top-0 bg-white z-10"
+      className="flex h-16 shrink-0 items-center gap-2 w-full shadow-sm fixed top-0 z-10 mx-auto bg-white dark:bg-black border-b border-border px-4"
       style={{ fontFamily: "var(--font-lato)" }}
     >
       <div className="flex items-center gap-2 px-4">
@@ -61,6 +62,10 @@ export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
             )}
           </BreadcrumbList>
         </Breadcrumb>
+      </div>
+      <div className="flex-1" />
+      <div className="gap-4 pr-72 flex items-center">
+        <ThemeToggle />
       </div>
     </header>
   );

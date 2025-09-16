@@ -1,4 +1,5 @@
 import { ReactQueryProvider } from "@/components/providers/react-query-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -75,12 +76,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <body className={`${lato.variable} ${meriweather.variable} antialiased`}>
-        <ReactQueryProvider>
-          <NuqsAdapter>{children}</NuqsAdapter>
-        </ReactQueryProvider>
-        <Toaster richColors />
+        <ThemeProvider
+          attribute={"class"}
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ReactQueryProvider>
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </ReactQueryProvider>
+          <Toaster richColors />
+        </ThemeProvider>
         <SpeedInsights />
         <Analytics />
       </body>
