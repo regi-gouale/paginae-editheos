@@ -289,8 +289,8 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
     }
   };
 
-  const handleRowClick = (authorId: string) => {
-    router.push(`/dashboard/authors/${authorId}`);
+  const handleRowClick = (authorSlug: string) => {
+    router.push(`/dashboard/authors/${authorSlug}`);
   };
 
   const handleEdit = (author: Author) => {
@@ -526,7 +526,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                 <TableRow
                   key={author.id}
                   className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => handleRowClick(author.id)}
+                  onClick={() => author.slug && handleRowClick(author.slug)}
                 >
                   <TableCell className="font-medium">
                     <div>

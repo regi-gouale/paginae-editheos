@@ -25,6 +25,29 @@ export function generateRandomId(length: number = 8): string {
   return result;
 }
 
+/**
+ * Génère un slug pour un auteur à partir de son prénom et nom
+ */
+export function generateAuthorSlug(
+  firstName: string,
+  lastName: string
+): string {
+  const name = `${firstName}${lastName}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, ""); // Supprime les espaces et caractères spéciaux
+  const randomId = generateRandomId(5);
+  return `${name}-${randomId}`;
+}
+
+/**
+ * Génère un slug pour un membre à partir de son nom
+ */
+export function generateMemberSlug(name: string): string {
+  const cleanName = name.toLowerCase().replace(/[^a-z0-9]/g, ""); // Supprime les espaces et caractères spéciaux
+  const randomId = generateRandomId(5);
+  return `${cleanName}-${randomId}`;
+}
+
 export const getProjectStatusFromColumnName = (
   columnTitle: string
 ): ProjectStatus => {

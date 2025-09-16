@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAuthorById } from "@/lib/actions/authors";
+import { getAuthorBySlug } from "@/lib/actions/authors";
 import { auth } from "@/lib/auth/auth";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -22,7 +22,7 @@ import { notFound, redirect } from "next/navigation";
 
 type Props = {
   params: Promise<{
-    id: string;
+    slug: string;
   }>;
 };
 
@@ -36,7 +36,7 @@ export default async function AuthorDetailPage({ params }: Props) {
     redirect("/auth");
   }
 
-  const author = await getAuthorById(resolvedParams.id);
+  const author = await getAuthorBySlug(resolvedParams.slug);
 
   if (!author) {
     notFound();
@@ -46,7 +46,7 @@ export default async function AuthorDetailPage({ params }: Props) {
     { label: "Auteurs", href: "/dashboard/authors" },
     {
       label: `${author.firstName} ${author.lastName}`,
-      href: `/dashboard/authors/${author.id}`,
+      href: `/dashboard/authors/${author.slug}`,
     },
   ];
 

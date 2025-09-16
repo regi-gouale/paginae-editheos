@@ -3,8 +3,10 @@ import { EditMemberDialog } from "@/components/membres/edit-member-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getMemberById } from "@/lib/actions/members";
+import { Label } from "@/components/ui/label";
+import { getMemberBySlug } from "@/lib/actions/members";
 import { auth } from "@/lib/auth/auth";
+import { formatDate } from "@/lib/utils";
 import { ArrowLeft, Calendar, Edit, Mail, User } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
@@ -29,7 +31,7 @@ const roleColors = {
 export default async function MemberDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: { slug: string };
 }) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -39,7 +41,7 @@ export default async function MemberDetailPage({
     redirect("/auth");
   }
 
-  const result = await getMemberById(params.id);
+  const result = await getMemberBySlug(params.slug);
 
   if (!result.success || !result.member) {
     notFound();
@@ -49,7 +51,7 @@ export default async function MemberDetailPage({
 
   const breadcrumbs = [
     { label: "Équipes", href: "/dashboard/team" },
-    { label: member.name, href: `/dashboard/team/${member.id}` },
+    { label: member.name, href: `/dashboard/team/${member.slug}` },
   ];
 
   return (
@@ -93,37 +95,37 @@ export default async function MemberDetailPage({
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Nom complet
-                  </label>
+                  </Label>
                   <p className="text-base font-medium">{member.name}</p>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Adresse email
-                  </label>
+                  </Label>
                   <div className="flex items-center gap-2">
                     <Mail className="size-4 text-muted-foreground" />
                     <p className="text-base">{member.email}</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Rôle
-                  </label>
+                  </Label>
                   <div>
-                    <Badge className={roleColors[member.role]}>
+                    <Badge className={`${roleColors[member.role]} rounded-xl`}>
                       {roleLabels[member.role]}
                     </Badge>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Statut
-                  </label>
+                  </Label>
                   <Badge
                     variant="outline"
-                    className="bg-green-50 text-green-700"
+                    className="bg-green-50 text-green-700 rounded-xl"
                   >
                     Actif
                   </Badge>
@@ -142,28 +144,16 @@ export default async function MemberDetailPage({
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Membre depuis
-                  </label>
-                  <p className="text-base">
-                    {new Date(member.createdAt).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </p>
+                  </Label>
+                  <p className="text-base">{formatDate(member.createdAt)}</p>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Dernière modification
-                  </label>
-                  <p className="text-base">
-                    {new Date(member.updatedAt).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </p>
+                  </Label>
+                  <p className="text-base">{formatDate(member.updatedAt)}</p>
                 </div>
               </div>
             </CardContent>

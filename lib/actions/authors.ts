@@ -2,6 +2,7 @@
 
 import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { prisma } from "@/lib/prisma";
+import { generateAuthorSlug } from "@/lib/utils";
 import { Prisma } from "@/prisma/generated/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -12,6 +13,7 @@ export type Author = {
   firstName: string;
   lastName: string;
   email: string;
+  slug: string | null;
   biography?: string | null;
   website?: string | null;
   nationality?: string | null;
@@ -71,6 +73,7 @@ export async function addAuthorAction(formData: FormData) {
       data: {
         ...validated,
         website: validated.website || null,
+        slug: generateAuthorSlug(validated.firstName, validated.lastName),
       },
     });
 
@@ -101,7 +104,7 @@ export async function updateAuthorAction(formData: FormData) {
 
     const validated = addAuthorSchema.parse(data);
 
-    await prisma.author.update({
+    const updatedAuthor = await prisma.author.update({
       where: { id },
       data: {
         ...validated,
@@ -110,7 +113,7 @@ export async function updateAuthorAction(formData: FormData) {
     });
 
     revalidatePath("/dashboard/authors");
-    revalidatePath(`/dashboard/authors/${id}`);
+    revalidatePath(`/dashboard/authors/${updatedAuthor.slug}`);
   } catch (error) {
     console.error("Error updating author:", error);
     throw error;
@@ -183,6 +186,19 @@ export async function getAuthors(
       },
       skip,
       take: limit,
+      select: {
+        id: true,
+        slug: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        biography: true,
+        website: true,
+        nationality: true,
+        birthDate: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       cacheStrategy: {
         ttl: 60, // Cache pendant 60 secondes
       },
@@ -222,7 +238,10 @@ export async function addAuthor(data: {
 }): Promise<{ success: boolean; author?: Author; error?: string }> {
   try {
     const author = await prisma.author.create({
-      data,
+      data: {
+        ...data,
+        slug: generateAuthorSlug(data.firstName, data.lastName),
+      },
     });
 
     return { success: true, author };
@@ -297,6 +316,23 @@ export async function getAuthorById(id: string): Promise<Author | null> {
     return author;
   } catch (error) {
     console.error("Error fetching author:", error);
+    return null;
+  }
+}
+
+// Fonction pour récupérer un auteur par slug
+export async function getAuthorBySlug(slug: string): Promise<Author | null> {
+  const session = await getCurrentSession();
+  if (!session) redirect("/auth");
+
+  try {
+    const author = await prisma.author.findUnique({
+      where: { slug },
+    });
+
+    return author;
+  } catch (error) {
+    console.error("Error fetching author by slug:", error);
     return null;
   }
 }
