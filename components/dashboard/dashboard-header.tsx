@@ -64,7 +64,7 @@ export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
         </Breadcrumb>
       </div>
       <div className="flex-1" />
-      <div className="gap-4 pr-72 flex items-center">
+      <div className="gap-4 mr-auto md:mr-64 lg:mr-72 flex items-center">
         <ThemeToggle />
       </div>
     </header>
