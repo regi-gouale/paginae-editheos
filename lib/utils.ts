@@ -39,9 +39,10 @@ export function generateAuthorSlug(
   firstName: string,
   lastName: string
 ): string {
-  const name = `${firstName}${lastName}`
+  const name = `${firstName}-${lastName}`
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, ""); // Supprime les espaces et caractères spéciaux
+    .replace(/[^a-z0-9]+/g, "-") // Remplace les espaces et caractères spéciaux par des tirets
+    .replace(/^-+|-+$/g, ""); // Supprime les tirets en début et fin
   const randomId = generateRandomId(5);
   return `${name}-${randomId}`;
 }
