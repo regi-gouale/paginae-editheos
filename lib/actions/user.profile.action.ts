@@ -1,8 +1,8 @@
 "use server";
+import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { getCurrentSession } from "../auth/auth-lib";
 
 const updateProfileSchema = z.object({
   name: z.string().min(1, "Le nom est requis"),

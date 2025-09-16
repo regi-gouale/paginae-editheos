@@ -1,19 +1,19 @@
 "use client";
+import { ProjectCustomFieldsEditor } from "@/components/projects/custom-fields-editor";
+import { ProjectDescriptionDialog } from "@/components/projects/description-dialog";
 import ProjectTitleEditor from "@/components/projects/input-title";
 import { DeadlineSelectorPopover } from "@/components/projects/popover-due-date";
 import { AuthorSelectionDropdown } from "@/components/projects/select-author";
 import { ProjectStatusDropdown } from "@/components/projects/select-project-status";
+import { ProjectTasksEditor } from "@/components/projects/tasks-editor";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { getPriorityLabel } from "@/lib/utils";
 import { Author, ProjectStatus } from "@/prisma/generated/prisma";
 import { ProjectWithDetails } from "@/types/kanban";
 import { useEffect, useState } from "react";
-import { Separator } from "../ui/separator";
-import { ProjectDescriptionDialog } from "./description-dialog";
-import { ProjectTasksEditor } from "./tasks-editor";
-import { ProjectCustomFieldsEditor } from "./custom-fields-editor";
 
 interface ProjectDetailDialogProps {
   project: ProjectWithDetails | null;

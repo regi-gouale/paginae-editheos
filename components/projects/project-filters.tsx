@@ -154,15 +154,15 @@ export function ProjectFilters({
           placeholder="Rechercher un projet..."
           value={filters.search}
           onChange={(e) => updateSearch(e.target.value)}
-          className="pl-10"
+          className="pl-10 rounded-xl"
         />
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center justify-center gap-2">
         {/* Status Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="rounded-xl">
               <Filter className="size-4 mr-2" />
               Statut
               {filters.statuses.length > 0 && (
@@ -192,7 +192,7 @@ export function ProjectFilters({
         {/* Type Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="rounded-xl">
               <Filter className="size-4 mr-2" />
               Type
               {filters.types.length > 0 && (
@@ -222,7 +222,7 @@ export function ProjectFilters({
         {/* Priority Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="rounded-xl">
               <Filter className="size-4 mr-2" />
               Priorité
               {filters.priorities.length > 0 && (
@@ -252,7 +252,7 @@ export function ProjectFilters({
         {/* Due Date Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="rounded-xl">
               <Filter className="size-4 mr-2" />
               Échéance
               {filters.dueDays.length > 0 && (
