@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { getPriorityLabel } from "@/lib/utils";
-import { Author, ProjectStatus } from "@/prisma/generated/prisma";
+import { Author } from "@/prisma/generated/prisma";
 import { ProjectWithDetails } from "@/types/kanban";
 import { useEffect, useState } from "react";
 
@@ -39,14 +39,6 @@ export function ProjectDetailDialog({
 
   const handleClose = () => {
     onOpenChange(false);
-  };
-
-  const handleStatusUpdate = (newStatus: ProjectStatus) => {
-    if (editedProject && onProjectUpdated) {
-      const updatedProject = { ...editedProject, status: newStatus };
-      setEditedProject(updatedProject);
-      onProjectUpdated(updatedProject);
-    }
   };
 
   const handleAuthorUpdate = (author: Author) => {
@@ -92,7 +84,7 @@ export function ProjectDetailDialog({
             <ProjectStatusDropdown
               projectId={editedProject.id}
               status={editedProject.status}
-              onStatusUpdated={handleStatusUpdate}
+              // onStatusUpdated={handleStatusUpdate}
             />
             <AuthorSelectionDropdown
               projectId={editedProject.id}
@@ -104,7 +96,7 @@ export function ProjectDetailDialog({
             <DeadlineSelectorPopover
               projectId={editedProject.id}
               dueDate={editedProject.dueDate}
-              onDueDateChange={handleDueDateUpdate}
+              // onDueDateChange={handleDueDateUpdate}
             />
             <div className="space-y-2">
               <Label>Priorité</Label>

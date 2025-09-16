@@ -16,15 +16,12 @@ import {
   projectTypes,
 } from "@/lib/utils";
 import { ProjectWithDetails } from "@/types/kanban";
-import {
-  ArrowLeft,
-  CalendarIcon,
-  ExternalLinkIcon,
-  MailIcon,
-} from "lucide-react";
+import { ArrowLeft, ExternalLinkIcon, MailIcon } from "lucide-react";
 import Link from "next/link";
 import { ProjectCustomFieldsEditor } from "./custom-fields-editor";
 import { ProjectFileUrlEditor } from "./file-url-editor";
+import { DeadlineSelectorPopover } from "./popover-due-date";
+import { ProjectStatusDropdown } from "./select-project-status";
 
 interface ProjectDetailViewProps {
   project: ProjectWithDetails;
@@ -117,23 +114,20 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
                   <p>{getPriorityLabel(project.priority)}</p>
                 </div>
 
-                {project.dueDate && (
-                  <div>
-                    <Label className="text-sm font-medium text-muted-foreground">
-                      Date d&apos;échéance
-                    </Label>
-                    <div className="flex items-center gap-2">
-                      <CalendarIcon className="h-4 w-4" />
-                      <p>{formatDateLong(project.dueDate)}</p>
-                    </div>
-                  </div>
-                )}
+                <DeadlineSelectorPopover
+                  projectId={project.id}
+                  dueDate={project.dueDate}
+                  isDetailView
+                  // onDueDateChange={handleDueDateUpdate}
+                />
 
                 <div>
-                  <Label className="text-sm font-medium text-muted-foreground">
-                    Statut Kanban
-                  </Label>
-                  <p>{project.kanbanColumn?.title || "Non assigné"}</p>
+                  {project.status && (
+                    <ProjectStatusDropdown
+                      projectId={project.id}
+                      status={project.status}
+                    />
+                  )}
                 </div>
               </div>
             </CardContent>
