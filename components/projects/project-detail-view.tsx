@@ -16,8 +16,6 @@ import {
   projectTypes,
 } from "@/lib/utils";
 import { ProjectWithDetails } from "@/types/kanban";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 import {
   ArrowLeft,
   CalendarIcon,
@@ -26,6 +24,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ProjectCustomFieldsEditor } from "./custom-fields-editor";
+import { ProjectFileUrlEditor } from "./file-url-editor";
 
 interface ProjectDetailViewProps {
   project: ProjectWithDetails;
@@ -125,11 +124,7 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
                     </Label>
                     <div className="flex items-center gap-2">
                       <CalendarIcon className="h-4 w-4" />
-                      <p>
-                        {format(new Date(project.dueDate), "dd MMMM yyyy", {
-                          locale: fr,
-                        })}
-                      </p>
+                      <p>{formatDateLong(project.dueDate)}</p>
                     </div>
                   </div>
                 )}
@@ -172,21 +167,6 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
                 <CardTitle>Champs personnalisés</CardTitle>
               </CardHeader>
               <CardContent>
-                {/* <div className="space-y-3">
-                  {project.customFields.map((field) => (
-                    <div
-                      key={field.id}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-2"
-                    >
-                      <Label className="text-sm font-medium text-muted-foreground">
-                        {field.name}
-                      </Label>
-                      <p className="break-words">
-                        {field.value || "Non défini"}
-                      </p>
-                    </div>
-                  ))}
-                </div> */}
                 <ProjectCustomFieldsEditor
                   projectId={project.id}
                   customFields={project.customFields}
@@ -203,7 +183,12 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
           {project.authors && project.authors.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>Auteurs ({project.authors.length})</CardTitle>
+                <CardTitle>
+                  Auteur
+                  {project.authors.length > 1
+                    ? "s ({project.authors.length})"
+                    : ""}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -281,6 +266,11 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
               <CardTitle>Métadonnées</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
+              <ProjectFileUrlEditor
+                projectId={project.id}
+                fileUrl={project.fileUrl || ""}
+                isDetailView
+              />
               <div>
                 <Label className="text-sm font-medium text-muted-foreground">
                   Créé le

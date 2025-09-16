@@ -553,6 +553,7 @@ export async function updateProject(
     columnId?: string;
     authorIds?: string[];
     slug?: string;
+    fileUrl?: string;
   }
 ) {
   try {

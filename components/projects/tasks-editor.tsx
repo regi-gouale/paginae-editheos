@@ -12,11 +12,11 @@ import { ProjectTask } from "@/prisma/generated/prisma";
 import { CheckSquare, Plus, Square, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-interface ProjectTasksEditorProps {
+type ProjectTasksEditorProps = {
   projectId: string;
   tasks?: ProjectTask[];
   isDetailView?: boolean;
-}
+};
 
 export function ProjectTasksEditor({
   projectId,

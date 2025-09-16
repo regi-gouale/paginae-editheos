@@ -9,7 +9,13 @@ import {
   isProjectOverdueForDisplay,
 } from "@/lib/utils";
 import type { ProjectWithDetails } from "@/types/kanban";
-import { BookUser, Calendar, CheckSquare, Printer } from "lucide-react";
+import {
+  BookUser,
+  Calendar,
+  CheckSquare,
+  Printer,
+  SquareAsteriskIcon,
+} from "lucide-react";
 
 interface ProjectCardProps {
   project: ProjectWithDetails;
@@ -92,19 +98,11 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           </div>
         )}
 
-        {project.customFields.map(
-          (field) =>
-            field.value && (
-              <div
-                key={field.id}
-                className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl"
-              >
-                {field.name}:{" "}
-                {field.value.toString().length > 10
-                  ? field.value.toString().slice(0, 10) + "..."
-                  : field.value.toString()}
-              </div>
-            )
+        {project.customFields.length > 0 && (
+          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl gap-2">
+            <SquareAsteriskIcon className="size-3 text-gray-500 dark:text-gray-400" />
+            <span>{project.customFields.length} champs</span>
+          </div>
         )}
       </div>
     </div>
