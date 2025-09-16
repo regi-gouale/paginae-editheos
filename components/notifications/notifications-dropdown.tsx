@@ -20,7 +20,6 @@ import {
   type Notification,
 } from "@/hooks/use-notifications";
 import { cn } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Bell, Check, CheckCheck, Trash2 } from "lucide-react";
@@ -33,14 +32,14 @@ function NotificationIcon() {
   const { data: unreadCount, isLoading } = useUnreadNotificationsCount();
 
   return (
-    <div className="relative flex">
+    <div className="relative ">
       <Bell className="size-5" />
-      {!isLoading && unreadCount && unreadCount > 0 && (
+      {!isLoading && unreadCount! > 0 && (
         <Badge
           variant="destructive"
           className="absolute -top-2 -right-2 size-5 flex items-center justify-center p-0 text-xs"
         >
-          {unreadCount > 9 ? "9+" : unreadCount}
+          {unreadCount! > 9 ? "9+" : unreadCount}
         </Badge>
       )}
     </div>
@@ -164,14 +163,7 @@ export function NotificationsDropdown() {
   const markAsRead = useMarkNotificationAsRead();
   const markAllAsRead = useMarkAllNotificationsAsRead();
   const deleteNotification = useDeleteNotification();
-  const queryClient = useQueryClient();
-
-  console.log("🔔 NotificationsDropdown render:", {
-    notifications: notifications?.length,
-    unreadCount,
-    isLoading,
-    error: error?.message,
-  });
+  // const queryClient = useQueryClient();
 
   const handleMarkAsRead = (notificationId: string) => {
     markAsRead.mutate(notificationId);
@@ -185,11 +177,6 @@ export function NotificationsDropdown() {
     deleteNotification.mutate(notificationId);
   };
 
-  // Fonction debug pour forcer le refresh
-  const handleForceRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ["notifications"] });
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -201,28 +188,18 @@ export function NotificationsDropdown() {
       <DropdownMenuContent className="w-80" align="end">
         <DropdownMenuLabel className="flex items-center justify-between">
           <span>Notifications</span>
-          <div className="flex items-center gap-2">
+          {unreadCount && unreadCount > 0 && (
             <Button
               variant="ghost"
               size="sm"
               className="h-6 text-xs"
-              onClick={handleForceRefresh}
+              onClick={handleMarkAllAsRead}
+              disabled={markAllAsRead.isPending}
             >
-              🔄
+              <CheckCheck className="h-3 w-3 mr-1" />
+              Tout marquer comme lu
             </Button>
-            {unreadCount && unreadCount > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 text-xs"
-                onClick={handleMarkAllAsRead}
-                disabled={markAllAsRead.isPending}
-              >
-                <CheckCheck className="h-3 w-3 mr-1" />
-                Tout marquer comme lu
-              </Button>
-            )}
-          </div>
+          )}
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
