@@ -1,61 +1,108 @@
 "use server";
-import { getCurrentSession } from "@/lib/auth/auth-lib";
-import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
+import { z } from "zod";
+import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib/prisma";
+import { createSecureServerAction, validateFileUpload, extractFormData } from "@/lib/security/actions-utils";
+import { secureNameSchema, secureEmailSchema } from "@/lib/security/validation";
+
+// Schema de validation sécurisé pour le profil utilisateur
 const updateProfileSchema = z.object({
-  name: z.string().min(1, "Le nom est requis"),
-  email: z.email("Email invalide"),
+  name: secureNameSchema,
+  email: secureEmailSchema,
 });
 
-export async function updateUserProfileAction(formData: FormData) {
-  const session = await getCurrentSession();
-  if (!session?.user) {
-    throw new Error("Not authenticated");
-  }
+// Schema pour les données avec fichier
+const updateProfileWithFileSchema = updateProfileSchema.extend({
+  avatarFile: z.instanceof(File).optional(),
+});
 
-  const data = {
-    name: (formData.get("name") as string) || "",
-    email: (formData.get("email") as string) || "",
-  };
-
-  const validated = updateProfileSchema.parse(data);
-
-  try {
-    const updateData: Record<string, unknown> = {
-      name: validated.name,
-      email: validated.email,
-    };
-
-    // Handle avatar file if present: convert to data URL and save in user.image
-    const avatar = formData.get("avatar");
-    if (avatar && typeof (avatar as File | Blob).arrayBuffer === "function") {
-      try {
-        const fileLike = avatar as File | Blob;
-        const arrayBuffer = await fileLike.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        const base64 = buffer.toString("base64");
-        const mime = (fileLike as File).type || "image/*";
-        const dataUrl = `data:${mime};base64,${base64}`;
-        updateData.image = dataUrl;
-      } catch (err) {
-        console.error("Error processing avatar file:", err);
-      }
+/**
+ * Action sécurisée pour mettre à jour le profil utilisateur
+ */
+export const updateUserProfileAction = createSecureServerAction(
+  updateProfileSchema,
+  async (validatedData, userId) => {
+    if (!userId) {
+      throw new Error("Utilisateur non authentifié");
     }
 
+    // Mise à jour des données de base
+    const updateData: Record<string, unknown> = {
+      name: validatedData.name,
+      email: validatedData.email,
+    };
+
     await prisma.user.update({
-      where: { id: session.user.id },
+      where: { id: userId },
       data: updateData,
     });
 
-    // Revalidate dashboard/profile and dashboard main pages
+    // Revalidation des pages concernées
+    revalidatePath("/dashboard/profile");
+    revalidatePath("/dashboard");
+
+    return { success: true };
+  },
+  {
+    action: "update_user_profile",
+    requireAuth: true,
+    allowedFields: ["name", "email"],
+    logSensitive: true,
+  }
+);
+
+/**
+ * Action séparée pour la mise à jour de l'avatar
+ */
+export async function updateUserAvatarAction(formData: FormData) {
+  try {
+    // Import des utilitaires d'auth ici pour éviter les dépendances circulaires
+    const { getRequiredUser } = await import("@/lib/auth/auth-utils");
+    const { logger } = await import("@/lib/security/logger");
+    
+    const user = await getRequiredUser();
+    
+    const avatarFile = formData.get("avatar") as File;
+    if (!avatarFile || avatarFile.size === 0) {
+      throw new Error("Aucun fichier sélectionné");
+    }
+
+    // Validation sécurisée du fichier
+    const fileValidation = validateFileUpload(avatarFile);
+    if (!fileValidation.success) {
+      throw new Error(fileValidation.error);
+    }
+
+    // Conversion sécurisée en base64 avec limite de taille
+    const maxSizeForBase64 = 2 * 1024 * 1024; // 2MB pour base64
+    if (avatarFile.size > maxSizeForBase64) {
+      throw new Error("Fichier trop volumineux pour la conversion (max 2MB)");
+    }
+
+    const arrayBuffer = await avatarFile.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const base64 = buffer.toString("base64");
+    const dataUrl = `data:${avatarFile.type};base64,${base64}`;
+
+    // Mise à jour en base de données
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { image: dataUrl },
+    });
+
+    logger.auditLog("update_user_avatar", user.id, {
+      fileSize: avatarFile.size,
+      fileType: avatarFile.type,
+    });
+
+    // Revalidation des pages
     revalidatePath("/dashboard/profile");
     revalidatePath("/dashboard");
 
     return { success: true };
   } catch (error) {
-    console.error("updateUserProfileAction error:", error);
-    throw error;
+    const { handleServerActionError } = await import("@/lib/security/logger");
+    return handleServerActionError(error, "update_user_avatar");
   }
 }

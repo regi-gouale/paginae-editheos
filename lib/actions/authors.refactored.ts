@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { createSecureServerAction, ActionResult } from "@/lib/security/actions-utils";
+import { secureNameSchema, secureEmailSchema, secureUrlSchema, secureTextSchema, secureIdSchema } from "@/lib/security/validation";
 
 export type Author = {
   id: string;
@@ -37,15 +39,23 @@ export type AuthorsResponse = {
   hasPrevPage: boolean;
 };
 
-// Schemas for validation
+// Schemas for validation using secure validation utilities
 const addAuthorSchema = z.object({
-  firstName: z.string().min(1, "Le prénom est requis"),
-  lastName: z.string().min(1, "Le nom est requis"),
-  email: z.string().email("Email invalide"),
-  biography: z.string().optional(),
-  website: z.string().url("URL invalide").optional().or(z.literal("")),
-  nationality: z.string().optional(),
+  firstName: secureNameSchema,
+  lastName: secureNameSchema,
+  email: secureEmailSchema,
+  biography: secureTextSchema.optional(),
+  website: secureUrlSchema.optional().or(z.literal("")),
+  nationality: z.string().max(100, "Nationalité trop longue").optional(),
   birthDate: z.date().optional(),
+});
+
+const updateAuthorSchema = addAuthorSchema.extend({
+  id: secureIdSchema,
+});
+
+const deleteAuthorSchema = z.object({
+  id: secureIdSchema,
 });
 
 // Server Actions following the pattern from instructions
