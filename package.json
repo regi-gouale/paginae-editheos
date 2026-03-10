@@ -8,7 +8,7 @@
     "analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "eslint",
-    "vercel-build": "prisma generate --no-engine && prisma migrate deploy && tsx scripts/sync-users-to-members.ts && next build --turbopack",
+    "vercel-build": "prisma generate && prisma migrate deploy && tsx scripts/sync-users-to-members.ts && next build --turbopack",
     "fix-project-status": "tsx scripts/fix-project-status-inconsistency.ts",
     "create-test-project": "tsx scripts/create-test-project.ts",
     "create-overdue-project": "tsx scripts/create-overdue-project.ts",
