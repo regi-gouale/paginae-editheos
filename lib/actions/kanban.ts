@@ -207,6 +207,7 @@ export async function getProjectById(id: string) {
             email: true,
             role: true,
             slug: true,
+            userId: true,
           },
         },
         tasks: {
@@ -265,6 +266,7 @@ export async function getProjectBySlug(slug: string) {
             role: true,
             createdAt: true,
             updatedAt: true,
+            userId: true,
           },
         },
         tasks: {
