@@ -4,20 +4,20 @@ import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
-import { Lato, Merriweather } from "next/font/google";
+import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
 
-const lato = Lato({
-  variable: "--font-lato",
+const editorialSans = Source_Sans_3({
+  variable: "--font-editorial-sans",
   subsets: ["latin"],
-  weight: ["100", "300", "400", "900", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const meriweather = Merriweather({
-  variable: "--font-meriweather",
+const editorialSerif = Cormorant_Garamond({
+  variable: "--font-editorial-serif",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
 };
 
 export const metadataBase = new URL(
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 );
 
 export default function RootLayout({
@@ -77,13 +77,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={`${lato.variable} ${meriweather.variable} antialiased`}>
+      <body
+        className={`${editorialSans.variable} ${editorialSerif.variable} antialiased`}>
         <ThemeProvider
           attribute={"class"}
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange
-        >
+          disableTransitionOnChange>
           <ReactQueryProvider>
             <NuqsAdapter>{children}</NuqsAdapter>
           </ReactQueryProvider>
