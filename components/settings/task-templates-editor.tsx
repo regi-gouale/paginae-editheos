@@ -154,6 +154,7 @@ export function TaskTemplatesEditor({
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     loadTemplates();
   }, [projectType]);
 
@@ -165,7 +166,7 @@ export function TaskTemplatesEditor({
         (t) => t.projectType === projectType,
       );
       setTemplates(filtered);
-    } catch (error) {
+    } catch {
       toast.error("Erreur lors du chargement des templates");
     } finally {
       setIsLoading(false);
@@ -184,7 +185,7 @@ export function TaskTemplatesEditor({
       setIsAdding(false);
       toast.success("Template ajouté avec succès");
       await loadTemplates();
-    } catch (error) {
+    } catch {
       toast.error("Erreur lors de l'ajout du template");
     }
   }
@@ -194,19 +195,19 @@ export function TaskTemplatesEditor({
       await deleteTaskTemplate(id);
       toast.success("Template supprimé avec succès");
       await loadTemplates();
-    } catch (error) {
+    } catch {
       toast.error("Erreur lors de la suppression du template");
     }
   }
 
-  function handleStartEdit(id: string) {
-    const template = templates.find((t) => t.id === id);
+  function handleStartEdit(templateId: string): void {
+    const template = templates.find((t) => t.id === templateId);
     if (template) {
       setEditTitle(template.title);
       setTemplates(
         templates.map((t) => ({
           ...t,
-          isEditing: t.id === id,
+          isEditing: t.id === templateId,
         })),
       );
     }
@@ -230,7 +231,7 @@ export function TaskTemplatesEditor({
       toast.success("Template modifié avec succès");
       await loadTemplates();
       setEditTitle("");
-    } catch (error) {
+    } catch {
       toast.error("Erreur lors de la modification du template");
     }
   }
@@ -253,7 +254,7 @@ export function TaskTemplatesEditor({
           })),
         );
         toast.success("Ordre mis à jour");
-      } catch (error) {
+      } catch {
         toast.error("Erreur lors de la réorganisation");
         await loadTemplates(); // Recharger en cas d'erreur
       }
