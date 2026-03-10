@@ -138,7 +138,7 @@ export async function deleteAuthorAction(formData: FormData) {
 const DEFAULT_NATIONALITY = "ALL";
 
 export async function getAuthors(
-  filters: AuthorsFilters = {}
+  filters: AuthorsFilters = {},
 ): Promise<AuthorsResponse> {
   try {
     const {
@@ -174,9 +174,6 @@ export async function getAuthors(
         orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
         skip,
         take: limit,
-        cacheStrategy: {
-          ttl: 60, // Cache pendant 60 secondes
-        },
       }),
       prisma.author.count({ where }),
     ]);
@@ -234,7 +231,7 @@ export async function addAuthor(data: {
 }
 
 export async function deleteAuthor(
-  id: string
+  id: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     await prisma.author.delete({
@@ -262,9 +259,6 @@ export async function getNationalities(): Promise<string[]> {
         nationality: {
           not: null,
         },
-      },
-      cacheStrategy: {
-        ttl: 60, // Cache pendant 1 minute
       },
     });
 

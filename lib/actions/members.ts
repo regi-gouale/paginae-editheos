@@ -31,7 +31,7 @@ export interface MembersResponse {
 }
 
 export async function getMembers(
-  filters: MembersFilters = {}
+  filters: MembersFilters = {},
 ): Promise<MembersResponse> {
   try {
     const { search = "", role = "ALL", page = 1, limit = 10 } = filters;
@@ -57,9 +57,6 @@ export async function getMembers(
     // Récupération du nombre total d'éléments
     const total = await prisma.member.count({
       where,
-      cacheStrategy: {
-        ttl: 60, // Cache pendant 60 secondes
-      },
     });
 
     // Récupération des membres avec pagination
@@ -70,9 +67,6 @@ export async function getMembers(
       },
       skip,
       take: limit,
-      cacheStrategy: {
-        ttl: 60, // Cache pendant 60 secondes
-      },
     });
 
     const totalPages = Math.ceil(total / limit);
@@ -118,14 +112,11 @@ export async function addMember(data: {
 }
 
 export async function getMemberById(
-  id: string
+  id: string,
 ): Promise<{ success: boolean; member?: Member; error?: string }> {
   try {
     const member = await prisma.member.findUnique({
       where: { id },
-      cacheStrategy: {
-        ttl: 60, // Cache pendant 60 secondes
-      },
     });
 
     if (!member) {
@@ -143,14 +134,11 @@ export async function getMemberById(
 }
 
 export async function getMemberBySlug(
-  slug: string
+  slug: string,
 ): Promise<{ success: boolean; member?: Member; error?: string }> {
   try {
     const member = await prisma.member.findUnique({
       where: { slug },
-      cacheStrategy: {
-        ttl: 60, // Cache pendant 60 secondes
-      },
     });
 
     if (!member) {
@@ -173,7 +161,7 @@ export async function updateMember(
     name?: string;
     email?: string;
     role?: "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST";
-  }
+  },
 ): Promise<{ success: boolean; member?: Member; error?: string }> {
   try {
     const member = await prisma.member.update({
@@ -191,7 +179,7 @@ export async function updateMember(
 }
 
 export async function deleteMember(
-  id: string
+  id: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     await prisma.member.delete({

@@ -11,6 +11,7 @@ import {
   getProjectStatusFromColumnName,
 } from "@/lib/utils";
 import type { ProjectStatus } from "@/prisma/generated/prisma/client";
+import type { KanbanColumnWithProjects } from "@/types/kanban";
 import { revalidatePath } from "next/cache";
 
 // Get project statistics for the sidebar
@@ -109,7 +110,6 @@ export async function getRecentProjects(limit = 5) {
           take: 1, // Optimisation : Ne récupérer que le premier auteur directement
         },
       },
-      cacheStrategy: { ttl: 60, swr: 120 }, // Cache pour 1 minute, stale while revalidate pour 2 minutes
     });
 
     // Transformer les données au format attendu
@@ -242,33 +242,8 @@ export async function getProjectBySlug(slug: string) {
     const project = await prisma.project.findUnique({
       where: { slug },
       include: {
-        authors: {
-          select: {
-            id: true,
-            email: true,
-            firstName: true,
-            lastName: true,
-            biography: true,
-            website: true,
-            createdAt: true,
-            updatedAt: true,
-            slug: true,
-            nationality: true,
-            birthDate: true,
-          },
-        },
-        members: {
-          select: {
-            id: true,
-            email: true,
-            slug: true,
-            name: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true,
-            userId: true,
-          },
-        },
+        authors: true,
+        members: true,
         tasks: {
           orderBy: { createdAt: "asc" },
         },
@@ -358,7 +333,7 @@ export async function ensureProjectSlug(projectId: string): Promise<string> {
 }
 
 // Get all columns with their projects
-export async function getKanbanData() {
+export async function getKanbanData(): Promise<KanbanColumnWithProjects[]> {
   try {
     // Optimisation : utiliser select pour limiter les champs retournés
     const columns = await prisma.kanbanColumn.findMany({
@@ -366,26 +341,10 @@ export async function getKanbanData() {
       include: {
         projects: {
           include: {
-            authors: {
-              select: {
-                id: true,
-                firstName: true,
-                lastName: true,
-                email: true,
-                // Exclure les champs moins utilisés comme biography, website, etc.
-              },
-            },
-            members: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-                role: true,
-              },
-            },
-            tasks: true, // Nécessaire pour les règles d'automatisation
-            customFields: true, // Nécessaire pour l'affichage
-            // Optimisation : Ne pas re-inclure kanbanColumn car nous avons déjà cette information
+            authors: true,
+            members: true,
+            tasks: true,
+            customFields: true,
           },
         },
       },
@@ -432,36 +391,22 @@ export async function getKanbanData() {
       ]);
 
       // Récupérer les colonnes nouvellement créées
-      return await prisma.kanbanColumn.findMany({
+      return (await prisma.kanbanColumn.findMany({
         orderBy: { position: "asc" },
         include: {
           projects: {
             include: {
-              authors: {
-                select: {
-                  id: true,
-                  firstName: true,
-                  lastName: true,
-                  email: true,
-                },
-              },
-              members: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                  role: true,
-                },
-              },
+              authors: true,
+              members: true,
               tasks: true,
               customFields: true,
             },
           },
         },
-      });
+      })) as KanbanColumnWithProjects[];
     }
 
-    return columns;
+    return columns as KanbanColumnWithProjects[];
   } catch (error) {
     console.error("Error fetching kanban data:", error);
     throw new Error("Failed to fetch kanban data");
@@ -917,7 +862,6 @@ export async function getAuthors() {
         email: true,
         // Exclure les champs moins utilisés pour réduire la taille des données
       },
-      cacheStrategy: { ttl: 300, swr: 600 }, // Cache pour 5 minutes, stale while revalidate pour 10 minutes
     });
   } catch (error) {
     console.error("Error fetching authors:", error);
@@ -937,7 +881,6 @@ export async function getMembers() {
         email: true,
         role: true,
       },
-      cacheStrategy: { ttl: 300, swr: 600 }, // Cache pour 5 minutes, stale while revalidate pour 10 minutes
     });
   } catch (error) {
     console.error("Error fetching members:", error);
