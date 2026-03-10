@@ -487,6 +487,51 @@ async function main() {
 
   console.log(`✅ Created ${rules.length} automation rules`);
 
+  // Crée les templates de tâches par défaut
+  const editionTemplates = [
+    "Réception du manuscrit",
+    "Première lecture éditoriale",
+    "Signature du contrat",
+    "Correction éditoriale",
+    "Validation du texte final",
+    "Création de la couverture",
+    "Validation de la couverture",
+    "Mise en page / Maquette",
+    "Relecture BAT (Bon à Tirer)",
+    "Impression",
+    "Publication et diffusion",
+  ];
+
+  const printingTemplates = [
+    "Réception du fichier",
+    "Vérification technique",
+    "Validation du devis",
+    "Préparation de l'impression",
+    "Impression",
+    "Contrôle qualité",
+    "Façonnage / Reliure",
+    "Emballage",
+    "Expédition",
+  ];
+
+  await prisma.taskTemplate.createMany({
+    data: [
+      ...editionTemplates.map((title, index) => ({
+        title,
+        projectType: "EDITION" as const,
+        order: index,
+      })),
+      ...printingTemplates.map((title, index) => ({
+        title,
+        projectType: "PRINTING" as const,
+        order: index,
+      })),
+    ],
+  });
+
+  const totalTemplates = editionTemplates.length + printingTemplates.length;
+  console.log(`✅ Created ${totalTemplates} task templates`);
+
   console.log("🎉 Seeding completed successfully!");
 }
 

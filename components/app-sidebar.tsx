@@ -61,26 +61,8 @@ const data = {
     },
     {
       title: "Paramètres",
-      url: "#",
+      url: "/dashboard/settings",
       icon: Settings2,
-      items: [
-        {
-          title: "Général",
-          url: "#",
-        },
-        {
-          title: "Équipe",
-          url: "#",
-        },
-        {
-          title: "Facturation",
-          url: "#",
-        },
-        {
-          title: "Limites",
-          url: "#",
-        },
-      ],
     },
   ],
   navSecondary: [
@@ -136,8 +118,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar
       variant="inset"
       {...props}
-      style={{ fontFamily: "var(--font-merriweather)" }}
-    >
+      style={{ fontFamily: "var(--font-merriweather)" }}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

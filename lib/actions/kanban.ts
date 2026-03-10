@@ -598,11 +598,26 @@ export async function createProject(data: {
       },
     });
 
-    // Ajouter automatiquement des tâches par défaut pour les projets de type EDITION
-    if (
-      data.type === "EDITION" ||
-      (!data.type && projectData.type === "EDITION")
-    ) {
+    // Ajouter automatiquement des tâches basées sur les templates définis
+    const projectType = data.type || projectData.type;
+
+    // Récupérer les templates de tâches pour ce type de projet
+    const taskTemplates = await prisma.taskTemplate.findMany({
+      where: { projectType },
+      orderBy: { order: "asc" },
+    });
+
+    // Si des templates existent, les utiliser, sinon utiliser les tâches par défaut pour EDITION
+    if (taskTemplates.length > 0) {
+      await prisma.projectTask.createMany({
+        data: taskTemplates.map((template) => ({
+          title: template.title,
+          projectId: project.id,
+          completed: false,
+        })),
+      });
+    } else if (projectType === "EDITION") {
+      // Fallback : tâches par défaut si aucun template n'est défini
       const defaultTasks = [
         "Réception du manuscrit",
         "Première lecture éditoriale",
