@@ -8,7 +8,7 @@ import {
   deleteProjectTask,
   updateProjectTask,
 } from "@/lib/actions/kanban";
-import { ProjectTask } from "@/prisma/generated/prisma/client";
+import type { ProjectTask } from "@/prisma/generated/prisma/client";
 import { CheckSquare, Plus, Square, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -33,8 +33,7 @@ function AddTaskButton({
           variant="outline"
           size="sm"
           onClick={onAddClick}
-          className="rounded-xl"
-        >
+          className="rounded-xl">
           <Plus className="size-4 mr-1" />
           Ajouter
         </Button>
@@ -51,8 +50,7 @@ function AddTaskButton({
         variant="outline"
         size="sm"
         onClick={onAddClick}
-        className="rounded-xl"
-      >
+        className="rounded-xl">
         <Plus className="size-4 mr-1" />
         Ajouter
       </Button>
@@ -99,8 +97,7 @@ function TaskAdder({
         size="sm"
         variant="outline"
         onClick={onCancel}
-        className="rounded-xl"
-      >
+        className="rounded-xl">
         Annuler
       </Button>
     </div>
@@ -150,7 +147,9 @@ export function ProjectTasksEditor({
 
     // Mise à jour optimiste de l'état local d'abord
     setEditedTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t))
+      prev.map((t) =>
+        t.id === taskId ? { ...t, completed: !t.completed } : t,
+      ),
     );
 
     try {
@@ -160,8 +159,8 @@ export function ProjectTasksEditor({
       // En cas d'erreur, revenir à l'état précédent
       setEditedTasks((prev) =>
         prev.map((t) =>
-          t.id === taskId ? { ...t, completed: task.completed } : t
-        )
+          t.id === taskId ? { ...t, completed: task.completed } : t,
+        ),
       );
       console.error("Erreur lors de la mise à jour de la tâche:", error);
     }
@@ -211,14 +210,12 @@ export function ProjectTasksEditor({
           editedTasks.map((task) => (
             <div
               key={task.id}
-              className="flex items-center gap-2 p-2 border rounded-xl group"
-            >
+              className="flex items-center gap-2 p-2 border rounded-xl group">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onToggleTask(task.id)}
-                className="p-1 size-6"
-              >
+                className="p-1 size-6">
                 {task.completed ? (
                   <CheckSquare className="size-4 text-green-600" />
                 ) : (
@@ -228,16 +225,14 @@ export function ProjectTasksEditor({
               <span
                 className={`flex-1 ${
                   task.completed ? "line-through text-muted-foreground" : ""
-                }`}
-              >
+                }`}>
                 {task.title}
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onDeleteTask(task.id)}
-                className="p-1 size-6 opacity-0 group-hover:opacity-100"
-              >
+                className="p-1 size-6 opacity-0 group-hover:opacity-100">
                 <Trash2 className="size-4 text-destructive" />
               </Button>
             </div>

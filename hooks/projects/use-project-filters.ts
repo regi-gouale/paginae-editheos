@@ -1,7 +1,7 @@
 "use client";
 
 import { ProjectFilters } from "@/components/projects/project-filters";
-import {
+import type {
   Priority,
   ProjectStatus,
   ProjectType,
@@ -32,8 +32,8 @@ const statusParser = parseAsArrayOf(
       BLOCKED: "BLOCKED",
       DONE: "DONE",
       REJECTED: "REJECTED",
-    } as const)
-  )
+    } as const),
+  ),
 ).withDefault([]);
 
 const typeParser = parseAsArrayOf(
@@ -41,8 +41,8 @@ const typeParser = parseAsArrayOf(
     Object.values({
       EDITION: "EDITION",
       PRINTING: "PRINTING",
-    } as const)
-  )
+    } as const),
+  ),
 ).withDefault([]);
 
 const priorityParser = parseAsArrayOf(
@@ -52,12 +52,12 @@ const priorityParser = parseAsArrayOf(
       MEDIUM: "MEDIUM",
       HIGH: "HIGH",
       URGENT: "URGENT",
-    } as const)
-  )
+    } as const),
+  ),
 ).withDefault([]);
 
 const dueDaysParser = parseAsArrayOf(
-  parseAsStringEnum(["7", "15", "30"])
+  parseAsStringEnum(["7", "15", "30"]),
 ).withDefault([]);
 
 const searchParser = parseAsString.withDefault("");

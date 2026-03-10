@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { getAuthors } from "@/lib/actions/authors";
 import { updateProject } from "@/lib/actions/kanban";
-import { Author } from "@/prisma/generated/prisma/client";
+import type { Author } from "@/prisma/generated/prisma/client";
 import { User } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -30,7 +30,7 @@ export function AuthorSelectionDropdown({
   const [isLoading, setIsLoading] = useState(false);
   const [authors, setAuthors] = useState<Author[]>([]);
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(
-    selectedAuthors[0] || null
+    selectedAuthors[0] || null,
   );
 
   useEffect(() => {
@@ -97,8 +97,7 @@ export function AuthorSelectionDropdown({
       ) : (
         <Select
           value={selectedAuthor?.id || ""}
-          onValueChange={handleAuthorChange}
-        >
+          onValueChange={handleAuthorChange}>
           <SelectTrigger className="w-full rounded-xl">
             <SelectValue placeholder="Sélectionner un auteur">
               {selectedAuthor && (

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRecentProjects } from "@/hooks/projects/use-recent-projects";
 import { isProjectOverdueForDisplay } from "@/lib/utils";
-import { ProjectStatus } from "@/prisma/generated/prisma/client";
+import type { ProjectStatus } from "@/prisma/generated/prisma/client";
 import { AlertCircle, Calendar, Clock, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
@@ -89,8 +89,7 @@ export default function RecentProjects() {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="flex items-start space-x-4 p-4 border rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
+              className="flex items-start space-x-4 p-4 border rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
               <div className="flex-1 space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium leading-none">{project.title}</h4>
@@ -105,8 +104,7 @@ export default function RecentProjects() {
                     className={
                       statusConfig[project.status as keyof typeof statusConfig]
                         .color
-                    }
-                  >
+                    }>
                     {
                       statusConfig[project.status as keyof typeof statusConfig]
                         .label
@@ -147,12 +145,11 @@ export default function RecentProjects() {
                         className={
                           isOverdue(
                             project.dueDate,
-                            project.status as ProjectStatus
+                            project.status as ProjectStatus,
                           )
                             ? "text-red-600 font-medium"
                             : ""
-                        }
-                      >
+                        }>
                         Échéance: {formatDueDate(project.dueDate)}
                       </span>
                     </div>

@@ -7,6 +7,7 @@ const withBundleAnalyzer = require("next-bundle-analyzer")({
 const nextConfig: NextConfig = {
   /* config options here */
   typedRoutes: true,
+  serverExternalPackages: ["@prisma/client", "@prisma/extension-accelerate"],
   turbopack: {
     resolveExtensions: [".mdx", ".tsx", ".ts", ".jsx", ".js", ".mjs", ".json"],
   },
