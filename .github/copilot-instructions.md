@@ -176,7 +176,7 @@ pnpm prisma db seed         # Données de test
 ## Points d'Attention
 
 1. **Règles d'Automatisation** : Ne pas modifier `lib/rules.ts` sans comprendre l'impact sur `shouldMoveProject()`
-2. **Prisma Output** : Toujours importer depuis `@/prisma/generated/prisma`, jamais `@prisma/client`
+2. **Prisma Output** : Toujours importer depuis `@/prisma/generated/prisma/client`, jamais `@prisma/client`
 3. **Session Management** : Server-side avec better-auth, utiliser `authClient.useSession()` côté client
 4. **Revalidation** : Obligatoire après toute mutation de données (`revalidatePath`)
 5. **Whitelist Email** : `lib/whitelist.ts` contrôle les inscriptions autorisées

@@ -16,7 +16,7 @@ import {
   updateTaskTemplate,
   reorderTaskTemplates,
 } from "@/lib/actions/task-templates.action";
-import { ProjectType, TaskTemplate } from "@/prisma/generated/prisma";
+import { ProjectType, TaskTemplate } from "@/prisma/generated/prisma/client";
 import { GripVertical, Plus, Trash2, Check, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";

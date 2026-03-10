@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { ProjectType } from "@/prisma/generated/prisma";
+import { ProjectType } from "@/prisma/generated/prisma/client";
 import { revalidatePath } from "next/cache";
 
 // Récupérer tous les templates de tâches

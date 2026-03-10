@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRecentProjects } from "@/hooks/projects/use-recent-projects";
 import { isProjectOverdueForDisplay } from "@/lib/utils";
-import { ProjectStatus } from "@/prisma/generated/prisma";
+import { ProjectStatus } from "@/prisma/generated/prisma/client";
 import { AlertCircle, Calendar, Clock, ExternalLink } from "lucide-react";
 import Link from "next/link";
 

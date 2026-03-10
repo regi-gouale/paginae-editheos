@@ -15,7 +15,7 @@ import {
   Priority,
   ProjectStatus,
   ProjectType,
-} from "@/prisma/generated/prisma";
+} from "@/prisma/generated/prisma/client";
 import { Filter, Search, Share2, X } from "lucide-react";
 import { toast } from "sonner";
 

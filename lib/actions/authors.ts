@@ -3,7 +3,7 @@
 import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { prisma } from "@/lib/prisma";
 import { generateAuthorSlug } from "@/lib/utils";
-import { Prisma } from "@/prisma/generated/prisma";
+import { Prisma } from "@/prisma/generated/prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";

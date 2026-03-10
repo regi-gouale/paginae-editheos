@@ -1,9 +1,10 @@
-import { PrismaClient } from "@/prisma/generated/prisma";
+import { PrismaClient } from "@/prisma/generated/prisma/client";
 import { withAccelerate } from "@prisma/extension-accelerate";
 
 // Définir les options du client Prisma pour optimiser les performances
 const prismaClientSingleton = () => {
   const client = new PrismaClient({
+    accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   }).$extends(withAccelerate());
   // const optimizeApiKey = process.env.OPTIMIZE_API_KEY;

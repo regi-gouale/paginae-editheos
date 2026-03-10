@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { generateMemberSlug } from "@/lib/utils";
-import { Prisma } from "@/prisma/generated/prisma";
+import { Prisma } from "@/prisma/generated/prisma/client";
 
 export interface Member {
   id: string;

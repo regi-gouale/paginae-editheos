@@ -2,7 +2,7 @@
 
 import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { prisma } from "@/lib/prisma";
-import type { NotificationType } from "@/prisma/generated/prisma";
+import type { NotificationType } from "@/prisma/generated/prisma/client";
 import { revalidatePath } from "next/cache";
 
 /**

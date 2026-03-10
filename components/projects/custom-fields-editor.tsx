@@ -9,7 +9,7 @@ import {
   deleteCustomField,
   updateCustomField,
 } from "@/lib/actions/kanban";
-import { CustomField } from "@/prisma/generated/prisma";
+import { CustomField } from "@/prisma/generated/prisma/client";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 

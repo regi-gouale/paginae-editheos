@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { getAuthors } from "@/lib/actions/authors";
 import { updateProject } from "@/lib/actions/kanban";
-import { Author } from "@/prisma/generated/prisma";
+import { Author } from "@/prisma/generated/prisma/client";
 import { User } from "lucide-react";
 import { useEffect, useState } from "react";
 

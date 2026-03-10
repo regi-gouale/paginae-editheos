@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { NotificationType } from "@/prisma/generated/prisma";
+import type { NotificationType } from "@/prisma/generated/prisma/client";
 
 /**
  * Fonction utilitaire pour créer des notifications pour un projet

@@ -5,7 +5,7 @@ import {
   Priority,
   ProjectStatus,
   ProjectType,
-} from "@/prisma/generated/prisma";
+} from "@/prisma/generated/prisma/client";
 import {
   createSerializer,
   parseAsArrayOf,

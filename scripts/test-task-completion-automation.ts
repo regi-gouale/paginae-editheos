@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { ProjectStatus } from "@/prisma/generated/prisma";
+import { ProjectStatus } from "@/prisma/generated/prisma/client";
 
 /**
  * Script de test pour valider l'automatisation "une tâche complétée = passage en En cours"

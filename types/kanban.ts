@@ -6,7 +6,7 @@ import {
   Project,
   ProjectStatus,
   ProjectTask,
-} from "@/prisma/generated/prisma";
+} from "@/prisma/generated/prisma/client";
 
 // Extended types based on Prisma schema
 export interface ProjectWithDetails extends Project {

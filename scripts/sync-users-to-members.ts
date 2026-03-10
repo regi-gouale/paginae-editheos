@@ -1,7 +1,7 @@
-import { PrismaClient } from "@/prisma/generated/prisma";
+import { PrismaClient } from "@/prisma/generated/prisma/client";
 import { generateMemberSlug } from "@/lib/utils";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
 
 async function syncUsersToMembers() {
   console.log("🔄 Synchronisation des utilisateurs vers les membres...\n");

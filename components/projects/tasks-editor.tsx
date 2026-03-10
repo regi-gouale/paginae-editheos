@@ -8,7 +8,7 @@ import {
   deleteProjectTask,
   updateProjectTask,
 } from "@/lib/actions/kanban";
-import { ProjectTask } from "@/prisma/generated/prisma";
+import { ProjectTask } from "@/prisma/generated/prisma/client";
 import { CheckSquare, Plus, Square, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 

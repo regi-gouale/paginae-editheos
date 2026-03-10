@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { ProjectStatus } from "@/prisma/generated/prisma";
+import { ProjectStatus } from "@/prisma/generated/prisma/client";
 
 export interface MonthlyData {
   month: string;

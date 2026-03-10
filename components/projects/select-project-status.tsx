@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { updateProject } from "@/lib/actions/kanban";
-import { ProjectStatus } from "@/prisma/generated/prisma";
+import { ProjectStatus } from "@/prisma/generated/prisma/client";
 import { useEffect, useState } from "react";
 
 interface ProjectStatusDropdownProps {

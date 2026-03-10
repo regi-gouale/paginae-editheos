@@ -1,4 +1,4 @@
-import { Priority, ProjectStatus } from "@/prisma/generated/prisma";
+import { Priority, ProjectStatus } from "@/prisma/generated/prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";

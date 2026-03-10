@@ -1,7 +1,7 @@
 import { getProjectStatusFromColumnName } from "@/lib/utils";
-import { PrismaClient } from "@/prisma/generated/prisma";
+import { PrismaClient } from "@/prisma/generated/prisma/client";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
 
 async function fixProjectStatusInconsistency() {
   console.log("🔍 Recherche des incohérences entre statuts et colonnes...");

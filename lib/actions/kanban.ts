@@ -10,7 +10,7 @@ import {
   getColumnNameFromProjectStatus,
   getProjectStatusFromColumnName,
 } from "@/lib/utils";
-import type { ProjectStatus } from "@/prisma/generated/prisma";
+import type { ProjectStatus } from "@/prisma/generated/prisma/client";
 import { revalidatePath } from "next/cache";
 
 // Get project statistics for the sidebar

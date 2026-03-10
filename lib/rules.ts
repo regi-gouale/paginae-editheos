@@ -4,7 +4,7 @@ import {
   RuleActionType,
   RuleConditionOperator,
   RuleConditionType,
-} from "@/prisma/generated/prisma";
+} from "@/prisma/generated/prisma/client";
 import {
   KanbanColumnWithProjects,
   KanbanRule,
