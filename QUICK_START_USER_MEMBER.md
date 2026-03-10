@@ -7,24 +7,23 @@
 - ✅ Script de synchronisation créé
 - ✅ Client Prisma régénéré
 - ✅ Script npm ajouté au package.json
+- ✅ **Migration Prisma créée** : `20260310140000_add_user_member_relation`
 
 ## 🚀 Prochaines étapes
 
 ### 1. Appliquer la migration SQL
 
-**Option A** - Via Prisma (recommandé en développement) :
+La migration a déjà été créée dans `prisma/migrations/20260310140000_add_user_member_relation/`.
+
+**En développement local** :
 
 ```bash
-# Nécessite un accès direct à la base de données
-pnpm prisma migrate dev --name add-user-member-relation
+# Si vous avez un accès direct à la base de données
+pnpm prisma migrate deploy
 ```
 
-**Option B** - Manuellement (pour Prisma Accelerate ou production) :
-
-```bash
-# Exécuter le fichier SQL manuellement
-psql -d votre_database < prisma/migrations/manual_add_user_member_relation.sql
-```
+**Sur Vercel (avec Prisma Accelerate)** :
+La migration sera automatiquement déployée lors du build via `prisma migrate deploy` dans le script `vercel-build`.
 
 ### 2. Synchroniser les utilisateurs existants
 

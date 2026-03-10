@@ -7,6 +7,31 @@ async function syncUsersToMembers() {
   console.log("🔄 Synchronisation des utilisateurs vers les membres...\n");
 
   try {
+    // Vérifier d'abord si la migration a été appliquée
+    // en essayant d'accéder à la colonne userId
+    try {
+      await prisma.member.findFirst({
+        where: { userId: { not: null } },
+      });
+    } catch (checkError: unknown) {
+      // Si la colonne n'existe pas encore, skip gracefully
+      if (
+        checkError instanceof Error &&
+        "code" in checkError &&
+        checkError.code === "P2022"
+      ) {
+        console.log(
+          "ℹ️  La migration User-Member n'a pas encore été appliquée.",
+        );
+        console.log(
+          "⏭️  Synchronisation ignorée. Exécutez la migration puis relancez ce script.\n",
+        );
+        return;
+      }
+      // Si c'est une autre erreur, la propager
+      throw checkError;
+    }
+
     // Récupérer tous les utilisateurs
     const users = await prisma.user.findMany({
       select: {
@@ -96,6 +121,13 @@ syncUsersToMembers()
     process.exit(0);
   })
   .catch((error) => {
+    // Si c'est l'erreur de colonne manquante, ne pas échouer le build
+    if (error?.code === "P2022") {
+      console.log(
+        "\nℹ️  La migration n'a pas encore été appliquée. Build continue...\n",
+      );
+      process.exit(0);
+    }
     console.error("❌ Script échoué:", error);
     process.exit(1);
   });
