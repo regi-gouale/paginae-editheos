@@ -45,71 +45,71 @@
 
 :root {
   --radius: 0.65rem;
-  --background: oklch(0.982 0.003 255);
-  --foreground: oklch(0.285 0.01 258);
-  --card: oklch(0.994 0.002 255);
-  --card-foreground: oklch(0.285 0.01 258);
-  --popover: oklch(0.998 0.001 255);
-  --popover-foreground: oklch(0.285 0.01 258);
-  --primary: oklch(0.47 0.03 250);
-  --primary-foreground: oklch(0.98 0.002 255);
-  --secondary: oklch(0.955 0.004 255);
-  --secondary-foreground: oklch(0.33 0.01 258);
-  --muted: oklch(0.96 0.003 255);
-  --muted-foreground: oklch(0.52 0.01 258);
-  --accent: oklch(0.948 0.005 248);
-  --accent-foreground: oklch(0.33 0.01 258);
+  --background: oklch(0.975 0.008 92);
+  --foreground: oklch(0.3 0.018 72);
+  --card: oklch(0.988 0.007 92);
+  --card-foreground: oklch(0.3 0.018 72);
+  --popover: oklch(0.992 0.006 92);
+  --popover-foreground: oklch(0.3 0.018 72);
+  --primary: oklch(0.43 0.034 62);
+  --primary-foreground: oklch(0.965 0.009 92);
+  --secondary: oklch(0.948 0.01 90);
+  --secondary-foreground: oklch(0.34 0.016 72);
+  --muted: oklch(0.954 0.009 90);
+  --muted-foreground: oklch(0.52 0.015 74);
+  --accent: oklch(0.94 0.012 85);
+  --accent-foreground: oklch(0.34 0.016 72);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.89 0.004 255);
-  --input: oklch(0.9 0.004 255);
-  --ring: oklch(0.47 0.03 250);
-  --chart-1: oklch(0.53 0.04 250);
-  --chart-2: oklch(0.56 0.025 200);
-  --chart-3: oklch(0.5 0.02 290);
-  --chart-4: oklch(0.62 0.03 160);
-  --chart-5: oklch(0.58 0.028 110);
-  --sidebar: oklch(0.974 0.003 255);
-  --sidebar-foreground: oklch(0.29 0.01 258);
-  --sidebar-primary: oklch(0.47 0.03 250);
-  --sidebar-primary-foreground: oklch(0.98 0.002 255);
-  --sidebar-accent: oklch(0.952 0.004 250);
-  --sidebar-accent-foreground: oklch(0.33 0.01 258);
-  --sidebar-border: oklch(0.885 0.004 255);
-  --sidebar-ring: oklch(0.47 0.03 250);
+  --border: oklch(0.875 0.01 88);
+  --input: oklch(0.89 0.01 88);
+  --ring: oklch(0.43 0.034 62);
+  --chart-1: oklch(0.47 0.04 62);
+  --chart-2: oklch(0.52 0.03 140);
+  --chart-3: oklch(0.5 0.02 260);
+  --chart-4: oklch(0.6 0.03 95);
+  --chart-5: oklch(0.56 0.028 35);
+  --sidebar: oklch(0.968 0.008 92);
+  --sidebar-foreground: oklch(0.31 0.017 72);
+  --sidebar-primary: oklch(0.43 0.034 62);
+  --sidebar-primary-foreground: oklch(0.965 0.009 92);
+  --sidebar-accent: oklch(0.946 0.01 88);
+  --sidebar-accent-foreground: oklch(0.34 0.016 72);
+  --sidebar-border: oklch(0.87 0.01 88);
+  --sidebar-ring: oklch(0.43 0.034 62);
 }
 
 .dark {
-  --background: oklch(0.215 0.004 255);
-  --foreground: oklch(0.93 0.004 255);
-  --card: oklch(0.255 0.004 255);
-  --card-foreground: oklch(0.93 0.004 255);
-  --popover: oklch(0.275 0.004 255);
-  --popover-foreground: oklch(0.93 0.004 255);
-  --primary: oklch(0.72 0.035 248);
-  --primary-foreground: oklch(0.24 0.004 255);
-  --secondary: oklch(0.305 0.004 255);
-  --secondary-foreground: oklch(0.93 0.004 255);
-  --muted: oklch(0.295 0.003 255);
-  --muted-foreground: oklch(0.74 0.006 255);
-  --accent: oklch(0.34 0.006 248);
-  --accent-foreground: oklch(0.93 0.004 255);
+  --background: oklch(0.22 0.013 72);
+  --foreground: oklch(0.92 0.01 88);
+  --card: oklch(0.265 0.012 72);
+  --card-foreground: oklch(0.92 0.01 88);
+  --popover: oklch(0.29 0.011 72);
+  --popover-foreground: oklch(0.92 0.01 88);
+  --primary: oklch(0.72 0.03 82);
+  --primary-foreground: oklch(0.24 0.012 72);
+  --secondary: oklch(0.315 0.01 72);
+  --secondary-foreground: oklch(0.92 0.01 88);
+  --muted: oklch(0.305 0.009 72);
+  --muted-foreground: oklch(0.75 0.01 86);
+  --accent: oklch(0.34 0.012 78);
+  --accent-foreground: oklch(0.92 0.01 88);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.38 0.004 255 / 65%);
-  --input: oklch(0.35 0.004 255);
-  --ring: oklch(0.72 0.035 248);
-  --chart-1: oklch(0.72 0.035 248);
-  --chart-2: oklch(0.7 0.026 205);
-  --chart-3: oklch(0.68 0.02 290);
-  --chart-4: oklch(0.74 0.022 160);
-  --chart-5: oklch(0.72 0.02 110);
-  --sidebar: oklch(0.245 0.004 255);
-  --sidebar-foreground: oklch(0.93 0.004 255);
-  --sidebar-primary: oklch(0.72 0.035 248);
-  --sidebar-primary-foreground: oklch(0.24 0.004 255);
-  --sidebar-accent: oklch(0.31 0.004 255);
-  --sidebar-accent-foreground: oklch(0.93 0.004 255);
-  --sidebar-border: oklch(0.37 0.004 255);
-  --sidebar-ring: oklch(0.72 0.035 248);
+  --border: oklch(0.39 0.01 74 / 70%);
+  --input: oklch(0.355 0.01 74);
+  --ring: oklch(0.72 0.03 82);
+  --chart-1: oklch(0.72 0.03 82);
+  --chart-2: oklch(0.71 0.022 145);
+  --chart-3: oklch(0.7 0.018 260);
+  --chart-4: oklch(0.75 0.02 100);
+  --chart-5: oklch(0.73 0.02 40);
+  --sidebar: oklch(0.248 0.011 72);
+  --sidebar-foreground: oklch(0.92 0.01 88);
+  --sidebar-primary: oklch(0.72 0.03 82);
+  --sidebar-primary-foreground: oklch(0.24 0.012 72);
+  --sidebar-accent: oklch(0.322 0.01 72);
+  --sidebar-accent-foreground: oklch(0.92 0.01 88);
+  --sidebar-border: oklch(0.38 0.01 74);
+  --sidebar-ring: oklch(0.72 0.03 82);
 }
 
 @layer base {
@@ -121,17 +121,17 @@
     background-image:
       radial-gradient(
         circle at 15% -10%,
-        color-mix(in oklab, var(--primary) 10%, transparent) 0%,
+        color-mix(in oklab, var(--primary) 7%, transparent) 0%,
         transparent 35%
       ),
       radial-gradient(
         circle at 100% 10%,
-        color-mix(in oklab, var(--accent) 12%, transparent) 0%,
+        color-mix(in oklab, var(--accent) 9%, transparent) 0%,
         transparent 40%
       ),
       linear-gradient(
         180deg,
-        color-mix(in oklab, var(--background) 98%, white) 0%,
+        color-mix(in oklab, var(--background) 97%, white) 0%,
         var(--background) 100%
       );
     min-height: 100vh;
@@ -139,7 +139,7 @@
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--primary) 22%, white);
+    background: color-mix(in oklab, var(--primary) 18%, white);
     color: var(--foreground);
   }
 
@@ -154,11 +154,11 @@
 
 @layer utilities {
   .surface-card {
-    background: color-mix(in oklab, var(--card) 90%, white 10%);
-    border: 1px solid color-mix(in oklab, var(--border) 90%, white 10%);
+    background: color-mix(in oklab, var(--card) 93%, white 7%);
+    border: 1px solid color-mix(in oklab, var(--border) 92%, white 8%);
     box-shadow:
-      0 8px 30px -20px color-mix(in oklab, var(--foreground) 16%, transparent),
-      0 2px 10px -6px color-mix(in oklab, var(--foreground) 16%, transparent);
+      0 10px 28px -22px color-mix(in oklab, var(--foreground) 20%, transparent),
+      0 2px 10px -7px color-mix(in oklab, var(--foreground) 15%, transparent);
     backdrop-filter: blur(6px);
   }
 
