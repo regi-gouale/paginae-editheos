@@ -1,4 +1,4 @@
-import { Priority, ProjectStatus } from "@/prisma/generated/prisma/client";
+import type { Priority, ProjectStatus } from "@/prisma/generated/prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -37,7 +37,7 @@ export function generateRandomId(length: number = 8): string {
  */
 export function generateAuthorSlug(
   firstName: string,
-  lastName: string
+  lastName: string,
 ): string {
   const name = `${firstName}-${lastName}`
     .toLowerCase()
@@ -69,37 +69,37 @@ export function generateProjectSlug(title: string): string {
 }
 
 export const getProjectStatusFromColumnName = (
-  columnTitle: string
+  columnTitle: string,
 ): ProjectStatus => {
   switch (columnTitle) {
     case "À faire":
-      return ProjectStatus.TODO;
+      return "TODO";
     case "En cours":
-      return ProjectStatus.IN_PROGRESS;
+      return "IN_PROGRESS";
     case "Bloqué":
-      return ProjectStatus.BLOCKED;
+      return "BLOCKED";
     case "Terminé":
-      return ProjectStatus.DONE;
+      return "DONE";
     case "Rejeté":
-      return ProjectStatus.REJECTED;
+      return "REJECTED";
     default:
-      return ProjectStatus.TODO;
+      return "TODO";
   }
 };
 
 export const getColumnNameFromProjectStatus = (
-  status: ProjectStatus
+  status: ProjectStatus,
 ): string => {
   switch (status) {
-    case ProjectStatus.TODO:
+    case "TODO":
       return "À faire";
-    case ProjectStatus.IN_PROGRESS:
+    case "IN_PROGRESS":
       return "En cours";
-    case ProjectStatus.BLOCKED:
+    case "BLOCKED":
       return "Bloqué";
-    case ProjectStatus.DONE:
+    case "DONE":
       return "Terminé";
-    case ProjectStatus.REJECTED:
+    case "REJECTED":
       return "Rejeté";
     default:
       return "À faire";
@@ -124,9 +124,9 @@ export const projectTypes = {
  */
 export function isProjectOverdueForDisplay(
   dueDate: Date | string | null | undefined,
-  status?: ProjectStatus
+  status?: ProjectStatus,
 ): boolean {
-  if (!dueDate || status === ProjectStatus.DONE) return false;
+  if (!dueDate || status === "DONE") return false;
   return new Date(dueDate) < new Date();
 }
 // Get priority-based styling
@@ -177,13 +177,13 @@ export const getPriorityLabel = (priority: Priority) => {
 
 export const getStatusVariant = (status: ProjectStatus) => {
   switch (status) {
-    case ProjectStatus.DONE:
+    case "DONE":
       return "default";
-    case ProjectStatus.IN_PROGRESS:
+    case "IN_PROGRESS":
       return "secondary";
-    case ProjectStatus.BLOCKED:
+    case "BLOCKED":
       return "destructive";
-    case ProjectStatus.REJECTED:
+    case "REJECTED":
       return "outline";
     default:
       return "secondary";
