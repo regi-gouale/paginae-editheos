@@ -4,6 +4,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  getRecentActivities,
+  type ActivityItem,
+} from "@/lib/actions/activity.action";
+import {
   AlertTriangle,
   CheckCircle,
   Clock,
@@ -12,25 +16,6 @@ import {
   Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-
-interface ActivityItem {
-  id: string;
-  type:
-    | "project_created"
-    | "project_updated"
-    | "project_completed"
-    | "member_added"
-    | "deadline_approaching";
-  title: string;
-  description: string;
-  user?: {
-    name: string;
-    email: string;
-    image?: string;
-  };
-  timestamp: Date;
-  projectTitle?: string;
-}
 
 const activityConfig = {
   project_created: {
@@ -70,69 +55,19 @@ export default function RecentActivity() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulation de données - remplacer par un appel API réel
-    const mockData: ActivityItem[] = [
-      {
-        id: "1",
-        type: "project_created",
-        title: "Nouveau projet créé",
-        description: "Guide de l'édition numérique",
-        user: {
-          name: "Marie Dubois",
-          email: "marie@example.com",
-        },
-        timestamp: new Date("2025-09-11T10:30:00"),
-        projectTitle: "Guide de l'édition numérique",
-      },
-      {
-        id: "2",
-        type: "deadline_approaching",
-        title: "Échéance dans 2 jours",
-        description: "Catalogue produits 2025",
-        timestamp: new Date("2025-09-11T09:15:00"),
-        projectTitle: "Catalogue produits 2025",
-      },
-      {
-        id: "3",
-        type: "project_updated",
-        title: "Statut mis à jour",
-        description: "Manuel utilisateur v2.0 - Bloqué",
-        user: {
-          name: "Jean Martin",
-          email: "jean@example.com",
-        },
-        timestamp: new Date("2025-09-10T16:45:00"),
-        projectTitle: "Manuel utilisateur v2.0",
-      },
-      {
-        id: "4",
-        type: "member_added",
-        title: "Nouveau membre",
-        description: "Sophie Laurent a rejoint l'équipe",
-        user: {
-          name: "Admin",
-          email: "admin@example.com",
-        },
-        timestamp: new Date("2025-09-10T14:20:00"),
-      },
-      {
-        id: "5",
-        type: "project_completed",
-        title: "Projet terminé",
-        description: "Brochure événement été 2025",
-        user: {
-          name: "Pierre Durand",
-          email: "pierre@example.com",
-        },
-        timestamp: new Date("2025-09-09T11:30:00"),
-        projectTitle: "Brochure événement été 2025",
-      },
-    ];
+    const loadActivities = async () => {
+      setLoading(true);
+      try {
+        const data = await getRecentActivities(5);
+        setActivities(data);
+      } catch (error) {
+        console.error("Erreur lors du chargement des activités:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setTimeout(() => {
-      setActivities(mockData);
-      setLoading(false);
-    }, 800);
+    loadActivities();
   }, []);
 
   const formatTimeAgo = (date: Date) => {
@@ -197,8 +132,7 @@ export default function RecentActivity() {
                   index < activities.length - 1
                     ? "border-b border-gray-100"
                     : ""
-                }`}
-              >
+                }`}>
                 <div className={`${config.bgColor} p-2 rounded-full`}>
                   <Icon className={`size-4 ${config.color}`} />
                 </div>

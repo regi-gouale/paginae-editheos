@@ -43,12 +43,12 @@ export default function DashboardStats() {
       description: "Nécessitent une attention",
     },
     {
-      title: "Échéances aujourd'hui",
+      title: "Échéances cette semaine",
       value: data.stats.dueSoon,
       icon: BookAlert,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
-      description: "À finaliser aujourd'hui",
+      description: "À finaliser cette semaine",
     },
   ];
 
