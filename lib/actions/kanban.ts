@@ -503,7 +503,7 @@ export async function updateKanbanColumn(
     title?: string;
     color?: string;
     position?: number;
-  }
+  },
 ) {
   try {
     const column = await prisma.kanbanColumn.update({
@@ -598,6 +598,34 @@ export async function createProject(data: {
       },
     });
 
+    // Ajouter automatiquement des tâches par défaut pour les projets de type EDITION
+    if (
+      data.type === "EDITION" ||
+      (!data.type && projectData.type === "EDITION")
+    ) {
+      const defaultTasks = [
+        "Réception du manuscrit",
+        "Première lecture éditoriale",
+        "Signature du contrat",
+        "Correction éditoriale",
+        "Validation du texte final",
+        "Création de la couverture",
+        "Validation de la couverture",
+        "Mise en page / Maquette",
+        "Relecture BAT (Bon à Tirer)",
+        "Impression",
+        "Publication et diffusion",
+      ];
+
+      await prisma.projectTask.createMany({
+        data: defaultTasks.map((title) => ({
+          title,
+          projectId: project.id,
+          completed: false,
+        })),
+      });
+    }
+
     // Créer des notifications pour les membres du projet
     const session = await getCurrentSession();
 
@@ -607,7 +635,7 @@ export async function createProject(data: {
         "PROJECT_CREATED",
         `📋 Nouveau projet : ${project.title}`,
         `Un nouveau projet "${project.title}" a été créé et vous y avez été assigné(e).`,
-        session?.user?.id // Exclure le créateur
+        session?.user?.id, // Exclure le créateur
       );
     }
 
@@ -618,7 +646,7 @@ export async function createProject(data: {
         "PROJECT_CREATED",
         `✅ Projet créé : ${project.title}`,
         `Votre projet "${project.title}" a été créé avec succès.`,
-        project.id
+        project.id,
       );
     }
 
@@ -643,7 +671,7 @@ export async function updateProject(
     authorIds?: string[];
     slug?: string;
     fileUrl?: string;
-  }
+  },
 ) {
   try {
     const { authorIds, ...updateData } = data;
@@ -731,7 +759,7 @@ export async function updateProject(
         "PROJECT_UPDATED",
         `✏️ Projet mis à jour : ${project.title}`,
         `Le projet "${project.title}" a été modifié.`,
-        session?.user?.id // Exclure la personne qui a fait la modification
+        session?.user?.id, // Exclure la personne qui a fait la modification
       );
     }
 
@@ -793,7 +821,7 @@ export async function moveProject(projectId: string, columnId: string | null) {
         "PROJECT_MOVED",
         `📋 Projet déplacé : ${project.title}`,
         `Le projet "${project.title}" a été déplacé vers "${targetColumn.title}".`,
-        session?.user?.id // Exclure la personne qui a fait le déplacement
+        session?.user?.id, // Exclure la personne qui a fait le déplacement
       );
     }
 
@@ -830,7 +858,7 @@ export async function updateProjectTask(
   data: {
     title?: string;
     completed?: boolean;
-  }
+  },
 ) {
   try {
     const task = await prisma.projectTask.update({
@@ -905,7 +933,7 @@ export async function applyAutomationRules(
   projectsToMove: {
     projectId: string;
     targetColumnId: string;
-  }[]
+  }[],
 ) {
   try {
     // Optimisation 1: Récupérer toutes les colonnes cibles en une seule requête
@@ -918,10 +946,13 @@ export async function applyAutomationRules(
       select: { id: true, title: true },
     });
 
-    const columnMap = targetColumns.reduce((map, column) => {
-      map[column.id] = column;
-      return map;
-    }, {} as Record<string, { id: string; title: string }>);
+    const columnMap = targetColumns.reduce(
+      (map, column) => {
+        map[column.id] = column;
+        return map;
+      },
+      {} as Record<string, { id: string; title: string }>,
+    );
 
     // Optimisation 2: Exécuter les mises à jour dans une transaction
     const projectUpdates = projectsToMove.map(
@@ -969,7 +1000,7 @@ export async function applyAutomationRules(
             projectId,
             error: error instanceof Error ? error.message : "Erreur inconnue",
           }));
-      }
+      },
     );
 
     const results = await Promise.all(projectUpdates);
