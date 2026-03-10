@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -300,8 +299,8 @@ export function TaskTemplatesEditor({
 
             {templates.length === 0 && !isAdding && (
               <div className="text-center text-muted-foreground py-8">
-                Aucun template défini. Cliquez sur "Ajouter une tâche" pour
-                commencer.
+                Aucun template défini. Cliquez sur &quot;Ajouter une tâche&quot;
+                pour commencer.
               </div>
             )}
 
