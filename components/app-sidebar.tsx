@@ -119,7 +119,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       variant="floating"
       {...props}
       className="border-sidebar-border/60 bg-sidebar/85 backdrop-blur-md"
-      style={{ fontFamily: "var(--font-editorial-serif)" }}>
+      style={{ fontFamily: "var(--font-ui-sans)" }}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
