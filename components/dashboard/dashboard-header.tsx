@@ -10,17 +10,16 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { SidebarActions } from "../sidebar-actions";
 
-interface DashboardHeaderProps {
+type DashboardHeaderProps = {
   breadcrumbs?: { label: string; href: string }[];
-}
+};
 
 export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
   return (
     <header
-      className="flex h-16 shrink-0 items-center gap-2 w-full shadow-sm fixed top-0 z-10 mx-auto bg-white dark:bg-black border-b border-border px-4"
-      style={{ fontFamily: "var(--font-lato)" }}
-    >
-      <div className="flex items-center gap-2 px-4">
+      className="fixed top-0 z-20 mx-auto flex h-16 w-full shrink-0 items-center gap-2 border-b border-border/70 bg-background/75 px-4 shadow-[0_10px_24px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md"
+      style={{ fontFamily: "var(--font-lato)" }}>
+      <div className="flex items-center gap-2 px-2 md:px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator
           orientation="vertical"
@@ -67,7 +66,7 @@ export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
       {/* <div className="gap-4 mr-auto md:mr-64 lg:mr-72 flex items-center">
         <ThemeToggle />
       </div> */}
-      <div className="gap-4 mr-auto md:mr-64 lg:mr-72 flex items-center">
+      <div className="mr-auto flex items-center gap-4 md:mr-64 lg:mr-72">
         <SidebarActions />
       </div>
     </header>

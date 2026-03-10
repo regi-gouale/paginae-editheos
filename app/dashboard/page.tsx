@@ -19,34 +19,36 @@ export default async function DashboardPage() {
   const breadcrumbs = [{ label: "Tableau de bord", href: "/dashboard" }];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 pb-8">
       <DashboardHeader breadcrumbs={breadcrumbs} />
 
-      <main className="flex-1 space-y-6 p-6 pt-24 max-w-6xl mx-auto">
-        {/* Message de bienvenue */}
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">
-            Bienvenue, {session.user.name || session.user.email}
-          </h1>
-          <p className="text-muted-foreground">
-            Voici un aperçu de l&apos;activité de vos projets et de votre
-            équipe.
-          </p>
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 pt-24 md:p-6 md:pt-24">
+        <div className="surface-card grain-overlay relative overflow-hidden rounded-2xl p-6 md:p-8">
+          <div className="absolute -right-12 -top-16 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
+          <div className="absolute -bottom-20 left-1/3 h-44 w-44 rounded-full bg-accent/30 blur-3xl" />
+          <div className="relative flex flex-col gap-2">
+            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              Espace editorial
+            </p>
+            <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
+              Bienvenue, {session.user.name || session.user.email}
+            </h1>
+            <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
+              Voici un apercu de l&apos;activite de vos projets et de votre
+              equipe.
+            </p>
+          </div>
         </div>
 
-        {/* Statistiques principales */}
         <DashboardStats />
 
-        {/* Grille principale */}
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Colonne principale (2/3) */}
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid gap-6 xl:grid-cols-12">
+          <div className="xl:col-span-8 space-y-6">
             <RecentProjects />
             <ProgressChart />
           </div>
 
-          {/* Sidebar (1/3) */}
-          <div className="space-y-6">
+          <div className="xl:col-span-4 space-y-6">
             <RecentActivity />
           </div>
         </div>

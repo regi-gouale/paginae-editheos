@@ -118,13 +118,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar
       variant="floating"
       {...props}
-      style={{ fontFamily: "var(--font-merriweather)" }}>
+      className="border-sidebar-border/60 bg-sidebar/85 backdrop-blur-md"
+      style={{ fontFamily: "var(--font-meriweather)" }}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-xl">
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-xl ring-1 ring-sidebar-primary/30 shadow-sm">
                   <Image
                     src="/logo-editheos.webp"
                     alt="Paginae"
@@ -133,10 +134,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium uppercase">
+                  <span className="truncate font-semibold uppercase tracking-wide">
                     Paginae
                   </span>
-                  <span className="truncate text-xs">Editheos</span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    Editheos
+                  </span>
                 </div>
               </a>
             </SidebarMenuButton>
