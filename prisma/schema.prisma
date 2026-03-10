@@ -25,6 +25,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   notifications Notification[]
+  member        Member?        @relation("UserMember")
 
   @@unique([email])
   @@map("user")
@@ -79,8 +80,10 @@ model Member {
   id        String     @id @default(uuid())
   email     String     @unique
   name      String
-  role      MemberRole
+  role      MemberRole @default(CONTRIBUTOR)
   slug      String?    @unique
+  userId    String?    @unique
+  user      User?      @relation("UserMember", fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now()) @updatedAt
 

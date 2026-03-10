@@ -116,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar
-      variant="inset"
+      variant="floating"
       {...props}
       style={{ fontFamily: "var(--font-merriweather)" }}>
       <SidebarHeader>

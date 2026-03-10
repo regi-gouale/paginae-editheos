@@ -8,12 +8,14 @@
     "analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "eslint",
-    "vercel-build": "prisma generate --no-engine && prisma migrate deploy && next build --turbopack",
+    "vercel-build": "prisma generate --no-engine && prisma migrate deploy && tsx scripts/sync-users-to-members.ts && next build --turbopack",
     "fix-project-status": "tsx scripts/fix-project-status-inconsistency.ts",
     "create-test-project": "tsx scripts/create-test-project.ts",
     "create-overdue-project": "tsx scripts/create-overdue-project.ts",
     "cleanup-test-projects": "tsx scripts/cleanup-test-projects.ts",
-    "create-project-with-custom-fields": "tsx scripts/create-project-with-custom-fields.ts"
+    "create-project-with-custom-fields": "tsx scripts/create-project-with-custom-fields.ts",
+    "sync-users-to-members": "tsx scripts/sync-users-to-members.ts",
+    "test-user-member-relation": "tsx scripts/test-user-member-relation.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
