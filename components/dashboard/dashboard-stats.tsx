@@ -59,8 +59,8 @@ export default function DashboardStats() {
       icon: FolderKanban,
       color: "text-green-600",
       bgColor: "bg-green-50",
-      change: "+12%",
-      changeType: "increase" as const,
+      change: data.trends.projectsChange.value,
+      changeType: data.trends.projectsChange.direction,
     },
     {
       title: "Membres de l'équipe",
@@ -68,8 +68,8 @@ export default function DashboardStats() {
       icon: Users,
       color: "text-indigo-600",
       bgColor: "bg-indigo-50",
-      change: "+2",
-      changeType: "increase" as const,
+      change: data.trends.membersChange.value,
+      changeType: data.trends.membersChange.direction,
     },
     {
       title: "Taux de progression",
@@ -77,8 +77,8 @@ export default function DashboardStats() {
       icon: TrendingUp,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
-      change: "+5%",
-      changeType: "increase" as const,
+      change: data.trends.completionRateChange.value,
+      changeType: data.trends.completionRateChange.direction,
     },
   ];
 
