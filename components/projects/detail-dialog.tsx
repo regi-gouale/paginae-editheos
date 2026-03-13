@@ -37,16 +37,12 @@ export function ProjectDetailDialog({
   isAdmin,
   onOpenChange,
 }: ProjectDetailDialogProps) {
-  const { confirm, showError, showSuccess } = useAlerts();
+  const { showError, showSuccess } = useAlerts();
   const router = useRouter();
   const [editedProject, setEditedProject] = useState<ProjectWithDetails | null>(
     null,
   );
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const handleClose = () => {
-    onOpenChange(false);
-  };
 
   useEffect(() => {
     if (project) {
@@ -59,13 +55,8 @@ export function ProjectDetailDialog({
       return;
     }
 
-    const confirmed = await confirm(
-      `Êtes-vous sûr de vouloir supprimer le projet \"${editedProject.title}\" ? Cette action est irréversible.`,
-      {
-        title: "Supprimer le projet",
-        confirmText: "Supprimer",
-        cancelText: "Annuler",
-      },
+    const confirmed = window.confirm(
+      `Êtes-vous sûr de vouloir supprimer le projet "${editedProject.title}" ? Cette action est irréversible.`,
     );
 
     if (!confirmed) {
@@ -100,7 +91,7 @@ export function ProjectDetailDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-start justify-between gap-4">
