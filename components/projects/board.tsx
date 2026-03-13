@@ -15,9 +15,10 @@ import { toast } from "sonner";
 
 interface ProjectsBoardProps {
   initialColumns: KanbanColumnWithProjects[];
+  isAdmin: boolean;
 }
 
-export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
+export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
   const [columns, setColumns] =
     useState<KanbanColumnWithProjects[]>(initialColumns);
   const [selectedProject, setSelectedProject] =
@@ -60,7 +61,7 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
           // Utiliser la nouvelle fonction shouldMoveProject pour déterminer si le projet doit être déplacé
           if (shouldMoveProject(project, rule) && rule.action?.targetColumnId) {
             const targetColumn = columns.find(
-              (col) => col.id === rule.action!.targetColumnId
+              (col) => col.id === rule.action!.targetColumnId,
             );
 
             // Vérifier que le projet n'est pas déjà dans la colonne cible
@@ -83,7 +84,7 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
         ({ projectId, targetColumnId }) => ({
           projectId,
           targetColumnId,
-        })
+        }),
       );
 
       // Appliquer les règles d'automatisation en base de données
@@ -187,17 +188,17 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
     // Trouver les colonnes source et destination
     const sourceColumn = columns.find((col) => col.id === source.droppableId);
     const destColumn = columns.find(
-      (col) => col.id === destination.droppableId
+      (col) => col.id === destination.droppableId,
     );
     if (!sourceColumn || !destColumn) return;
 
     // Créer les nouveaux tableaux de colonnes
     const newColumns = [...columns];
     const sourceColIndex = newColumns.findIndex(
-      (col) => col.id === source.droppableId
+      (col) => col.id === source.droppableId,
     );
     const destColIndex = newColumns.findIndex(
-      (col) => col.id === destination.droppableId
+      (col) => col.id === destination.droppableId,
     );
 
     // Trouver le projet déplacé
@@ -291,6 +292,7 @@ export function ProjectsBoard({ initialColumns }: ProjectsBoardProps) {
       <ProjectDetailDialog
         project={selectedProject}
         open={!!selectedProject}
+        isAdmin={isAdmin}
         onOpenChange={(open) => {
           if (!open) setSelectedProject(null);
         }}

@@ -17,7 +17,7 @@ type DashboardHeaderProps = {
 export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
   return (
     <header
-      className="fixed top-0 z-20 mx-auto flex h-16 w-full shrink-0 items-center gap-2 border-b border-border/70 bg-background/75 px-4 shadow-[0_10px_24px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md"
+      className="fixed top-0 z-20 mx-auto flex h-16 w-full shrink-0 items-center gap-2 border-b border-border/70 bg-background/75 px-4 shadow-[0_10px_24px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md max-w-7xl md:px-6 lg:px-8"
       style={{ fontFamily: "var(--font-ui-sans)" }}>
       <div className="flex items-center gap-2 px-2 md:px-4">
         <SidebarTrigger className="-ml-1" />

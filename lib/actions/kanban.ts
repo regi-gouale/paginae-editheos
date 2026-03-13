@@ -795,6 +795,44 @@ export async function moveProject(projectId: string, columnId: string | null) {
   }
 }
 
+// Delete a project (admin only)
+export async function deleteProject(projectId: string) {
+  try {
+    const session = await getCurrentSession();
+
+    if (!session?.user?.id) {
+      return {
+        success: false,
+        error: "Vous devez être connecté pour supprimer un projet",
+      };
+    }
+
+    const currentMember = await prisma.member.findUnique({
+      where: { userId: session.user.id },
+      select: { role: true },
+    });
+
+    if (!currentMember || currentMember.role !== "ADMIN") {
+      return {
+        success: false,
+        error: "Seuls les administrateurs peuvent supprimer un projet",
+      };
+    }
+
+    await prisma.project.delete({
+      where: { id: projectId },
+    });
+
+    revalidatePath("/dashboard/projects");
+    revalidatePath("/dashboard");
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    return { success: false, error: "Impossible de supprimer le projet" };
+  }
+}
+
 // Create a new task for a project
 export async function createProjectTask(data: {
   title: string;
