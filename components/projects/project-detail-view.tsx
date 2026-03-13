@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useAlerts } from "@/hooks/use-alerts";
+import { deleteProject } from "@/lib/actions/kanban";
 import {
   formatDateLong,
   getColumnNameFromProjectStatus,
@@ -16,8 +18,10 @@ import {
   projectTypes,
 } from "@/lib/utils";
 import { ProjectWithDetails } from "@/types/kanban";
-import { ArrowLeft, ExternalLinkIcon, MailIcon } from "lucide-react";
+import { ArrowLeft, ExternalLinkIcon, MailIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { ProjectCustomFieldsEditor } from "./custom-fields-editor";
 import { ProjectFileUrlEditor } from "./file-url-editor";
 import { DeadlineSelectorPopover } from "./popover-due-date";
@@ -25,9 +29,17 @@ import { ProjectStatusDropdown } from "./select-project-status";
 
 interface ProjectDetailViewProps {
   project: ProjectWithDetails;
+  isAdmin: boolean;
 }
 
-export function ProjectDetailView({ project }: ProjectDetailViewProps) {
+export function ProjectDetailView({
+  project,
+  isAdmin,
+}: ProjectDetailViewProps) {
+  const router = useRouter();
+  const { showError, showSuccess } = useAlerts();
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   };
@@ -43,9 +55,41 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
   const getProgressPercentage = () => {
     if (!project.tasks || project.tasks.length === 0) return 0;
     const completedTasks = project.tasks.filter(
-      (task) => task.completed
+      (task) => task.completed,
     ).length;
     return Math.round((completedTasks / project.tasks.length) * 100);
+  };
+
+  const handleDeleteProject = async () => {
+    const confirmed = window.confirm(
+      `Êtes-vous sûr de vouloir supprimer le projet "${project.title}" ? Cette action est irréversible.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      const result = await deleteProject(project.id);
+
+      if (result.success) {
+        showSuccess("Projet supprimé avec succès");
+        router.push("/dashboard/projects");
+        router.refresh();
+      } else {
+        showError("Erreur lors de la suppression", result.error);
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      showError(
+        "Erreur lors de la suppression",
+        "Une erreur inattendue s'est produite",
+      );
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -62,8 +106,7 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
 
             <Badge
               variant={getStatusVariant(project.status)}
-              className="rounded-full"
-            >
+              className="rounded-full">
               {getColumnNameFromProjectStatus(project.status)}
             </Badge>
             <ProjectTitleEditor
@@ -72,6 +115,18 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
               slug={project.slug || undefined}
               isDetailView
             />
+
+            {isAdmin && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleDeleteProject}
+                disabled={isDeleting}
+                className="ml-auto rounded-xl">
+                <Trash2 className="size-4" />
+                {isDeleting ? "Suppression..." : "Supprimer"}
+              </Button>
+            )}
           </div>
           {project.description && (
             <ProjectDescriptionDialog
@@ -92,8 +147,7 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
               <CardTitle
                 style={{
                   fontFamily: "var(--font-montserrat)",
-                }}
-              >
+                }}>
                 Informations générales
               </CardTitle>
             </CardHeader>
@@ -209,8 +263,7 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
                               href={author.website}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="hover:underline"
-                            >
+                              className="hover:underline">
                               Site web
                             </a>
                           </div>
