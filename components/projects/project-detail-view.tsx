@@ -139,8 +139,9 @@ export function ProjectDetailView({
                   <AlertDialogHeader>
                     <AlertDialogTitle>Supprimer ce projet ?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Cette action est irréversible. Le projet "{project.title}"
-                      et ses données associées seront supprimés définitivement.
+                      Cette action est irréversible. Le projet &quot;
+                      {project.title}&quot; et ses données associées seront
+                      supprimés définitivement.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

@@ -29,7 +29,6 @@ interface ProjectDetailDialogProps {
 export function ProjectDetailDialog({
   project,
   open,
-  isAdmin,
   onOpenChange,
 }: ProjectDetailDialogProps) {
   const [editedProject, setEditedProject] = useState<ProjectWithDetails | null>(
