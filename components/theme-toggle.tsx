@@ -29,7 +29,7 @@ export function ThemeToggle() {
   const isChecked = resolvedTheme === "dark";
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 hidden md:flex">
       <Sun className="size-5" />
       <Switch
         id="theme-toggle"
