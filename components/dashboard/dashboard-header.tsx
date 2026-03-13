@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { SidebarActions } from "../sidebar-actions";
+import { SidebarActions } from "@/components/sidebar-actions";
 
 type DashboardHeaderProps = {
   breadcrumbs?: { label: string; href: string }[];
@@ -17,7 +17,7 @@ type DashboardHeaderProps = {
 export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
   return (
     <header
-      className="fixed top-0 z-20 mx-auto flex h-16 w-full shrink-0 items-center gap-2 border-b border-border/70 bg-background/75 px-4 shadow-[0_10px_24px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md max-w-7xl md:px-6 lg:px-8"
+      className="fixed top-0 z-20 mx-auto flex h-16 w-full shrink-0 items-center gap-2 border-b border-border/70 bg-background/75 px-4 shadow-[0_10px_24px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md md:px-6 lg:px-8"
       style={{ fontFamily: "var(--font-ui-sans)" }}>
       <div className="flex items-center gap-2 px-2 md:px-4">
         <SidebarTrigger className="-ml-1" />
@@ -66,9 +66,9 @@ export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
       {/* <div className="gap-4 mr-auto md:mr-64 lg:mr-72 flex items-center">
         <ThemeToggle />
       </div> */}
-      <div className="mr-auto flex items-center gap-4 md:mr-64 lg:mr-72">
-        <SidebarActions />
-      </div>
+      {/* <div className="mr-auto flex items-center gap-4 md:mr-64 lg:mr-72"> */}
+      <SidebarActions />
+      {/* </div> */}
     </header>
   );
 }
