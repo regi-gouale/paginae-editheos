@@ -7,6 +7,17 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { useAlerts } from "@/hooks/use-alerts";
 import { deleteProject } from "@/lib/actions/kanban";
@@ -39,6 +50,7 @@ export function ProjectDetailView({
   const router = useRouter();
   const { showError, showSuccess } = useAlerts();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
@@ -61,20 +73,13 @@ export function ProjectDetailView({
   };
 
   const handleDeleteProject = async () => {
-    const confirmed = window.confirm(
-      `Êtes-vous sûr de vouloir supprimer le projet "${project.title}" ? Cette action est irréversible.`,
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
     setIsDeleting(true);
 
     try {
       const result = await deleteProject(project.id);
 
       if (result.success) {
+        setIsDeleteDialogOpen(false);
         showSuccess("Projet supprimé avec succès");
         router.push("/dashboard/projects");
         router.refresh();
@@ -117,15 +122,47 @@ export function ProjectDetailView({
             />
 
             {isAdmin && (
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleDeleteProject}
-                disabled={isDeleting}
-                className="ml-auto rounded-xl">
-                <Trash2 className="size-4" />
-                {isDeleting ? "Suppression..." : "Supprimer"}
-              </Button>
+              <AlertDialog
+                open={isDeleteDialogOpen}
+                onOpenChange={setIsDeleteDialogOpen}>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    disabled={isDeleting}
+                    className="ml-auto rounded-xl">
+                    <Trash2 className="size-4" />
+                    Supprimer
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="rounded-2xl">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Supprimer ce projet ?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Cette action est irréversible. Le projet "{project.title}"
+                      et ses données associées seront supprimés définitivement.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel
+                      className="rounded-xl"
+                      disabled={isDeleting}>
+                      Annuler
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      disabled={isDeleting}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        void handleDeleteProject();
+                      }}>
+                      {isDeleting
+                        ? "Suppression..."
+                        : "Supprimer définitivement"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
           </div>
           {project.description && (
