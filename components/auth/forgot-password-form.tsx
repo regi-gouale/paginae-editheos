@@ -87,8 +87,8 @@ export function ForgotPasswordForm() {
 
                 <div className="space-y-4 w-full">
                   <p className="text-sm text-muted-foreground">
-                    Le lien expire dans 1 heure. Si vous ne voyez pas l'email,
-                    vérifiez votre dossier spam.
+                    Le lien expire dans 1 heure. Si vous ne voyez pas
+                    l&apos;email, vérifiez votre dossier spam.
                   </p>
 
                   <Button
