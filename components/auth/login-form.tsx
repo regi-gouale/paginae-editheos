@@ -60,8 +60,7 @@ export function LoginForm() {
           <Form {...form}>
             <form
               className="space-y-4 md:space-y-6 p-8"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+              onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold pb-6">
@@ -114,9 +113,8 @@ export function LoginForm() {
                         </FormControl>
                         <FormDescription className="flex">
                           <Link
-                            href="#"
-                            className="ml-auto text-sm underline-offset-2 hover:underline w-full text-right"
-                          >
+                            href="/auth/forgot-password"
+                            className="ml-auto text-sm underline-offset-2 hover:underline w-full text-right">
                             Mot de passe oublié ?
                           </Link>
                         </FormDescription>
@@ -129,8 +127,7 @@ export function LoginForm() {
                 <Button
                   type="submit"
                   className="w-full mt-4"
-                  disabled={loading}
-                >
+                  disabled={loading}>
                   {loading ? "Connexion..." : "Connexion"}
                 </Button>
 
@@ -143,8 +140,7 @@ export function LoginForm() {
                       window.location.href = "/auth/register";
                     }}
                     disabled={loading}
-                    type="button"
-                  >
+                    type="button">
                     Inscrivez-vous
                   </Button>
                 </div>
