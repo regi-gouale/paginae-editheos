@@ -20,7 +20,6 @@ import { z } from "zod";
 
 const forgotPasswordSchema = z.object({
   email: z
-    .string()
     .email("Veuillez entrer une adresse email valide.")
     .min(1, "L'email est requis"),
 });
