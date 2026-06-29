@@ -247,7 +247,8 @@ export function EditAuthorDialog({
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
-                disabled={isPending}>
+                disabled={isPending}
+              >
                 Annuler
               </Button>
               <Button type="submit" disabled={isPending}>

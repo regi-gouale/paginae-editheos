@@ -5,6 +5,7 @@ import { ProjectDetailView } from "@/components/projects/project-detail-view";
 import { getProjectBySlug } from "@/lib/actions/kanban";
 import { auth } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
+import type { ProjectWithDetails } from "@/types/kanban";
 
 export default async function ProjectDetailPage({
   params,
@@ -39,7 +40,10 @@ export default async function ProjectDetailPage({
       <div className="flex flex-col">
         <DashboardHeader breadcrumbs={breadcrumbs} />
         <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 pt-24">
-          <ProjectDetailView project={project as any} isAdmin={isAdmin} />
+          <ProjectDetailView
+            project={project as ProjectWithDetails}
+            isAdmin={isAdmin}
+          />
         </main>
       </div>
     );

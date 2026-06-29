@@ -6,7 +6,15 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": true
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!.github/**/*.ts",
+      "!.github/**/*.tsx",
+      "!.github/**/*.mts",
+      "!.github/**/*.cts",
+      "!**/globals.css"
+    ]
   },
   "formatter": {
     "enabled": true,

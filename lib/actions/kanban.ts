@@ -812,7 +812,7 @@ export async function deleteProject(projectId: string) {
       select: { role: true },
     });
 
-    if (!currentMember || currentMember.role !== "ADMIN") {
+    if (currentMember?.role !== "ADMIN") {
       return {
         success: false,
         error: "Seuls les administrateurs peuvent supprimer un projet",

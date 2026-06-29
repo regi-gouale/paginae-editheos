@@ -64,7 +64,7 @@ export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
           // Utiliser la nouvelle fonction shouldMoveProject pour déterminer si le projet doit être déplacé
           if (shouldMoveProject(project, rule) && rule.action?.targetColumnId) {
             const targetColumn = columns.find(
-              (col) => col.id === rule.action!.targetColumnId,
+              (col) => col.id === rule.action?.targetColumnId,
             );
 
             // Vérifier que le projet n'est pas déjà dans la colonne cible

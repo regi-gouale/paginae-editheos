@@ -18,8 +18,7 @@ export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
   return (
     <header
       className="inset-x-0 flex h-16 shrink-0 items-center gap-2 border-b border-border/70 bg-background/75 px-4 shadow-[0_10px_24px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md md:px-6 lg:px-8"
-      style={{ fontFamily: "var(--font-ui-sans)" }}
-    >
+      style={{ fontFamily: "var(--font-ui-sans)" }}>
       <div className="flex min-w-0 flex-1 items-center gap-2 px-2 md:px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator
@@ -34,12 +33,11 @@ export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
               </BreadcrumbLink>
             </BreadcrumbItem>
             {breadcrumbs?.map((item, index) => (
-              <div key={`breadcrumb-${index}`} className="flex items-center">
-                <BreadcrumbSeparator
-                  className="hidden md:block"
-                  key={`separator-${index}`}
-                />
-                <BreadcrumbItem key={`item-${index}`}>
+              <div
+                key={`${item.href}-${item.label}`}
+                className="flex items-center">
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
                   {index === breadcrumbs.length - 1 ? (
                     <BreadcrumbPage className="ml-2">
                       {item.label}

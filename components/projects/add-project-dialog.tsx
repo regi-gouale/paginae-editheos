@@ -53,7 +53,7 @@ export function AddProjectDialog({
           type,
           priority,
         });
-        if (res && res.id) {
+        if (res?.id) {
           if (onProjectAdded) onProjectAdded();
           setOpen(false);
           setName("");

@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useProjectStats } from "@/hooks/projects/use-project-stats";
 import { authClient } from "@/lib/auth/auth-client";
+import Link from "next/link";
 
 const data = {
   user: {
@@ -118,13 +119,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       variant="floating"
       {...props}
       className="border-sidebar-border/60 bg-sidebar/85 backdrop-blur-md"
-      style={{ fontFamily: "var(--font-ui-sans)" }}
-    >
+      style={{ fontFamily: "var(--font-ui-sans)" }}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link href="/dashboard">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-xl ring-1 ring-sidebar-primary/30 shadow-sm">
                   <Image
                     src="/logo-editheos.webp"
@@ -141,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     Editheos
                   </span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

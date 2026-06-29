@@ -73,9 +73,7 @@ async function testUserMemberRelation() {
 
     const usersWithoutMembers = totalUsers - usersWithMembers;
     if (usersWithoutMembers > 0) {
-      console.log(
-        `\n⚠️  ${usersWithoutMembers} utilisateur(s) sans membre lié`,
-      );
+      console.log(`\n⚠️  ${usersWithoutMembers} utilisateur(s) sans membre lié`);
       console.log(`💡 Exécutez: pnpm sync-users-to-members`);
     } else {
       console.log(`\n✅ Tous les utilisateurs ont un membre lié !`);

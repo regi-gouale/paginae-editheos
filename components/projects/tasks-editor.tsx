@@ -209,41 +209,40 @@ export function ProjectTasksEditor({
 
       {/* Liste des tâches */}
       <div className="mt-4 space-y-2">
-        {editedTasks &&
-          editedTasks.map((task) => (
-            <div
-              key={task.id}
-              className="flex items-center gap-2 p-2 border rounded-xl group"
+        {editedTasks?.map((task) => (
+          <div
+            key={task.id}
+            className="flex items-center gap-2 p-2 border rounded-xl group"
+          >
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onToggleTask(task.id)}
+              className="p-1 size-6"
             >
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onToggleTask(task.id)}
-                className="p-1 size-6"
-              >
-                {task.completed ? (
-                  <CheckSquare className="size-4 text-green-600" />
-                ) : (
-                  <Square className="size-4" />
-                )}
-              </Button>
-              <span
-                className={`flex-1 ${
-                  task.completed ? "line-through text-muted-foreground" : ""
-                }`}
-              >
-                {task.title}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onDeleteTask(task.id)}
-                className="p-1 size-6 opacity-0 group-hover:opacity-100"
-              >
-                <Trash2 className="size-4 text-destructive" />
-              </Button>
-            </div>
-          ))}
+              {task.completed ? (
+                <CheckSquare className="size-4 text-green-600" />
+              ) : (
+                <Square className="size-4" />
+              )}
+            </Button>
+            <span
+              className={`flex-1 ${
+                task.completed ? "line-through text-muted-foreground" : ""
+              }`}
+            >
+              {task.title}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onDeleteTask(task.id)}
+              className="p-1 size-6 opacity-0 group-hover:opacity-100"
+            >
+              <Trash2 className="size-4 text-destructive" />
+            </Button>
+          </div>
+        ))}
       </div>
     </div>
   );

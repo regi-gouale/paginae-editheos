@@ -54,7 +54,7 @@ async function createTestNotifications() {
           userId: user.id,
           projectId: project.id,
           type: "PROJECT_MOVED",
-          title: "📋 Projet déplacé : " + project.title,
+          title: `📋 Projet déplacé : ${project.title}`,
           message: `Le projet "${project.title}" a été déplacé vers "En cours".`,
         },
       }),

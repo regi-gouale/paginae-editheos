@@ -115,18 +115,14 @@ function Carousel({
         scrollNext,
         canScrollPrev,
         canScrollNext,
-      }}
-    >
-      <div
+      }}>
+      <section
         onKeyDownCapture={handleKeyDown}
         className={cn("relative", className)}
-        role="region"
-        aria-roledescription="carousel"
         data-slot="carousel"
-        {...props}
-      >
+        {...props}>
         {children}
-      </div>
+      </section>
     </CarouselContext.Provider>
   );
 }
@@ -138,8 +134,7 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
     <div
       ref={carouselRef}
       className="overflow-hidden"
-      data-slot="carousel-content"
-    >
+      data-slot="carousel-content">
       <div
         className={cn(
           "flex",
@@ -157,8 +152,6 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
 
   return (
     <div
-      role="group"
-      aria-roledescription="slide"
       data-slot="carousel-item"
       className={cn(
         "min-w-0 shrink-0 grow-0 basis-full",
@@ -192,8 +185,7 @@ function CarouselPrevious({
       )}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
-      {...props}
-    >
+      {...props}>
       <ArrowLeft />
       <span className="sr-only">Previous slide</span>
     </Button>
@@ -222,8 +214,7 @@ function CarouselNext({
       )}
       disabled={!canScrollNext}
       onClick={scrollNext}
-      {...props}
-    >
+      {...props}>
       <ArrowRight />
       <span className="sr-only">Next slide</span>
     </Button>

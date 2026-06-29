@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -27,11 +28,7 @@ const profileSchema = z.object({
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 async function resolveActionResult<T>(actionPromise: Promise<T>): Promise<T> {
-  try {
-    return await actionPromise;
-  } catch (error) {
-    throw error;
-  }
+  return await actionPromise;
 }
 
 type ProfileFormProps = ProfileFormData & { image?: string };
@@ -47,7 +44,9 @@ export function ProfileForm({ initial }: { initial: ProfileFormProps }) {
   const mutation = useMutation({
     mutationFn: async (data: ProfileFormData) => {
       const formData = new FormData();
-      Object.entries(data).forEach(([k, v]) => formData.append(k, v as string));
+      Object.entries(data).forEach(([k, v]) => {
+        formData.append(k, v as string);
+      });
       if (file) formData.append("avatar", file);
       return resolveActionResult(updateUserProfileAction(formData));
     },
@@ -79,16 +78,15 @@ export function ProfileForm({ initial }: { initial: ProfileFormProps }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4"
-      >
+        className="flex flex-col gap-4">
         <div className="flex items-center gap-8">
-          <div className="w-20 h-20 rounded-full overflow-hidden bg-muted flex items-center justify-center">
+          <div className="relative w-20 h-20 rounded-full overflow-hidden bg-muted flex items-center justify-center">
             {preview ? (
-              // Use plain img for blob/data URLs to avoid Next Image width/height requirement
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={preview}
                 alt="avatar"
+                fill
+                unoptimized
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -106,7 +104,7 @@ export function ProfileForm({ initial }: { initial: ProfileFormProps }) {
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
+                  if (e.target.files?.[0]) {
                     setFile(e.target.files[0]);
                   }
                 }}

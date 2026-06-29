@@ -65,28 +65,27 @@ export function ProjectDescriptionDialog({
               size={"sm"}
               variant={"outline"}
               onClick={onCancel}
-              className="rounded-xl"
-            >
+              className="rounded-xl">
               Annuler
             </Button>
           </div>
         </div>
       ) : (
         <div className="space-y-2">
-          <div
+          <button
+            type="button"
             className={`${
               isDetailView
                 ? "text-muted-foreground text-lg mx-auto p-4 rounded-xl"
-                : "min-h-[60px] p-3 border rounded-xl hover:bg-muted/50 text-sm"
-            } cursor-pointer hover:bg-muted/50 max-h-96 overflow-y-auto`}
-            onClick={() => setIsEditing(true)}
-          >
+                : "min-h-15 p-3 border rounded-xl hover:bg-muted/50 text-sm"
+            } w-full text-left cursor-pointer hover:bg-muted/50 max-h-96 overflow-y-auto`}
+            onClick={() => setIsEditing(true)}>
             {editedDescription || (
               <span className="text-muted-foreground italic">
                 Cliquez pour ajouter une description ...
               </span>
             )}
-          </div>
+          </button>
         </div>
       )}
     </div>

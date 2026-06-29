@@ -3,7 +3,6 @@
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Bell, Check, CheckCheck, Trash2 } from "lucide-react";
-import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,8 +36,7 @@ function NotificationIcon() {
       {!isLoading && unreadCount! > 0 && (
         <Badge
           variant="destructive"
-          className="absolute -top-2 -right-2 size-5 flex items-center justify-center p-0 text-xs"
-        >
+          className="absolute -top-2 -right-2 size-5 flex items-center justify-center p-0 text-xs">
           {unreadCount! > 9 ? "9+" : unreadCount}
         </Badge>
       )}
@@ -58,8 +56,6 @@ function NotificationItem({
   onMarkAsRead: (id: string) => void;
   onDelete: (id: string) => void;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case "PROJECT_CREATED":
@@ -91,11 +87,8 @@ function NotificationItem({
         "flex items-start gap-3 p-3 rounded-lg transition-colors relative group",
         !notification.read && "bg-blue-50 dark:bg-blue-950/20",
         "hover:bg-gray-50 dark:hover:bg-gray-800/50",
-      )}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="flex-shrink-0 text-lg">
+      )}>
+      <div className="shrink-0 text-lg">
         {getNotificationIcon(notification.type)}
       </div>
 
@@ -115,36 +108,32 @@ function NotificationItem({
       </div>
 
       {/* Actions au survol */}
-      {isHovered && (
-        <div className="flex items-center gap-1">
-          {!notification.read && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 w-6 p-0"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onMarkAsRead(notification.id);
-              }}
-            >
-              <Check className="h-3 w-3" />
-            </Button>
-          )}
+      <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+        {!notification.read && (
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+            className="h-6 w-6 p-0"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              onDelete(notification.id);
-            }}
-          >
-            <Trash2 className="h-3 w-3" />
+              onMarkAsRead(notification.id);
+            }}>
+            <Check className="h-3 w-3" />
           </Button>
-        </div>
-      )}
+        )}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onDelete(notification.id);
+          }}>
+          <Trash2 className="h-3 w-3" />
+        </Button>
+      </div>
 
       {/* Indicateur non lu */}
       {!notification.read && (
@@ -194,8 +183,7 @@ export function NotificationsDropdown() {
               size="sm"
               className="h-6 text-xs"
               onClick={handleMarkAllAsRead}
-              disabled={markAllAsRead.isPending}
-            >
+              disabled={markAllAsRead.isPending}>
               <CheckCheck className="h-3 w-3 mr-1" />
               Tout marquer comme lu
             </Button>
@@ -205,12 +193,12 @@ export function NotificationsDropdown() {
         <DropdownMenuSeparator />
 
         {/* Contenu des notifications */}
-        <ScrollArea className="h-[400px]">
+        <ScrollArea className="h-100">
           {isLoading ? (
             // Skeleton pendant le chargement
             <div className="space-y-3 p-2">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="flex items-start gap-3 p-3">
+              {["s1", "s2", "s3"].map((skeletonId) => (
+                <div key={skeletonId} className="flex items-start gap-3 p-3">
                   <Skeleton className="h-6 w-6 rounded-full" />
                   <div className="flex-1 space-y-2">
                     <Skeleton className="h-4 w-3/4" />

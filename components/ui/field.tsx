@@ -84,7 +84,6 @@ function Field({
 }: React.ComponentProps<"div"> & VariantProps<typeof fieldVariants>) {
   return (
     <div
-      role="group"
       data-slot="field"
       data-orientation={orientation}
       className={cn(fieldVariants({ orientation }), className)}
@@ -167,14 +166,12 @@ function FieldSeparator({
         "relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2",
         className,
       )}
-      {...props}
-    >
+      {...props}>
       <Separator className="absolute inset-0 top-1/2" />
       {children && (
         <span
           className="relative mx-auto block w-fit bg-background px-2 text-muted-foreground"
-          data-slot="field-separator-content"
-        >
+          data-slot="field-separator-content">
           {children}
         </span>
       )}
@@ -203,15 +200,15 @@ function FieldError({
       ...new Map(errors.map((error) => [error?.message, error])).values(),
     ];
 
-    if (uniqueErrors?.length == 1) {
+    if (uniqueErrors?.length === 1) {
       return uniqueErrors[0]?.message;
     }
 
     return (
       <ul className="ml-4 flex list-disc flex-col gap-1">
         {uniqueErrors.map(
-          (error, index) =>
-            error?.message && <li key={index}>{error.message}</li>,
+          (error) =>
+            error?.message && <li key={error.message}>{error.message}</li>,
         )}
       </ul>
     );
@@ -226,8 +223,7 @@ function FieldError({
       role="alert"
       data-slot="field-error"
       className={cn("text-sm font-normal text-destructive", className)}
-      {...props}
-    >
+      {...props}>
       {content}
     </div>
   );
