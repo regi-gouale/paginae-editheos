@@ -45,6 +45,7 @@ export function AuthorSelectionDropdown({
         // Transformer les auteurs en ajoutant les champs manquants avec des valeurs par défaut
         const transformedAuthors: Author[] = response.authors.map((author) => ({
           ...author,
+          organizationId: author.organizationId ?? null,
           biography: author.biography ?? null,
           website: author.website ?? null,
           nationality: author.nationality ?? null,

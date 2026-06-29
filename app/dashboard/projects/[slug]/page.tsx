@@ -39,7 +39,7 @@ export default async function ProjectDetailPage({
       <div className="flex flex-col">
         <DashboardHeader breadcrumbs={breadcrumbs} />
         <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 pt-24">
-          <ProjectDetailView project={project} isAdmin={isAdmin} />
+          <ProjectDetailView project={project as any} isAdmin={isAdmin} />
         </main>
       </div>
     );

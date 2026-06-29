@@ -7,6 +7,7 @@ import type {
   ProjectWithDetails,
 } from "@/types/kanban";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
+import type { CSSProperties } from "react";
 
 // Couleurs prédéfinies pour les colonnes
 // const COLUMN_COLORS = [
@@ -117,18 +118,23 @@ KanbanColumnProps) {
                 draggableId={project.id}
                 index={index}
               >
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    <ProjectCard
-                      project={project}
-                      onClick={() => onProjectClick(project)}
-                    />
-                  </div>
-                )}
+                {(provided) => {
+                  const { style, ...draggableProps } = provided.draggableProps;
+
+                  return (
+                    <div
+                      ref={provided.innerRef}
+                      {...draggableProps}
+                      {...provided.dragHandleProps}
+                      style={style as CSSProperties | undefined}
+                    >
+                      <ProjectCard
+                        project={project}
+                        onClick={() => onProjectClick(project)}
+                      />
+                    </div>
+                  );
+                }}
               </Draggable>
             ))}
             {provided.placeholder}
