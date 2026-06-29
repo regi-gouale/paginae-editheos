@@ -15,6 +15,8 @@ Workflow d'audit systématique pour détecter les régressions et vérifier les 
 - Pour un audit de sécurité ou de qualité
 - Quand le build (`pnpm build`) échoue sans raison évidente
 
+Lint du projet : `pnpm lint` est basé sur Biome.
+
 ## Procédure
 
 ### Étape 1 — Définir le périmètre

@@ -1,6 +1,6 @@
 ---
 name: debug-build
-description: "Diagnostiquer et corriger les erreurs de build Next.js dans Paginae Editheos. Use when: pnpm build échoue, erreur TypeScript, erreur ESLint bloquante, Prisma generate manquant, import introuvable, type error, build error, compilation failed."
+description: "Diagnostiquer et corriger les erreurs de build Next.js dans Paginae Editheos. Use when: pnpm build échoue, erreur TypeScript, erreur Biome/lint bloquante, Prisma generate manquant, import introuvable, type error, build error, compilation failed."
 argument-hint: "Colle l'erreur de build ou décris le symptôme (ex: 'type error sur kanban.ts ligne 42')."
 ---
 
@@ -11,7 +11,7 @@ Workflow de diagnostic pour les échecs `pnpm build` dans ce projet Next.js 15 +
 ## Quand utiliser ce skill
 
 - `pnpm build` se termine avec exit code non nul
-- Erreurs TypeScript ou ESLint bloquantes au build
+- Erreurs TypeScript ou Biome/lint bloquantes au build
 - Pages qui échouent en génération statique
 - Problème après une migration Prisma ou un changement de schéma
 
@@ -31,7 +31,7 @@ Identifier la **catégorie** de l'erreur — voir [./references/erreurs-frequent
 | ----------------------------------------------------------------------- | ----------------------------------- |
 | `Type error:` / `TS2xxx`                                                | Étape 3 — TypeScript                |
 | `Cannot find module` / `Module not found`                               | Étape 4 — Imports                   |
-| `ESLint:` avec `Error` (pas Warning)                                    | Étape 5 — ESLint                    |
+| `lint/` ou `assist/source/` dans la sortie lint                         | Étape 5 — Biome / lint              |
 | `PrismaClientInitializationError` / `@prisma/client did not initialize` | Étape 6 — Prisma                    |
 | `Error: NEXT_` / env variable                                           | Étape 7 — Variables d'environnement |
 | Erreur dans une page statique (`/dashboard/…`)                          | Étape 8 — Pages                     |
@@ -52,15 +52,18 @@ Causes fréquentes dans ce projet :
 - Import depuis `@/features/dialog-manager/…` → cette feature n'existe pas encore
 - Chemin d'alias `@/` mal configuré → vérifier `tsconfig.json` paths
 
-### Étape 5 — ESLint bloquant
+### Étape 5 — Biome / lint bloquant
 
-Les **warnings** ne bloquent pas le build Next.js. Seules les règles configurées en `error` bloquent.
+La commande `pnpm lint` est pilotée par Biome. Si le lint échoue, lancer d'abord un correctif automatique puis traiter les diagnostics restants.
 
 ```bash
-pnpm lint 2>&1 | grep "Error:"
+pnpm lint:fix
+pnpm lint
 ```
 
-Règles ESLint enforced dans ce projet : `@typescript-eslint/no-explicit-any`, `prefer-const`, `@typescript-eslint/consistent-type-definitions` (type > interface).
+Diagnostics fréquents avec Biome dans ce projet : `assist/source/organizeImports`, `lint/style/useTemplate`, `lint/style/noNonNullAssertion`.
+
+Note TypeScript : il n'existe pas de bloc top-level `typescript` dans Biome. La famille `javascript` couvre TS/TSX. Pour cibler explicitement TS, utiliser `overrides` avec `**/*.ts` et `**/*.tsx`.
 
 ### Étape 6 — Prisma non initialisé
 
@@ -93,5 +96,6 @@ Si une page `/dashboard/…` échoue en génération :
 ## Critères de complétion
 
 - `pnpm build` se termine sans exit code non nul
+- `pnpm lint` se termine sans erreur sur les fichiers touchés
 - Aucune erreur TypeScript (warnings tolérés)
 - Rapport des corrections appliquées produit

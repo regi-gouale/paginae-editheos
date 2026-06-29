@@ -73,7 +73,7 @@ Référence exhaustive pour l'audit qualité et régressions du projet.
 
 ## 7. TypeScript & Qualité générale
 
-- [ ] `pnpm lint` passe sans erreur sur les fichiers modifiés
+- [ ] `pnpm lint` (Biome) passe sans erreur sur les fichiers modifiés
 - [ ] `pnpm build` passe (si audit pré-déploiement)
 - [ ] Aucun `console.log` de debug laissé dans le code
 - [ ] Aucun `TODO` bloquant non documenté
