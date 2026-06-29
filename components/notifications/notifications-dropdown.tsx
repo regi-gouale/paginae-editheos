@@ -1,5 +1,9 @@
 "use client";
 
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
+import { Bell, Check, CheckCheck, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,18 +16,14 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  type Notification,
   useDeleteNotification,
   useMarkAllNotificationsAsRead,
   useMarkNotificationAsRead,
   useNotifications,
   useUnreadNotificationsCount,
-  type Notification,
 } from "@/hooks/use-notifications";
 import { cn } from "@/lib/utils";
-import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Bell, Check, CheckCheck, Trash2 } from "lucide-react";
-import { useState } from "react";
 
 /**
  * Composant pour l'icône de notification avec badge
@@ -90,7 +90,7 @@ function NotificationItem({
       className={cn(
         "flex items-start gap-3 p-3 rounded-lg transition-colors relative group",
         !notification.read && "bg-blue-50 dark:bg-blue-950/20",
-        "hover:bg-gray-50 dark:hover:bg-gray-800/50"
+        "hover:bg-gray-50 dark:hover:bg-gray-800/50",
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

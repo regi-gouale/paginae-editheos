@@ -98,8 +98,8 @@ export const shouldMoveProject = (
         // Vérifie si le projet est en retard ET n'est pas terminé
         return Boolean(
           project.dueDate &&
-          project.status !== "DONE" &&
-          new Date(project.dueDate) < new Date(),
+            project.status !== "DONE" &&
+            new Date(project.dueDate) < new Date(),
         );
       }
       break;

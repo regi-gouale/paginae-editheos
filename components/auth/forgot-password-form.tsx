@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -11,12 +17,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 const forgotPasswordSchema = z.object({
   email: z
@@ -96,14 +96,16 @@ export function ForgotPasswordForm() {
                     onClick={() => {
                       setSubmitted(false);
                       form.reset();
-                    }}>
+                    }}
+                  >
                     Envoyer un autre email
                   </Button>
 
                   <div className="text-center">
                     <Link
                       href="/auth/login"
-                      className="text-sm text-primary hover:underline">
+                      className="text-sm text-primary hover:underline"
+                    >
                       Retour à la connexion
                     </Link>
                   </div>
@@ -123,7 +125,8 @@ export function ForgotPasswordForm() {
           <Form {...form}>
             <form
               className="space-y-4 md:space-y-6 p-8"
-              onSubmit={form.handleSubmit(onSubmit)}>
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold pb-2">
@@ -159,7 +162,8 @@ export function ForgotPasswordForm() {
                 <Button
                   type="submit"
                   className="w-full mt-4"
-                  disabled={loading}>
+                  disabled={loading}
+                >
                   {loading
                     ? "Envoi en cours..."
                     : "Envoyer le lien de réinitialisation"}
@@ -169,7 +173,8 @@ export function ForgotPasswordForm() {
                   Vous vous souvenez de votre mot de passe ?{" "}
                   <Link
                     href="/auth/login"
-                    className="text-primary hover:underline font-medium">
+                    className="text-primary hover:underline font-medium"
+                  >
                     Connexion
                   </Link>
                 </div>

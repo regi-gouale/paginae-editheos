@@ -1,13 +1,13 @@
 "use client";
 
+import { Draggable, Droppable } from "@hello-pangea/dnd";
+import type { CSSProperties } from "react";
 import { ProjectCard } from "@/components/project-card";
 import { AddProjectDialog } from "@/components/projects/add-project-dialog";
 import type {
   KanbanColumnWithProjects,
   ProjectWithDetails,
 } from "@/types/kanban";
-import { Draggable, Droppable } from "@hello-pangea/dnd";
-import type { CSSProperties } from "react";
 
 // Couleurs prédéfinies pour les colonnes
 // const COLUMN_COLORS = [

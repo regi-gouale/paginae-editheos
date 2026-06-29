@@ -1,12 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  getRecentActivities,
-  type ActivityItem,
-} from "@/lib/actions/activity.action";
 import {
   AlertTriangle,
   CheckCircle,
@@ -16,6 +9,13 @@ import {
   Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  type ActivityItem,
+  getRecentActivities,
+} from "@/lib/actions/activity.action";
 
 const activityConfig = {
   project_created: {
@@ -132,7 +132,8 @@ export default function RecentActivity() {
                   index < activities.length - 1
                     ? "border-b border-gray-100"
                     : ""
-                }`}>
+                }`}
+              >
                 <div className={`${config.bgColor} p-2 rounded-full`}>
                   <Icon className={`size-4 ${config.color}`} />
                 </div>

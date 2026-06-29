@@ -7,7 +7,11 @@
     "build": "next build --turbopack",
     "analyze": "ANALYZE=true next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "lint:eslint": "eslint",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
     "vercel-build": "prisma generate && prisma migrate deploy && tsx scripts/sync-users-to-members.ts && next build --turbopack",
     "fix-project-status": "tsx scripts/fix-project-status-inconsistency.ts",
     "create-test-project": "tsx scripts/create-test-project.ts",
@@ -81,6 +85,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.1",
     "@eslint/eslintrc": "^3.3.5",
     "@tailwindcss/postcss": "^4.3.1",
     "@types/node": "^26.0.1",

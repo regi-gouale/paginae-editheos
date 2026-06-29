@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -10,7 +11,6 @@ import {
 } from "@/components/ui/select";
 import { updateProject } from "@/lib/actions/kanban";
 import type { ProjectStatus } from "@/prisma/generated/prisma/client";
-import { useEffect, useState } from "react";
 
 interface ProjectStatusDropdownProps {
   projectId: string;
@@ -39,7 +39,8 @@ ProjectStatusDropdownProps) {
       <Label>Statut</Label>
       <Select
         value={selectedStatus}
-        onValueChange={(value) => onValueChange(value as ProjectStatus)}>
+        onValueChange={(value) => onValueChange(value as ProjectStatus)}
+      >
         <SelectTrigger className="w-full rounded-xl">
           <SelectValue placeholder="Sélectionner un statut" />
         </SelectTrigger>

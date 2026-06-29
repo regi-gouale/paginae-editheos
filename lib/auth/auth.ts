@@ -1,12 +1,12 @@
-import { PrismaClient } from "@/prisma/generated/prisma/client";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
-import { sendEmail } from "@/lib/email/usesend";
 import {
   resetPasswordEmailHTML,
   resetPasswordEmailText,
 } from "@/lib/email/reset-password-template";
+import { sendEmail } from "@/lib/email/usesend";
+import { PrismaClient } from "@/prisma/generated/prisma/client";
 
 const prisma = new PrismaClient({
   accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,

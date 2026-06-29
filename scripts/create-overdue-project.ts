@@ -1,10 +1,12 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
-const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+});
 
 async function createOverdueTestProject() {
   console.log(
-    "🔧 Création d'un projet en retard pour tester les règles d'automatisation..."
+    "🔧 Création d'un projet en retard pour tester les règles d'automatisation...",
   );
 
   try {
@@ -57,7 +59,7 @@ async function createOverdueTestProject() {
     console.log(`✅ Projet en retard créé avec ID: ${project.id}`);
     console.log(`📅 Date d'échéance: ${pastDueDate.toLocaleDateString()}`);
     console.log(
-      "🎯 Ce projet devrait être automatiquement déplacé vers 'Bloqué' lors du prochain chargement du board"
+      "🎯 Ce projet devrait être automatiquement déplacé vers 'Bloqué' lors du prochain chargement du board",
     );
   } catch (error) {
     console.error("❌ Erreur lors de la création du projet en retard :", error);

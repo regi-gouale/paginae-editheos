@@ -1,6 +1,13 @@
 "use client";
 
 import {
+  BookUser,
+  Calendar,
+  CheckSquare,
+  Printer,
+  SquareAsteriskIcon,
+} from "lucide-react";
+import {
   cn,
   formatDate,
   getPriorityBadgeStyle,
@@ -9,13 +16,6 @@ import {
   isProjectOverdueForDisplay,
 } from "@/lib/utils";
 import type { ProjectWithDetails } from "@/types/kanban";
-import {
-  BookUser,
-  Calendar,
-  CheckSquare,
-  Printer,
-  SquareAsteriskIcon,
-} from "lucide-react";
 
 interface ProjectCardProps {
   project: ProjectWithDetails;
@@ -35,7 +35,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
     <div
       className={cn(
         "mb-2 p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer group",
-        getPriorityBorderStyle(project.priority)
+        getPriorityBorderStyle(project.priority),
       )}
       onClick={onClick}
     >
@@ -65,7 +65,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           <div
             className={cn(
               "text-xs px-2 py-1 rounded-full font-medium ml-2 shrink-0",
-              getPriorityBadgeStyle(project.priority)
+              getPriorityBadgeStyle(project.priority),
             )}
           >
             {getPriorityLabel(project.priority)}
@@ -87,7 +87,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
               isOverdue
                 ? "text-red-600 dark:text-red-400"
                 : "text-gray-500 dark:text-gray-400",
-              "bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl"
+              "bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl",
             )}
           >
             <Calendar className="size-3 mr-1" />

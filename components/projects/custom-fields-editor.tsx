@@ -1,5 +1,7 @@
 "use client";
 
+import { Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,8 +12,6 @@ import {
   updateCustomField,
 } from "@/lib/actions/kanban";
 import type { CustomField } from "@/prisma/generated/prisma/client";
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
 
 // Composant réutilisable pour le bouton d'ajout de champs personnalisés
 type AddCustomFieldButtonProps = {
@@ -30,7 +30,8 @@ function AddCustomFieldButton({
           variant="outline"
           size="sm"
           onClick={onAddClick}
-          className="rounded-xl">
+          className="rounded-xl"
+        >
           <Plus className="size-4 mr-1" />
           Ajouter
         </Button>
@@ -45,7 +46,8 @@ function AddCustomFieldButton({
         variant="outline"
         size="sm"
         onClick={onAddClick}
-        className="rounded-xl">
+        className="rounded-xl"
+      >
         <Plus className="size-4 mr-1" />
         Ajouter
       </Button>
@@ -106,7 +108,8 @@ function CustomFieldAdder({
           size="sm"
           variant="outline"
           onClick={onCancel}
-          className="rounded-xl">
+          className="rounded-xl"
+        >
           Annuler
         </Button>
       </div>
@@ -242,7 +245,8 @@ export function ProjectCustomFieldsEditor({
           editedFields.map((field) => (
             <div
               key={field.id}
-              className="flex items-center gap-2 px-2 border rounded-xl group">
+              className="flex items-center gap-2 px-2 border rounded-xl group"
+            >
               <div className="flex-1 space-y-1 flex flex-row items-center justify-baseline gap-x-4">
                 <div className="font-medium text-sm">{field.name}</div>
                 <span>:</span>
@@ -277,7 +281,8 @@ export function ProjectCustomFieldsEditor({
                   <Badge
                     variant={"outline"}
                     className="px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
-                    onClick={() => setEditingFieldId(field.id)}>
+                    onClick={() => setEditingFieldId(field.id)}
+                  >
                     {field.value}
                   </Badge>
                 )}
@@ -286,7 +291,8 @@ export function ProjectCustomFieldsEditor({
                 variant="ghost"
                 size="icon"
                 className="invisible group-hover:visible"
-                onClick={() => onDeleteField(field.id)}>
+                onClick={() => onDeleteField(field.id)}
+              >
                 <Trash2 className="size-4 text-destructive" />
               </Button>
             </div>

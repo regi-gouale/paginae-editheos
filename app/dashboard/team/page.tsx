@@ -1,9 +1,9 @@
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { MembersTable } from "@/components/membres/members-table";
 import { getMembers } from "@/lib/actions/members";
 import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function TeamPage() {
   const session = await auth.api.getSession({

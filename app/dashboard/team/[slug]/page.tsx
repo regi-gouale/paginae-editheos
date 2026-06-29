@@ -1,3 +1,6 @@
+import { ArrowLeft, Calendar, Edit, Mail, User } from "lucide-react";
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { EditMemberDialog } from "@/components/membres/edit-member-dialog";
 import { Badge } from "@/components/ui/badge";
@@ -7,9 +10,6 @@ import { Label } from "@/components/ui/label";
 import { getMemberBySlug } from "@/lib/actions/members";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { formatDateLong } from "@/lib/utils";
-import { ArrowLeft, Calendar, Edit, Mail, User } from "lucide-react";
-import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
 
 const roleLabels = {
   ADMIN: "Administrateur",

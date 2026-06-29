@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+
 // REMPLACER : myEntityAction → votre Server Action
 // import { myEntityAction } from "@/lib/actions/my-domain.action";
 
@@ -66,7 +67,8 @@ export function MyComponent() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4">
+        className="flex flex-col gap-4"
+      >
         <FormField
           control={form.control}
           name="name"

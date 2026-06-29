@@ -13,8 +13,8 @@ import {
   User2,
   Users2,
 } from "lucide-react";
-import * as React from "react";
-
+import Image from "next/image";
+import type * as React from "react";
 import { NavMain } from "@/components/dashboard/nav-main";
 import { NavProjects } from "@/components/dashboard/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -30,7 +30,6 @@ import {
 } from "@/components/ui/sidebar";
 import { useProjectStats } from "@/hooks/projects/use-project-stats";
 import { authClient } from "@/lib/auth/auth-client";
-import Image from "next/image";
 
 const data = {
   user: {
@@ -119,7 +118,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       variant="floating"
       {...props}
       className="border-sidebar-border/60 bg-sidebar/85 backdrop-blur-md"
-      style={{ fontFamily: "var(--font-ui-sans)" }}>
+      style={{ fontFamily: "var(--font-ui-sans)" }}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

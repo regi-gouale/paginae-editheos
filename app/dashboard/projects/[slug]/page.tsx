@@ -1,10 +1,10 @@
+import { headers } from "next/headers";
+import { notFound, redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { ProjectDetailView } from "@/components/projects/project-detail-view";
 import { getProjectBySlug } from "@/lib/actions/kanban";
 import { auth } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
-import { headers } from "next/headers";
-import { notFound, redirect } from "next/navigation";
 
 export default async function ProjectDetailPage({
   params,

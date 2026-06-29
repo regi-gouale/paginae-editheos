@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,12 +18,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { updateUserProfileAction } from "@/lib/actions/user.profile.action";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Le nom est requis"),
@@ -65,7 +65,7 @@ export function ProfileForm({ initial }: { initial: ProfileFormProps }) {
 
   const [file, setFile] = React.useState<File | null>(null);
   const [preview, setPreview] = React.useState<string | undefined>(
-    initial.image
+    initial.image,
   );
 
   React.useEffect(() => {

@@ -63,21 +63,21 @@ async function testTaskCompletionAutomation() {
     if (updatedProject) {
       console.log(`📊 Statut actuel: ${updatedProject.status}`);
       console.log(
-        `📋 Colonne actuelle: ${updatedProject.kanbanColumn?.title || "Aucune"}`
+        `📋 Colonne actuelle: ${updatedProject.kanbanColumn?.title || "Aucune"}`,
       );
       console.log(
         `✅ Tâches complétées: ${
           updatedProject.tasks.filter((t) => t.completed).length
-        }/${updatedProject.tasks.length}`
+        }/${updatedProject.tasks.length}`,
       );
 
       // L'automatisation devrait se déclencher dans le board Kanban
       // Ce script ne teste que la création, l'automatisation se déclenche côté client
       console.log(
-        "\n⚠️  Note: L'automatisation se déclenche dans le composant Board Kanban côté client"
+        "\n⚠️  Note: L'automatisation se déclenche dans le composant Board Kanban côté client",
       );
       console.log(
-        "💡 Pour tester, ouvrez le dashboard et observez si le projet passe automatiquement en 'En cours'"
+        "💡 Pour tester, ouvrez le dashboard et observez si le projet passe automatiquement en 'En cours'",
       );
     }
 

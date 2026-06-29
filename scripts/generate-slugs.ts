@@ -40,11 +40,11 @@ async function generateSlugsForExistingData() {
           data: { slug },
         });
         console.log(
-          `Slug généré pour l'auteur ${author.firstName} ${author.lastName}: ${slug}`
+          `Slug généré pour l'auteur ${author.firstName} ${author.lastName}: ${slug}`,
         );
       } else {
         console.error(
-          `Impossible de générer un slug unique pour l'auteur ${author.firstName} ${author.lastName}`
+          `Impossible de générer un slug unique pour l'auteur ${author.firstName} ${author.lastName}`,
         );
       }
     }
@@ -86,7 +86,7 @@ async function generateSlugsForExistingData() {
         console.log(`Slug généré pour le membre ${member.name}: ${slug}`);
       } else {
         console.error(
-          `Impossible de générer un slug unique pour le membre ${member.name}`
+          `Impossible de générer un slug unique pour le membre ${member.name}`,
         );
       }
     }
@@ -131,7 +131,7 @@ async function generateSlugsForExistingData() {
         console.log(`Slug généré pour le projet ${project.title}: ${slug}`);
       } else {
         console.error(
-          `Impossible de générer un slug unique pour le projet ${project.title}`
+          `Impossible de générer un slug unique pour le projet ${project.title}`,
         );
       }
     }

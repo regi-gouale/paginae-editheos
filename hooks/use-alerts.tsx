@@ -36,7 +36,7 @@ export const useAlerts = () => {
 
   const confirm = async (
     message: string,
-    options: ConfirmOptions = {}
+    options: ConfirmOptions = {},
   ): Promise<boolean> => {
     const {
       title = "Confirmation",

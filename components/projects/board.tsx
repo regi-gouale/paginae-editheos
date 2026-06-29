@@ -1,5 +1,8 @@
 "use client";
 
+import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import { ProjectDetailDialog } from "@/components/projects/detail-dialog";
 import { KanbanColumn } from "@/components/projects/kanban-column";
 import { ProjectFilters } from "@/components/projects/project-filters";
@@ -8,10 +11,10 @@ import { applyAutomationRules, updateProject } from "@/lib/actions/kanban";
 import { filterKanbanColumns } from "@/lib/project-filters";
 import { getRules, shouldMoveProject } from "@/lib/rules";
 import { getProjectStatusFromColumnName } from "@/lib/utils";
-import { KanbanColumnWithProjects, ProjectWithDetails } from "@/types/kanban";
-import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+import type {
+  KanbanColumnWithProjects,
+  ProjectWithDetails,
+} from "@/types/kanban";
 
 interface ProjectsBoardProps {
   initialColumns: KanbanColumnWithProjects[];

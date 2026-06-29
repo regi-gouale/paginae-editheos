@@ -1,5 +1,7 @@
 "use client";
 
+import { TrendingDown, TrendingUp } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -9,14 +11,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  type ChartConfig,
 } from "@/components/ui/chart";
 import { useProgressChart } from "@/hooks/dashboard/use-progress-chart";
-import { TrendingDown, TrendingUp } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
   completed: { label: "Termines", color: "hsl(142, 71%, 45%)" },
@@ -55,7 +55,8 @@ export default function ProgressChart() {
         </div>
         <Badge
           variant={data.trend.direction === "up" ? "default" : "destructive"}
-          className="flex items-center gap-1">
+          className="flex items-center gap-1"
+        >
           {data.trend.direction === "up" ? (
             <TrendingUp className="size-3" />
           ) : (
@@ -71,7 +72,8 @@ export default function ProgressChart() {
         <ChartContainer config={chartConfig} className="h-[240px] w-full">
           <AreaChart
             data={chartData}
-            margin={{ left: 0, right: 12, top: 4, bottom: 0 }}>
+            margin={{ left: 0, right: 12, top: 4, bottom: 0 }}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"

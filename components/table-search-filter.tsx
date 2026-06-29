@@ -1,3 +1,5 @@
+import { Filter, Search } from "lucide-react";
+import type React from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -6,8 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Filter, Search } from "lucide-react";
-import React from "react";
 
 interface TableSearchFilterProps {
   searchValue: string;

@@ -1,9 +1,9 @@
 "use client";
 
+import { Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useUnreadNotificationsCount } from "@/hooks/use-notifications";
-import { Bell } from "lucide-react";
 
 /**
  * Composant simplifié pour l'icône de notification (pour la sidebar mobile)

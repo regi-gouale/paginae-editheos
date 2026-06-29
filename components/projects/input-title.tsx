@@ -1,10 +1,10 @@
 "use client";
 
+import { Edit3Icon, Link2Icon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ensureProjectSlug, updateProject } from "@/lib/actions/kanban";
-import { Edit3Icon, Link2Icon } from "lucide-react";
-import { useEffect, useState } from "react";
 
 interface ProjectTitleEditorProps {
   projectId: string;

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   deleteNotificationAction,
   getUnreadNotificationsCountAction,
@@ -7,8 +9,6 @@ import {
   markAllNotificationsAsReadAction,
   markNotificationAsReadAction,
 } from "@/lib/actions/notifications";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 export type Notification = {
   id: string;

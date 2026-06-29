@@ -1,5 +1,5 @@
-import { getProjectStats } from "@/lib/actions/kanban";
 import { useEffect, useState } from "react";
+import { getProjectStats } from "@/lib/actions/kanban";
 
 export function useProjectStats() {
   const [stats, setStats] = useState({

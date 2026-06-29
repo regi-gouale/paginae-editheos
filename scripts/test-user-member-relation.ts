@@ -1,6 +1,8 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
-const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+});
 
 async function testUserMemberRelation() {
   console.log("🧪 Test de la relation User ↔ Member\n");
@@ -71,9 +73,7 @@ async function testUserMemberRelation() {
 
     const usersWithoutMembers = totalUsers - usersWithMembers;
     if (usersWithoutMembers > 0) {
-      console.log(
-        `\n⚠️  ${usersWithoutMembers} utilisateur(s) sans membre lié`,
-      );
+      console.log(`\n⚠️  ${usersWithoutMembers} utilisateur(s) sans membre lié`);
       console.log(`💡 Exécutez: pnpm sync-users-to-members`);
     } else {
       console.log(`\n✅ Tous les utilisateurs ont un membre lié !`);

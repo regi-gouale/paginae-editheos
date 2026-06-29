@@ -1,5 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import Link from "next/link";
+import { useQueryState } from "nuqs";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -16,14 +24,6 @@ import { authClient } from "@/lib/auth/auth-client";
 import { registerFormSchema } from "@/lib/schemas/auth-schema";
 import { cn } from "@/lib/utils";
 import { isEmailWhitelisted } from "@/lib/whitelist";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import Link from "next/link";
-import { useQueryState } from "nuqs";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 export function RegisterForm() {
   const [email, setEmail] = useQueryState("email");
@@ -56,7 +56,7 @@ export function RegisterForm() {
 
     if (result?.error) {
       toast.error(
-        "Erreur lors de l'inscription. Veuillez vérifier vos informations et réessayer."
+        "Erreur lors de l'inscription. Veuillez vérifier vos informations et réessayer.",
       );
       setLoading(false);
     } else {

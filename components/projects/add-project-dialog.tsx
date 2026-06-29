@@ -1,5 +1,7 @@
 "use client";
 
+import { Plus } from "lucide-react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,8 +24,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { createProject } from "@/lib/actions/kanban";
 import { cn } from "@/lib/utils";
-import { Plus } from "lucide-react";
-import { useState, useTransition } from "react";
 
 export function AddProjectDialog({
   onProjectAdded,
@@ -138,7 +138,7 @@ export function AddProjectDialog({
                 <Select
                   value={priority}
                   onValueChange={(
-                    value: "LOW" | "MEDIUM" | "HIGH" | "URGENT"
+                    value: "LOW" | "MEDIUM" | "HIGH" | "URGENT",
                   ) => setPriority(value)}
                 >
                   <SelectTrigger className="mt-1 w-full">

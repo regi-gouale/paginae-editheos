@@ -1,5 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,9 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAlerts } from "@/hooks/use-alerts";
-import { Member, updateMember } from "@/lib/actions/members";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { type Member, updateMember } from "@/lib/actions/members";
 
 export type MemberRole =
   | "ADMIN"
@@ -73,7 +74,7 @@ export const EditMemberDialog: React.FC<EditMemberDialogProps> = ({
       console.error("Error:", error);
       showError(
         "Erreur lors de la modification du membre",
-        "Une erreur inattendue s'est produite"
+        "Une erreur inattendue s'est produite",
       );
     } finally {
       setIsLoading(false);

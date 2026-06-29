@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
 import {
   createProjectNotificationForMembers,
@@ -12,7 +13,6 @@ import {
 } from "@/lib/utils";
 import type { ProjectStatus } from "@/prisma/generated/prisma/client";
 import type { KanbanColumnWithProjects } from "@/types/kanban";
-import { revalidatePath } from "next/cache";
 
 // Get project statistics for the sidebar
 export async function getProjectStats() {

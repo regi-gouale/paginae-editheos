@@ -1,8 +1,8 @@
 "use client";
 
-import { updateProject } from "@/lib/actions/kanban";
 import { Edit3Icon, ExternalLinkIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { updateProject } from "@/lib/actions/kanban";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 

@@ -1,9 +1,9 @@
 "use client";
 
+import { AlertTriangle, CalendarClock, Lock, TrendingUp } from "lucide-react";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useDashboardStats } from "@/hooks/dashboard/use-dashboard-stats";
-import { AlertTriangle, CalendarClock, Lock, TrendingUp } from "lucide-react";
 
 export default function DashboardStats() {
   const { data, loading } = useDashboardStats();

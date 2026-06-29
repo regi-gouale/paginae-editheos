@@ -1,5 +1,7 @@
 "use client";
 
+import { User } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -11,8 +13,6 @@ import {
 import { getAuthors } from "@/lib/actions/authors";
 import { updateProject } from "@/lib/actions/kanban";
 import type { Author } from "@/prisma/generated/prisma/client";
-import { User } from "lucide-react";
-import { useEffect, useState } from "react";
 
 interface AuthorSelectionDropdownProps {
   projectId: string;
@@ -98,7 +98,8 @@ export function AuthorSelectionDropdown({
       ) : (
         <Select
           value={selectedAuthor?.id || ""}
-          onValueChange={handleAuthorChange}>
+          onValueChange={handleAuthorChange}
+        >
           <SelectTrigger className="w-full rounded-xl">
             <SelectValue placeholder="Sélectionner un auteur">
               {selectedAuthor && (
