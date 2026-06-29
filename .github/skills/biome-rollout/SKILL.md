@@ -20,8 +20,8 @@ Workflow reproductible pour installer Biome, l'aligner avec TypeScript, et stabi
 ### Étape 1 — Installer et initialiser
 
 ```bash
-pnpm add -D @biomejs/biome
-pnpm biome init
+bun add -D @biomejs/biome
+bun biome init
 ```
 
 Objectif : obtenir un fichier `biome.json` valide avant customisation.
@@ -56,8 +56,8 @@ Si l'équipe veut une section explicite TypeScript, ajouter un `overrides` :
 
 ### Étape 4 — Triage des diagnostics
 
-1. Exécuter `pnpm lint:fix`
-2. Rejouer `pnpm lint`
+1. Exécuter `bun lint:fix`
+2. Rejouer `bun lint`
 3. Classer les diagnostics :
 
 - auto-fixables (imports, format, templates)
@@ -75,9 +75,9 @@ Ne pas mélanger les deux stratégies sans décision explicite.
 ### Étape 6 — Validation finale
 
 ```bash
-pnpm biome check biome.json
-pnpm lint
-pnpm build
+bun biome check biome.json
+bun lint
+bun build
 ```
 
 ## Critères de complétion
@@ -85,4 +85,4 @@ pnpm build
 - `biome.json` valide
 - scripts lint/format opérationnels
 - stratégie de périmètre définie (inclure tout vs exclusions ciblées)
-- `pnpm lint` et `pnpm build` passent ou écarts documentés avec plan d'action
+- `bun lint` et `bun build` passent ou écarts documentés avec plan d'action

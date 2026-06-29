@@ -89,7 +89,8 @@ export default function RecentProjects() {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="flex items-start space-x-4 p-4 border rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              className="flex items-start space-x-4 p-4 border rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
               <div className="flex-1 space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium leading-none">{project.title}</h4>
@@ -104,7 +105,8 @@ export default function RecentProjects() {
                     className={
                       statusConfig[project.status as keyof typeof statusConfig]
                         .color
-                    }>
+                    }
+                  >
                     {
                       statusConfig[project.status as keyof typeof statusConfig]
                         .label
@@ -149,7 +151,8 @@ export default function RecentProjects() {
                           )
                             ? "text-red-600 font-medium"
                             : ""
-                        }>
+                        }
+                      >
                         Échéance: {formatDueDate(project.dueDate)}
                       </span>
                     </div>

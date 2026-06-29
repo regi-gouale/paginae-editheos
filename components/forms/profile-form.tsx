@@ -78,7 +78,8 @@ export function ProfileForm({ initial }: { initial: ProfileFormProps }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4">
+        className="flex flex-col gap-4"
+      >
         <div className="flex items-center gap-8">
           <div className="relative w-20 h-20 rounded-full overflow-hidden bg-muted flex items-center justify-center">
             {preview ? (

@@ -19,8 +19,8 @@ import {
 import { useProgressChart } from "@/hooks/dashboard/use-progress-chart";
 
 const chartConfig = {
-  completed: { label: "Termines", color: "hsl(142, 71%, 45%)" },
-  created: { label: "Crees", color: "hsl(217, 91%, 60%)" },
+  completed: { label: "Terminés", color: "hsl(142, 71%, 45%)" },
+  created: { label: "Créés", color: "hsl(217, 91%, 60%)" },
   inProgress: { label: "En cours", color: "hsl(25, 95%, 53%)" },
 } satisfies ChartConfig;
 
@@ -35,7 +35,7 @@ export default function ProgressChart() {
         </CardHeader>
         <CardContent>
           <div className="animate-pulse">
-            <div className="h-[240px] rounded bg-muted"></div>
+            <div className="h-60 rounded bg-muted"></div>
           </div>
         </CardContent>
       </Card>
@@ -50,13 +50,12 @@ export default function ProgressChart() {
         <div className="flex flex-col gap-1.5">
           <CardTitle>Progression mensuelle</CardTitle>
           <CardDescription>
-            Projets crees, en cours et termines sur 6 mois
+            Projets créés, en cours et terminés sur 6 mois
           </CardDescription>
         </div>
         <Badge
           variant={data.trend.direction === "up" ? "default" : "destructive"}
-          className="flex items-center gap-1"
-        >
+          className="flex items-center gap-1">
           {data.trend.direction === "up" ? (
             <TrendingUp className="size-3" />
           ) : (
@@ -69,11 +68,10 @@ export default function ProgressChart() {
         </Badge>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[240px] w-full">
+        <ChartContainer config={chartConfig} className="h-60 w-full">
           <AreaChart
             data={chartData}
-            margin={{ left: 0, right: 12, top: 4, bottom: 0 }}
-          >
+            margin={{ left: 0, right: 12, top: 4, bottom: 0 }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
@@ -159,13 +157,13 @@ export default function ProgressChart() {
             <div className="text-2xl font-bold text-emerald-600">
               {data.totalCompleted}
             </div>
-            <div className="text-xs text-muted-foreground">Termines</div>
+            <div className="text-xs text-muted-foreground">Terminés</div>
           </div>
           <div className="text-center flex flex-col gap-1">
             <div className="text-2xl font-bold text-blue-600">
               {data.totalCreated}
             </div>
-            <div className="text-xs text-muted-foreground">Crees</div>
+            <div className="text-xs text-muted-foreground">Créés</div>
           </div>
           <div className="text-center flex flex-col gap-1">
             <div className="text-2xl font-bold text-purple-600">
@@ -175,7 +173,7 @@ export default function ProgressChart() {
               %
             </div>
             <div className="text-xs text-muted-foreground">
-              Taux de reussite
+              Taux de réussite
             </div>
           </div>
         </div>

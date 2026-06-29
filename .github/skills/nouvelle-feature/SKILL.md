@@ -27,7 +27,7 @@ Avant d'écrire une seule ligne, lire :
 ### Étape 2 — Schéma Prisma (si modèle nouveau ou modifié)
 
 1. Modifier `prisma/schema.prisma` — nouveaux champs toujours optionnels (`?`)
-2. `pnpm prisma migrate dev --name ajout-<nom-feature>`
+2. `bun prisma migrate dev --name ajout-<nom-feature>`
 3. Vérifier `types/kanban.ts` si lié aux projets
 
 ### Étape 3 — Server Action
@@ -63,8 +63,8 @@ Réutiliser les types `ProjectWithDetails` / `KanbanColumnWithProjects` si lié 
 ### Étape 6 — Validation
 
 ```bash
-pnpm lint:fix
-pnpm lint
+bun lint:fix
+bun lint
 ```
 
 Vérifier : imports organisés, aucun `any` implicite/explicite, types cohérents, `interface` remplacé par `type`.
@@ -73,5 +73,5 @@ Vérifier : imports organisés, aucun `any` implicite/explicite, types cohérent
 
 - [ ] Server Action avec auth + revalidation
 - [ ] Composant UI avec mutation + toasts français
-- [ ] `pnpm lint` sans erreur
+- [ ] `bun lint` sans erreur
 - [ ] Aucun `any` dans le code produit

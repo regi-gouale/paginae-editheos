@@ -74,11 +74,13 @@ function SortableTaskItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-2 p-3 border rounded-lg bg-background group">
+      className="flex items-center gap-2 p-3 border rounded-lg bg-background group"
+    >
       <div
         {...attributes}
         {...listeners}
-        className="cursor-grab active:cursor-grabbing">
+        className="cursor-grab active:cursor-grabbing"
+      >
         <GripVertical className="size-4 text-muted-foreground" />
       </div>
 
@@ -101,14 +103,16 @@ function SortableTaskItem({
             variant="ghost"
             size="sm"
             onClick={() => onEdit(template.id, editTitle)}
-            className="size-8 p-0">
+            className="size-8 p-0"
+          >
             <Check className="size-4 text-green-600" />
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onCancelEdit(template.id)}
-            className="size-8 p-0">
+            className="size-8 p-0"
+          >
             <X className="size-4 text-muted-foreground" />
           </Button>
         </>
@@ -117,14 +121,16 @@ function SortableTaskItem({
           <button
             type="button"
             className="flex-1 cursor-pointer text-left"
-            onClick={() => onStartEdit(template.id)}>
+            onClick={() => onStartEdit(template.id)}
+          >
             {template.title}
           </button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onDelete(template.id)}
-            className="size-8 p-0 opacity-0 group-hover:opacity-100">
+            className="size-8 p-0 opacity-0 group-hover:opacity-100"
+          >
             <Trash2 className="size-4 text-destructive" />
           </Button>
         </>
@@ -280,10 +286,12 @@ export function TaskTemplatesEditor({
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}>
+              onDragEnd={handleDragEnd}
+            >
               <SortableContext
                 items={templates.map((t) => t.id)}
-                strategy={verticalListSortingStrategy}>
+                strategy={verticalListSortingStrategy}
+              >
                 <div className="space-y-2">
                   {templates.map((template) => (
                     <SortableTaskItem
@@ -333,7 +341,8 @@ export function TaskTemplatesEditor({
                   onClick={() => {
                     setIsAdding(false);
                     setNewTaskTitle("");
-                  }}>
+                  }}
+                >
                   <X className="size-4" />
                 </Button>
               </div>
@@ -342,7 +351,8 @@ export function TaskTemplatesEditor({
                 variant="outline"
                 size="sm"
                 onClick={() => setIsAdding(true)}
-                className="w-full">
+                className="w-full"
+              >
                 <Plus className="size-4 mr-2" />
                 Ajouter une tâche
               </Button>

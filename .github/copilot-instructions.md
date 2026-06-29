@@ -80,7 +80,7 @@ const { data: session } = useSession();
 
 ### Commands
 
-- `pnpm dev` - Development with Turbopack
+- `bun dev` - Development with Turbopack
 
 ## Key Integration Points
 
@@ -157,15 +157,15 @@ revalidatePath("/dashboard/projects");
 ### Déploiement
 
 ```bash
-pnpm vercel-build  # Script spécial qui génère Prisma client + migrations + build
+bun vercel-build  # Script spécial qui génère Prisma client + migrations + build
 ```
 
 ### Développement
 
 ```bash
-pnpm dev                    # Next.js avec turbopack
-pnpm prisma migrate dev     # Après changements schema
-pnpm prisma db seed         # Données de test
+bun dev                    # Next.js avec turbopack
+bun prisma migrate dev     # Après changements schema
+bun prisma db seed         # Données de test
 ```
 
 ### Structure des Données

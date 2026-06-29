@@ -1,16 +1,16 @@
 ---
 name: debug-build
-description: "Diagnostiquer et corriger les erreurs de build Next.js dans Paginae Editheos. Use when: pnpm build échoue, erreur TypeScript, erreur Biome/lint bloquante, Prisma generate manquant, import introuvable, type error, build error, compilation failed."
+description: "Diagnostiquer et corriger les erreurs de build Next.js dans Paginae Editheos. Use when: bun build échoue, erreur TypeScript, erreur Biome/lint bloquante, Prisma generate manquant, import introuvable, type error, build error, compilation failed."
 argument-hint: "Colle l'erreur de build ou décris le symptôme (ex: 'type error sur kanban.ts ligne 42')."
 ---
 
 # Debug Build — Paginae Editheos
 
-Workflow de diagnostic pour les échecs `pnpm build` dans ce projet Next.js 15 + Prisma + TypeScript strict.
+Workflow de diagnostic pour les échecs `bun build` dans ce projet Next.js 15 + Prisma + TypeScript strict.
 
 ## Quand utiliser ce skill
 
-- `pnpm build` se termine avec exit code non nul
+- `bun build` se termine avec exit code non nul
 - Erreurs TypeScript ou Biome/lint bloquantes au build
 - Pages qui échouent en génération statique
 - Problème après une migration Prisma ou un changement de schéma
@@ -20,7 +20,7 @@ Workflow de diagnostic pour les échecs `pnpm build` dans ce projet Next.js 15 +
 ### Étape 1 — Lire l'erreur complète
 
 ```bash
-pnpm build 2>&1 | head -120
+bun build 2>&1 | head -120
 ```
 
 Identifier la **catégorie** de l'erreur — voir [./references/erreurs-frequentes.md](./references/erreurs-frequentes.md) pour les patterns courants et leurs corrections.
@@ -40,7 +40,7 @@ Identifier la **catégorie** de l'erreur — voir [./references/erreurs-frequent
 
 1. Lire le fichier incriminé et son contexte.
 2. Vérifier : `type` utilisé à la place de `interface` ? Pas de `any` implicite ?
-3. Si le type vient de Prisma : vérifier que `pnpm prisma generate` a été exécuté après le dernier changement de schéma.
+3. Si le type vient de Prisma : vérifier que `bun prisma generate` a été exécuté après le dernier changement de schéma.
 4. Types étendus dans `types/kanban.ts` — vérifier cohérence avec le schéma.
 
 ### Étape 4 — Imports introuvables
@@ -54,11 +54,11 @@ Causes fréquentes dans ce projet :
 
 ### Étape 5 — Biome / lint bloquant
 
-La commande `pnpm lint` est pilotée par Biome. Si le lint échoue, lancer d'abord un correctif automatique puis traiter les diagnostics restants.
+La commande `bun lint` est pilotée par Biome. Si le lint échoue, lancer d'abord un correctif automatique puis traiter les diagnostics restants.
 
 ```bash
-pnpm lint:fix
-pnpm lint
+bun lint:fix
+bun lint
 ```
 
 Diagnostics fréquents avec Biome dans ce projet : `assist/source/organizeImports`, `lint/style/useTemplate`, `lint/style/noNonNullAssertion`.
@@ -68,8 +68,8 @@ Note TypeScript : il n'existe pas de bloc top-level `typescript` dans Biome. La 
 ### Étape 6 — Prisma non initialisé
 
 ```bash
-pnpm prisma generate
-pnpm build
+bun prisma generate
+bun build
 ```
 
 Si le client n'est pas généré, tous les imports depuis `@/lib/prisma` échouent silencieusement à la compilation. S'assurer que le dossier `prisma/generated/prisma/` existe et est à jour.
@@ -95,7 +95,7 @@ Si une page `/dashboard/…` échoue en génération :
 
 ## Critères de complétion
 
-- `pnpm build` se termine sans exit code non nul
-- `pnpm lint` se termine sans erreur sur les fichiers touchés
+- `bun build` se termine sans exit code non nul
+- `bun lint` se termine sans erreur sur les fichiers touchés
 - Aucune erreur TypeScript (warnings tolérés)
 - Rapport des corrections appliquées produit

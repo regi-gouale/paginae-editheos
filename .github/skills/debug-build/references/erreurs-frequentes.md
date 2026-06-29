@@ -22,7 +22,7 @@ import type { ProjectStatus } from "@prisma/client";
 ### `Property '...' does not exist on type 'ProjectWithDetails'`
 
 **Cause** : type étendu dans `types/kanban.ts` pas mis à jour après changement de schéma Prisma.  
-**Fix** : mettre à jour `types/kanban.ts` pour refléter le nouveau schéma, puis `pnpm prisma generate`.
+**Fix** : mettre à jour `types/kanban.ts` pour refléter le nouveau schéma, puis `bun prisma generate`.
 
 ### `Object is possibly 'undefined'`
 
@@ -79,8 +79,8 @@ import { PrismaClient } from "@prisma/client";
 **Fix** :
 
 ```bash
-pnpm prisma generate
-pnpm build
+bun prisma generate
+bun build
 ```
 
 ### `The table '...' does not exist`
@@ -89,8 +89,8 @@ pnpm build
 **Fix** :
 
 ```bash
-pnpm prisma migrate dev
-pnpm build
+bun prisma migrate dev
+bun build
 ```
 
 ---
@@ -103,7 +103,7 @@ pnpm build
 **Fix** :
 
 ```bash
-pnpm lint:fix
+bun lint:fix
 ```
 
 ### `lint/style/useTemplate`

@@ -38,7 +38,8 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
         "mb-2 w-full p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer group text-left",
         getPriorityBorderStyle(project.priority),
       )}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       {project.authors.length > 0 && (
         <div className="flex items-center space-x-1 gap-2">
           {project.type === "EDITION" ? (
@@ -50,7 +51,8 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           {project.authors.map((author) => (
             <div
               key={author.id}
-              className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl">
+              className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl"
+            >
               {author.firstName} {author.lastName}
             </div>
           ))}
@@ -65,7 +67,8 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
             className={cn(
               "text-xs px-2 py-1 rounded-full font-medium ml-2 shrink-0",
               getPriorityBadgeStyle(project.priority),
-            )}>
+            )}
+          >
             {getPriorityLabel(project.priority)}
           </div>
         )}
@@ -86,7 +89,8 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
                 ? "text-red-600 dark:text-red-400"
                 : "text-gray-500 dark:text-gray-400",
               "bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl",
-            )}>
+            )}
+          >
             <Calendar className="size-3 mr-1" />
             <span className="truncate">{formatDate(project.dueDate)}</span>
           </div>
