@@ -48,7 +48,7 @@ Référence exhaustive pour l'audit qualité et régressions du projet.
 - [ ] Aucune suppression de colonne sans vérification des usages dans le code
 - [ ] Enums `ProjectStatus`, `RuleConditionType`, `RuleActionType` non modifiés sans vérification de `lib/rules.ts`
 - [ ] Migration nommée explicitement (pas `migration` générique)
-- [ ] `pnpm prisma generate` exécuté après changement de schéma
+- [ ] `bun prisma generate` exécuté après changement de schéma
 
 ---
 
@@ -73,7 +73,7 @@ Référence exhaustive pour l'audit qualité et régressions du projet.
 
 ## 7. TypeScript & Qualité générale
 
-- [ ] `pnpm lint` (Biome) passe sans erreur sur les fichiers modifiés
-- [ ] `pnpm build` passe (si audit pré-déploiement)
+- [ ] `bun lint` (Biome) passe sans erreur sur les fichiers modifiés
+- [ ] `bun build` passe (si audit pré-déploiement)
 - [ ] Aucun `console.log` de debug laissé dans le code
 - [ ] Aucun `TODO` bloquant non documenté

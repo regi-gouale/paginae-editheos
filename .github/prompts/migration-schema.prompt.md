@@ -27,7 +27,7 @@ Applique la migration Prisma suivante de façon sécurisée :
 ### 3. Migration
 
 ```bash
-pnpm prisma migrate dev --name <nom-explicite-du-changement>
+bun prisma migrate dev --name <nom-explicite-du-changement>
 ```
 
 - Vérifier que la migration générée est réversible.
@@ -42,8 +42,8 @@ pnpm prisma migrate dev --name <nom-explicite-du-changement>
 ### 5. Vérification
 
 ```bash
-pnpm prisma generate
-pnpm lint
+bun prisma generate
+bun lint
 ```
 
 Résume : changements de schéma, migration produite, usages mis à jour, risques de données résiduels.

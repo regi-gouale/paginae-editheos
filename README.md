@@ -27,7 +27,7 @@ Suivez ces étapes pour lancer le projet en local.
 ### Prérequis
 
 - [Node.js](https://nodejs.org/en) (version 18.x ou supérieure)
-- [pnpm](https://pnpm.io/installation)
+- [bun](https://bun.io/installation)
 - Une base de données (ex: PostgreSQL)
 
 ### Installation
@@ -42,7 +42,7 @@ Suivez ces étapes pour lancer le projet en local.
 2.  **Installez les dépendances :**
 
     ```bash
-    pnpm install
+    bun install
     ```
 
 3.  **Configurez les variables d'environnement :**
@@ -55,12 +55,12 @@ Suivez ces étapes pour lancer le projet en local.
 4.  **Appliquez les migrations de la base de données :**
 
     ```bash
-    pnpm prisma migrate dev
+    bun prisma migrate dev
     ```
 
 5.  **(Optionnel) Remplissez la base de données avec des données de test :**
     ```bash
-    pnpm prisma db seed
+    bun prisma db seed
     ```
 
 ### Lancer le serveur de développement
@@ -68,11 +68,11 @@ Suivez ces étapes pour lancer le projet en local.
 Pour démarrer l'application en mode développement, exécutez :
 
 ```bash
-pnpm dev
+bun dev
 ```
 
 Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur pour voir l'application.
 
 ## Déploiement
 
-Ce projet est optimisé pour un déploiement sur [Vercel](https://vercel.com/). Le script `vercel-build` (`pnpm vercel-build`) est configuré pour générer les clients Prisma, appliquer les migrations et construire l'application Next.js.
+Ce projet est optimisé pour un déploiement sur [Vercel](https://vercel.com/). Le script `vercel-build` (`bun vercel-build`) est configuré pour générer les clients Prisma, appliquer les migrations et construire l'application Next.js.

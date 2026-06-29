@@ -20,7 +20,7 @@ Implémente la fonctionnalité suivante dans le projet Paginae Editheos :
 ### 2. Données (si changement de schéma)
 
 - Ajouter ou modifier le modèle dans `prisma/schema.prisma`.
-- Créer une migration nommée explicitement (`pnpm prisma migrate dev --name <nom>`).
+- Créer une migration nommée explicitement (`bun prisma migrate dev --name <nom>`).
 - Vérifier que le client généré est dans `prisma/generated/prisma`.
 
 ### 3. Server Action (`lib/actions/<domaine>.ts`)
@@ -45,7 +45,7 @@ Implémente la fonctionnalité suivante dans le projet Paginae Editheos :
 
 ### 6. Validation finale
 
-- `pnpm lint` sans erreur.
+- `bun lint` sans erreur.
 - Types TypeScript cohérents, aucun `any`.
 
 Résume les fichiers créés/modifiés et les risques résiduels éventuels.

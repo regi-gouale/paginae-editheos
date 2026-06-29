@@ -14,6 +14,7 @@ import {
   Users2,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import type * as React from "react";
 import { NavMain } from "@/components/dashboard/nav-main";
 import { NavProjects } from "@/components/dashboard/nav-projects";
@@ -30,7 +31,6 @@ import {
 } from "@/components/ui/sidebar";
 import { useProjectStats } from "@/hooks/projects/use-project-stats";
 import { authClient } from "@/lib/auth/auth-client";
-import Link from "next/link";
 
 const data = {
   user: {
@@ -119,7 +119,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       variant="floating"
       {...props}
       className="border-sidebar-border/60 bg-sidebar/85 backdrop-blur-md"
-      style={{ fontFamily: "var(--font-ui-sans)" }}>
+      style={{ fontFamily: "var(--font-ui-sans)" }}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

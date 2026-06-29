@@ -23,9 +23,7 @@ async function testUserMemberRelation() {
           `✅ Membre lié: ${userWithMember.member.name} (${userWithMember.member.role})`,
         );
       } else {
-        console.log(
-          `⚠️  Aucun membre lié. Exécutez: pnpm sync-users-to-members`,
-        );
+        console.log(`⚠️  Aucun membre lié. Exécutez: bun sync-users-to-members`);
       }
     } else {
       console.log("ℹ️  Aucun utilisateur trouvé dans la base de données");
@@ -74,7 +72,7 @@ async function testUserMemberRelation() {
     const usersWithoutMembers = totalUsers - usersWithMembers;
     if (usersWithoutMembers > 0) {
       console.log(`\n⚠️  ${usersWithoutMembers} utilisateur(s) sans membre lié`);
-      console.log(`💡 Exécutez: pnpm sync-users-to-members`);
+      console.log(`💡 Exécutez: bun sync-users-to-members`);
     } else {
       console.log(`\n✅ Tous les utilisateurs ont un membre lié !`);
     }

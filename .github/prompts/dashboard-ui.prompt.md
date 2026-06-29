@@ -25,7 +25,7 @@ Genere une page de tableau de bord professionnelle dans le projet Paginae Edithe
 
 - Lire `components/dashboard/stats-card.tsx`, `components/dashboard/dashboard-stats.tsx`, et `components/dashboard/dashboard-header.tsx` pour reproduire les patterns existants.
 - Lire `components/ui/card.tsx`, `components/ui/chart.tsx`, et `components/ui/table.tsx` pour les primitives disponibles.
-- Verifier les composants existants dans `components/dashboard/` et `components/projects/` avant de creer des doublons.
+- Vérifier les composants existants dans `components/dashboard/` et `components/projects/` avant de créer des doublons.
 
 ### 2. Structure de la page (`app/dashboard/...`)
 
@@ -69,10 +69,10 @@ Genere une page de tableau de bord professionnelle dans le projet Paginae Edithe
 
 ### 7. Validation finale
 
-- `pnpm lint` sans erreur.
+- `bun lint` sans erreur.
 - Types TypeScript coherents.
 - Aucun emoji dans le rendu.
 - Responsive correct sur mobile et desktop.
-- Les textes visibles sont en francais.
+- Les textes visibles sont en français.
 
-Resume les fichiers crees/modifies, les metriques affichees, et les eventuelles ameliorations futures.
+Resume les fichiers créés/modifiés, les métriques affichées, et les éventuelles améliorations futures.

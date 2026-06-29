@@ -20,7 +20,7 @@ You are a specialist for Server Actions and mutation flows in this repository.
 2. Implement or adjust the Server Action with strict types and auth checks.
 3. Ensure client mutation flow resolves action result and shows meaningful toasts.
 4. Add or fix `revalidatePath` targets based on affected pages.
-5. Run focused validation (`pnpm lint` or targeted checks) when needed.
+5. Run focused validation (`bun lint` or targeted checks) when needed.
 
 ## Output Format
 

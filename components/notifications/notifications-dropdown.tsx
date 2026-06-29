@@ -36,7 +36,8 @@ function NotificationIcon() {
       {!isLoading && unreadCount! > 0 && (
         <Badge
           variant="destructive"
-          className="absolute -top-2 -right-2 size-5 flex items-center justify-center p-0 text-xs">
+          className="absolute -top-2 -right-2 size-5 flex items-center justify-center p-0 text-xs"
+        >
           {unreadCount! > 9 ? "9+" : unreadCount}
         </Badge>
       )}
@@ -87,7 +88,8 @@ function NotificationItem({
         "flex items-start gap-3 p-3 rounded-lg transition-colors relative group",
         !notification.read && "bg-blue-50 dark:bg-blue-950/20",
         "hover:bg-gray-50 dark:hover:bg-gray-800/50",
-      )}>
+      )}
+    >
       <div className="shrink-0 text-lg">
         {getNotificationIcon(notification.type)}
       </div>
@@ -118,7 +120,8 @@ function NotificationItem({
               e.preventDefault();
               e.stopPropagation();
               onMarkAsRead(notification.id);
-            }}>
+            }}
+          >
             <Check className="h-3 w-3" />
           </Button>
         )}
@@ -130,7 +133,8 @@ function NotificationItem({
             e.preventDefault();
             e.stopPropagation();
             onDelete(notification.id);
-          }}>
+          }}
+        >
           <Trash2 className="h-3 w-3" />
         </Button>
       </div>
@@ -183,7 +187,8 @@ export function NotificationsDropdown() {
               size="sm"
               className="h-6 text-xs"
               onClick={handleMarkAllAsRead}
-              disabled={markAllAsRead.isPending}>
+              disabled={markAllAsRead.isPending}
+            >
               <CheckCheck className="h-3 w-3 mr-1" />
               Tout marquer comme lu
             </Button>

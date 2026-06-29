@@ -33,8 +33,8 @@ const prisma = new PrismaClient();
 ## Après toute modification de schéma
 
 ```bash
-pnpm prisma migrate dev --name <nom-explicite>
-pnpm prisma generate
+bun prisma migrate dev --name <nom-explicite>
+bun prisma generate
 ```
 
 Vérifier que les types étendus dans `types/kanban.ts` restent cohérents.

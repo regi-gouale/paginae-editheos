@@ -13,9 +13,9 @@ Workflow d'audit systématique pour détecter les régressions et vérifier les 
 - Avant un déploiement Vercel
 - Après une PR ou un refactoring significatif
 - Pour un audit de sécurité ou de qualité
-- Quand le build (`pnpm build`) échoue sans raison évidente
+- Quand le build (`bun build`) échoue sans raison évidente
 
-Lint du projet : `pnpm lint` est basé sur Biome.
+Lint du projet : `bun lint` est basé sur Biome.
 
 ## Procédure
 
