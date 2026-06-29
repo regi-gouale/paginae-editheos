@@ -1,8 +1,8 @@
-import type { Priority, ProjectStatus } from "@/prisma/generated/prisma/client";
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
+import type { Priority, ProjectStatus } from "@/prisma/generated/prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

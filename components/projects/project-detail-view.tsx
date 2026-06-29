@@ -1,12 +1,12 @@
 "use client";
 
+import { ArrowLeft, ExternalLinkIcon, MailIcon, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { ProjectDescriptionDialog } from "@/components/projects/description-dialog";
 import ProjectTitleEditor from "@/components/projects/input-title";
 import { ProjectTasksEditor } from "@/components/projects/tasks-editor";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +18,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useAlerts } from "@/hooks/use-alerts";
 import { deleteProject } from "@/lib/actions/kanban";
@@ -28,11 +32,7 @@ import {
   getStatusVariant,
   projectTypes,
 } from "@/lib/utils";
-import { ProjectWithDetails } from "@/types/kanban";
-import { ArrowLeft, ExternalLinkIcon, MailIcon, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import type { ProjectWithDetails } from "@/types/kanban";
 import { ProjectCustomFieldsEditor } from "./custom-fields-editor";
 import { ProjectFileUrlEditor } from "./file-url-editor";
 import { DeadlineSelectorPopover } from "./popover-due-date";
@@ -111,7 +111,8 @@ export function ProjectDetailView({
 
             <Badge
               variant={getStatusVariant(project.status)}
-              className="rounded-full">
+              className="rounded-full"
+            >
               {getColumnNameFromProjectStatus(project.status)}
             </Badge>
             <ProjectTitleEditor
@@ -124,13 +125,15 @@ export function ProjectDetailView({
             {isAdmin && (
               <AlertDialog
                 open={isDeleteDialogOpen}
-                onOpenChange={setIsDeleteDialogOpen}>
+                onOpenChange={setIsDeleteDialogOpen}
+              >
                 <AlertDialogTrigger asChild>
                   <Button
                     variant="destructive"
                     size="sm"
                     disabled={isDeleting}
-                    className="ml-auto rounded-xl">
+                    className="ml-auto rounded-xl"
+                  >
                     <Trash2 className="size-4" />
                     Supprimer
                   </Button>
@@ -147,7 +150,8 @@ export function ProjectDetailView({
                   <AlertDialogFooter>
                     <AlertDialogCancel
                       className="rounded-xl"
-                      disabled={isDeleting}>
+                      disabled={isDeleting}
+                    >
                       Annuler
                     </AlertDialogCancel>
                     <AlertDialogAction
@@ -156,7 +160,8 @@ export function ProjectDetailView({
                       onClick={(event) => {
                         event.preventDefault();
                         void handleDeleteProject();
-                      }}>
+                      }}
+                    >
                       {isDeleting
                         ? "Suppression..."
                         : "Supprimer définitivement"}
@@ -185,7 +190,8 @@ export function ProjectDetailView({
               <CardTitle
                 style={{
                   fontFamily: "var(--font-montserrat)",
-                }}>
+                }}
+              >
                 Informations générales
               </CardTitle>
             </CardHeader>
@@ -301,7 +307,8 @@ export function ProjectDetailView({
                               href={author.website}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="hover:underline">
+                              className="hover:underline"
+                            >
                               Site web
                             </a>
                           </div>

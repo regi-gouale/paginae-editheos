@@ -1,14 +1,14 @@
+import { useEffect, useState } from "react";
 import {
+  type AttentionProject,
+  type DashboardStatsData,
+  getActiveTaskProgress,
   getDashboardStats,
   getProjectsNeedingAttention,
-  getActiveTaskProgress,
-  type DashboardStatsData,
-  type AttentionProject,
   type TaskProgressProject,
 } from "@/lib/actions/dashboard.action";
-import { useEffect, useState } from "react";
 
-export type { DashboardStatsData, AttentionProject, TaskProgressProject };
+export type { AttentionProject, DashboardStatsData, TaskProgressProject };
 
 const defaultStats: DashboardStatsData = {
   overdue: 0,

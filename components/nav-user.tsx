@@ -1,7 +1,7 @@
 "use client";
 
 import { BadgeCheck, Bell, ChevronsUpDown } from "lucide-react";
-
+import Link from "next/link";
 import { SignOutButton } from "@/components/auth/signout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -19,7 +19,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
 
 export function NavUser({
   user,

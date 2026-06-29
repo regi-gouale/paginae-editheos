@@ -1,11 +1,5 @@
 "use client";
 
-import { ProjectFilters } from "@/components/projects/project-filters";
-import type {
-  Priority,
-  ProjectStatus,
-  ProjectType,
-} from "@/prisma/generated/prisma/client";
 import {
   createSerializer,
   parseAsArrayOf,
@@ -13,6 +7,12 @@ import {
   parseAsStringEnum,
   useQueryStates,
 } from "nuqs";
+import type { ProjectFilters } from "@/components/projects/project-filters";
+import type {
+  Priority,
+  ProjectStatus,
+  ProjectType,
+} from "@/prisma/generated/prisma/client";
 
 // Interface pour les filtres avec dueDays en string (pour nuqs)
 interface ProjectFiltersState {

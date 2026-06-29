@@ -1,5 +1,19 @@
 "use client";
 
+import { fr } from "date-fns/locale";
+import {
+  Edit,
+  Filter,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Trash2,
+  User,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { EditAuthorDialog } from "@/components/authors/edit-author-dialog";
 import { TablePagination } from "@/components/table-pagination";
 import { Badge } from "@/components/ui/badge";
@@ -45,27 +59,14 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useAlerts } from "@/hooks/use-alerts";
 import {
+  type Author,
+  type AuthorsResponse,
   addAuthor,
-  Author,
-  AuthorsResponse,
   deleteAuthor,
   getAuthors,
   getNationalities,
 } from "@/lib/actions/authors";
 import { formatDateLong } from "@/lib/utils";
-import { fr } from "date-fns/locale";
-import {
-  Edit,
-  Filter,
-  MoreHorizontal,
-  Plus,
-  Search,
-  Trash2,
-  User,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
 
 interface AuthorsTableProps {
   initialData: AuthorsResponse;
@@ -167,7 +168,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         setIsLoading(false);
       }
     },
-    300
+    300,
   );
 
   const handleSearchChange = (value: string) => {
@@ -243,7 +244,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
       console.error("Error adding author:", error);
       showError(
         "Erreur lors de l'ajout de l'auteur",
-        "Une erreur inattendue s'est produite"
+        "Une erreur inattendue s'est produite",
       );
     } finally {
       setIsLoading(false);
@@ -257,7 +258,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         title: "Supprimer l'auteur",
         confirmText: "Supprimer",
         cancelText: "Annuler",
-      }
+      },
     );
 
     if (!confirmed) {
@@ -284,7 +285,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
       console.error("Error deleting author:", error);
       showError(
         "Erreur lors de la suppression",
-        "Une erreur inattendue s'est produite"
+        "Une erreur inattendue s'est produite",
       );
     }
   };

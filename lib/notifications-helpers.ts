@@ -9,7 +9,7 @@ export async function createProjectNotificationForMembers(
   type: NotificationType,
   title: string,
   message: string,
-  excludeUserId?: string
+  excludeUserId?: string,
 ) {
   try {
     // Récupérer le projet avec ses membres
@@ -49,15 +49,15 @@ export async function createProjectNotificationForMembers(
             title,
             message,
           },
-        })
-      )
+        }),
+      ),
     );
 
     return { success: true, notifications };
   } catch (error) {
     console.error(
       "Erreur lors de la création des notifications de projet:",
-      error
+      error,
     );
     return { success: false, error: "Impossible de créer les notifications" };
   }
@@ -71,7 +71,7 @@ export async function createUserNotification(
   type: NotificationType,
   title: string,
   message: string,
-  projectId?: string
+  projectId?: string,
 ) {
   try {
     const notification = await prisma.notification.create({
@@ -88,7 +88,7 @@ export async function createUserNotification(
   } catch (error) {
     console.error(
       "Erreur lors de la création de la notification utilisateur:",
-      error
+      error,
     );
     return { success: false, error: "Impossible de créer la notification" };
   }
@@ -143,7 +143,7 @@ export async function createDueDateNotifications() {
         project.id,
         "PROJECT_DUE_SOON",
         `📅 Échéance proche : ${project.title}`,
-        `Le projet "${project.title}" arrive à échéance demain.`
+        `Le projet "${project.title}" arrive à échéance demain.`,
       );
     }
 
@@ -153,7 +153,7 @@ export async function createDueDateNotifications() {
         project.id,
         "PROJECT_OVERDUE",
         `🚨 Projet en retard : ${project.title}`,
-        `Le projet "${project.title}" a dépassé sa date d'échéance.`
+        `Le projet "${project.title}" a dépassé sa date d'échéance.`,
       );
     }
 
@@ -165,7 +165,7 @@ export async function createDueDateNotifications() {
   } catch (error) {
     console.error(
       "Erreur lors de la création des notifications d'échéance:",
-      error
+      error,
     );
     return {
       success: false,

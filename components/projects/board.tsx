@@ -1,5 +1,8 @@
 "use client";
 
+import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import { ProjectDetailDialog } from "@/components/projects/detail-dialog";
 import { KanbanColumn } from "@/components/projects/kanban-column";
 import { ProjectFilters } from "@/components/projects/project-filters";
@@ -8,10 +11,10 @@ import { applyAutomationRules, updateProject } from "@/lib/actions/kanban";
 import { filterKanbanColumns } from "@/lib/project-filters";
 import { getRules, shouldMoveProject } from "@/lib/rules";
 import { getProjectStatusFromColumnName } from "@/lib/utils";
-import { KanbanColumnWithProjects, ProjectWithDetails } from "@/types/kanban";
-import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+import type {
+  KanbanColumnWithProjects,
+  ProjectWithDetails,
+} from "@/types/kanban";
 
 interface ProjectsBoardProps {
   initialColumns: KanbanColumnWithProjects[];
@@ -61,7 +64,7 @@ export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
           // Utiliser la nouvelle fonction shouldMoveProject pour déterminer si le projet doit être déplacé
           if (shouldMoveProject(project, rule) && rule.action?.targetColumnId) {
             const targetColumn = columns.find(
-              (col) => col.id === rule.action!.targetColumnId,
+              (col) => col.id === rule.action?.targetColumnId,
             );
 
             // Vérifier que le projet n'est pas déjà dans la colonne cible

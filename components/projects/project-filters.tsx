@@ -1,5 +1,7 @@
 "use client";
 
+import { Filter, Search, Share2, X } from "lucide-react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,8 +18,6 @@ import type {
   ProjectStatus,
   ProjectType,
 } from "@/prisma/generated/prisma/client";
-import { Filter, Search, Share2, X } from "lucide-react";
-import { toast } from "sonner";
 
 export interface ProjectFilters {
   statuses: ProjectStatus[];
@@ -181,7 +181,8 @@ export function ProjectFilters({
                 checked={filters.statuses.includes(status as ProjectStatus)}
                 onCheckedChange={(checked) =>
                   updateStatuses(status as ProjectStatus, checked)
-                }>
+                }
+              >
                 {label}
               </DropdownMenuCheckboxItem>
             ))}
@@ -210,7 +211,8 @@ export function ProjectFilters({
                 checked={filters.types.includes(type as ProjectType)}
                 onCheckedChange={(checked) =>
                   updateTypes(type as ProjectType, checked)
-                }>
+                }
+              >
                 {label}
               </DropdownMenuCheckboxItem>
             ))}
@@ -239,7 +241,8 @@ export function ProjectFilters({
                 checked={filters.priorities.includes(priority as Priority)}
                 onCheckedChange={(checked) =>
                   updatePriorities(priority as Priority, checked)
-                }>
+                }
+              >
                 {label}
               </DropdownMenuCheckboxItem>
             ))}
@@ -268,7 +271,8 @@ export function ProjectFilters({
                 checked={filters.dueDays.includes(Number(days))}
                 onCheckedChange={(checked) =>
                   updateDueDays(Number(days), checked)
-                }>
+                }
+              >
                 {label}
               </DropdownMenuCheckboxItem>
             ))}
@@ -284,7 +288,8 @@ export function ProjectFilters({
             variant="outline"
             size="sm"
             onClick={handleShareUrl}
-            className="shrink-0">
+            className="shrink-0"
+          >
             <Share2 className="size-4 mr-2" />
             Partager
           </Button>
@@ -296,7 +301,8 @@ export function ProjectFilters({
             variant="ghost"
             size="sm"
             onClick={clearAllFilters}
-            className="shrink-0">
+            className="shrink-0"
+          >
             <X className="size-4 mr-2" />
             Effacer ({getFilterCount()})
           </Button>

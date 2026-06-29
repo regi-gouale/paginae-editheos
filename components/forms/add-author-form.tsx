@@ -1,5 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,11 +17,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { addAuthorAction } from "@/lib/actions/authors.refactored";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 // Schema pour la validation avec zod
 const addAuthorSchema = z.object({
@@ -32,12 +32,8 @@ type AddAuthorFormData = z.infer<typeof addAuthorSchema>;
 
 // Pattern de résolution des actions serveur selon les instructions
 async function resolveActionResult<T>(actionPromise: Promise<T>): Promise<T> {
-  try {
-    const result = await actionPromise;
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const result = await actionPromise;
+  return result;
 }
 
 export function AddAuthorForm() {
@@ -175,7 +171,7 @@ export function AddAuthorForm() {
               <FormControl>
                 <Textarea
                   placeholder="Biographie de l'auteur..."
-                  className="min-h-[100px]"
+                  className="min-h-25"
                   {...field}
                 />
               </FormControl>

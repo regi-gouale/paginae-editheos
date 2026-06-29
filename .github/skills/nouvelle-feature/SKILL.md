@@ -63,10 +63,11 @@ Réutiliser les types `ProjectWithDetails` / `KanbanColumnWithProjects` si lié 
 ### Étape 6 — Validation
 
 ```bash
+pnpm lint:fix
 pnpm lint
 ```
 
-Vérifier : aucun `any`, types cohérents, `interface` remplacé par `type`.
+Vérifier : imports organisés, aucun `any` implicite/explicite, types cohérents, `interface` remplacé par `type`.
 
 ## Critères de complétion
 

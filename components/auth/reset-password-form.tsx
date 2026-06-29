@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -12,12 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 const resetPasswordSchema = z
   .object({
@@ -102,7 +102,8 @@ export function ResetPasswordForm({ initialToken }: ResetPasswordFormProps) {
 
                 <Button
                   onClick={() => router.push("/auth/forgot-password")}
-                  className="w-full">
+                  className="w-full"
+                >
                   Demander un nouveau lien
                 </Button>
               </div>
@@ -120,7 +121,8 @@ export function ResetPasswordForm({ initialToken }: ResetPasswordFormProps) {
           <Form {...form}>
             <form
               className="space-y-4 md:space-y-6 p-8"
-              onSubmit={form.handleSubmit(onSubmit)}>
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold pb-2">
@@ -206,7 +208,8 @@ export function ResetPasswordForm({ initialToken }: ResetPasswordFormProps) {
                 <Button
                   type="submit"
                   className="w-full mt-4"
-                  disabled={loading}>
+                  disabled={loading}
+                >
                   {loading
                     ? "Réinitialisation..."
                     : "Réinitialiser le mot de passe"}

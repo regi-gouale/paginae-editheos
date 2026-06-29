@@ -1,6 +1,6 @@
-import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 
 export const metadata: Metadata = {
   title: "Mot de passe oublié — Paginae",

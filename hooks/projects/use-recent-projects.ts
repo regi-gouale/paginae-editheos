@@ -1,6 +1,6 @@
+import { useEffect, useState } from "react";
 import { getRecentProjects } from "@/lib/actions/kanban";
 import type { $Enums } from "@/prisma/generated/prisma/client";
-import { useEffect, useState } from "react";
 
 export interface RecentProject {
   id: string;

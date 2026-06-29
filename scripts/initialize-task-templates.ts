@@ -1,6 +1,8 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
-const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+});
 
 /**
  * Script pour initialiser les templates de tâches par défaut

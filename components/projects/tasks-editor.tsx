@@ -1,5 +1,7 @@
 "use client";
 
+import { CheckSquare, Plus, Square, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,8 +11,6 @@ import {
   updateProjectTask,
 } from "@/lib/actions/kanban";
 import type { ProjectTask } from "@/prisma/generated/prisma/client";
-import { CheckSquare, Plus, Square, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
 
 // Composant réutilisable pour le bouton d'ajout
 type AddTaskButtonProps = {
@@ -33,7 +33,8 @@ function AddTaskButton({
           variant="outline"
           size="sm"
           onClick={onAddClick}
-          className="rounded-xl">
+          className="rounded-xl"
+        >
           <Plus className="size-4 mr-1" />
           Ajouter
         </Button>
@@ -50,7 +51,8 @@ function AddTaskButton({
         variant="outline"
         size="sm"
         onClick={onAddClick}
-        className="rounded-xl">
+        className="rounded-xl"
+      >
         <Plus className="size-4 mr-1" />
         Ajouter
       </Button>
@@ -97,7 +99,8 @@ function TaskAdder({
         size="sm"
         variant="outline"
         onClick={onCancel}
-        className="rounded-xl">
+        className="rounded-xl"
+      >
         Annuler
       </Button>
     </div>
@@ -206,37 +209,40 @@ export function ProjectTasksEditor({
 
       {/* Liste des tâches */}
       <div className="mt-4 space-y-2">
-        {editedTasks &&
-          editedTasks.map((task) => (
-            <div
-              key={task.id}
-              className="flex items-center gap-2 p-2 border rounded-xl group">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onToggleTask(task.id)}
-                className="p-1 size-6">
-                {task.completed ? (
-                  <CheckSquare className="size-4 text-green-600" />
-                ) : (
-                  <Square className="size-4" />
-                )}
-              </Button>
-              <span
-                className={`flex-1 ${
-                  task.completed ? "line-through text-muted-foreground" : ""
-                }`}>
-                {task.title}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onDeleteTask(task.id)}
-                className="p-1 size-6 opacity-0 group-hover:opacity-100">
-                <Trash2 className="size-4 text-destructive" />
-              </Button>
-            </div>
-          ))}
+        {editedTasks?.map((task) => (
+          <div
+            key={task.id}
+            className="flex items-center gap-2 p-2 border rounded-xl group"
+          >
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onToggleTask(task.id)}
+              className="p-1 size-6"
+            >
+              {task.completed ? (
+                <CheckSquare className="size-4 text-green-600" />
+              ) : (
+                <Square className="size-4" />
+              )}
+            </Button>
+            <span
+              className={`flex-1 ${
+                task.completed ? "line-through text-muted-foreground" : ""
+              }`}
+            >
+              {task.title}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onDeleteTask(task.id)}
+              className="p-1 size-6 opacity-0 group-hover:opacity-100"
+            >
+              <Trash2 className="size-4 text-destructive" />
+            </Button>
+          </div>
+        ))}
       </div>
     </div>
   );

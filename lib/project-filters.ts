@@ -1,12 +1,15 @@
-import { ProjectFilters } from "@/components/projects/project-filters";
-import { KanbanColumnWithProjects, ProjectWithDetails } from "@/types/kanban";
+import type { ProjectFilters } from "@/components/projects/project-filters";
+import type {
+  KanbanColumnWithProjects,
+  ProjectWithDetails,
+} from "@/types/kanban";
 
 /**
  * Filtre les projets selon les critères spécifiés
  */
 export function filterProjects(
   projects: ProjectWithDetails[],
-  filters: ProjectFilters
+  filters: ProjectFilters,
 ): ProjectWithDetails[] {
   return projects.filter((project) => {
     // Filtre par statut
@@ -71,7 +74,7 @@ export function filterProjects(
  */
 export function filterKanbanColumns(
   columns: KanbanColumnWithProjects[],
-  filters: ProjectFilters
+  filters: ProjectFilters,
 ): KanbanColumnWithProjects[] {
   return columns.map((column) => ({
     ...column,

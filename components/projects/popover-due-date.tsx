@@ -1,5 +1,7 @@
 "use client";
 
+import { fr } from "date-fns/locale";
+import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
@@ -10,8 +12,6 @@ import {
 } from "@/components/ui/popover";
 import { updateProject } from "@/lib/actions/kanban";
 import { formatDate, formatDateLong } from "@/lib/utils";
-import { fr } from "date-fns/locale";
-import { Calendar } from "lucide-react";
 
 interface DeadlineSelectorPopoverProps {
   projectId: string;

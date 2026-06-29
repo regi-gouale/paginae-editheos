@@ -1,9 +1,9 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { prisma } from "@/lib/prisma";
 import type { NotificationType } from "@/prisma/generated/prisma/client";
-import { revalidatePath } from "next/cache";
 
 /**
  * Fonction utilitaire pour obtenir l'utilisateur actuel ou échouer
@@ -24,7 +24,7 @@ export async function createNotificationAction(
   type: NotificationType,
   title: string,
   message: string,
-  projectId?: string
+  projectId?: string,
 ) {
   try {
     const notification = await prisma.notification.create({
@@ -53,7 +53,7 @@ export async function createProjectNotificationAction(
   type: NotificationType,
   title: string,
   message: string,
-  excludeUserId?: string
+  excludeUserId?: string,
 ) {
   try {
     // Récupérer tous les utilisateurs ayant un email correspondant aux membres du projet
@@ -93,8 +93,8 @@ export async function createProjectNotificationAction(
             title,
             message,
           },
-        })
-      )
+        }),
+      ),
     );
 
     revalidatePath("/dashboard");
@@ -102,7 +102,7 @@ export async function createProjectNotificationAction(
   } catch (error) {
     console.error(
       "Erreur lors de la création des notifications de projet:",
-      error
+      error,
     );
     return { success: false, error: "Impossible de créer les notifications" };
   }

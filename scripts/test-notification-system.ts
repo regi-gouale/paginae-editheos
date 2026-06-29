@@ -4,7 +4,9 @@ import {
 } from "@/lib/notifications-helpers";
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
-const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+});
 
 async function testNotificationSystem() {
   try {
@@ -41,12 +43,12 @@ async function testNotificationSystem() {
       "PROJECT_CREATED",
       `✅ Projet créé : ${project.title}`,
       `Votre projet "${project.title}" a été créé avec succès.`,
-      project.id
+      project.id,
     );
 
     console.log(
       "🔔 Notification créateur:",
-      creatorNotification.success ? "✅" : "❌"
+      creatorNotification.success ? "✅" : "❌",
     );
 
     // 4. Vérifier les notifications en base
@@ -59,7 +61,7 @@ async function testNotificationSystem() {
     console.log(`📨 Notifications en base: ${notifications.length}`);
     notifications.forEach((notif, index) => {
       console.log(
-        `  ${index + 1}. ${notif.title} (${notif.read ? "lu" : "non lu"})`
+        `  ${index + 1}. ${notif.title} (${notif.read ? "lu" : "non lu"})`,
       );
     });
 
@@ -82,12 +84,12 @@ async function testNotificationSystem() {
         "PROJECT_ASSIGNED",
         `👤 Assigné au projet : ${project.title}`,
         `Vous avez été assigné(e) au projet "${project.title}".`,
-        user.id // Exclure le créateur
+        user.id, // Exclure le créateur
       );
 
       console.log(
         "🔔 Notification membres:",
-        memberNotification.success ? "✅" : "❌"
+        memberNotification.success ? "✅" : "❌",
       );
     }
 

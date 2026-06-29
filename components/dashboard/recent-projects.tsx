@@ -1,5 +1,7 @@
 "use client";
 
+import { AlertCircle, Calendar, Clock, ExternalLink } from "lucide-react";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,8 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRecentProjects } from "@/hooks/projects/use-recent-projects";
 import { isProjectOverdueForDisplay } from "@/lib/utils";
 import type { ProjectStatus } from "@/prisma/generated/prisma/client";
-import { AlertCircle, Calendar, Clock, ExternalLink } from "lucide-react";
-import Link from "next/link";
 
 const statusConfig = {
   TODO: { label: "À faire", color: "bg-blue-100 text-blue-800" },
@@ -61,8 +61,8 @@ export default function RecentProjects() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="animate-pulse">
+            {["s1", "s2", "s3"].map((skeletonId) => (
+              <div key={skeletonId} className="animate-pulse">
                 <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
                 <div className="h-3 bg-gray-200 rounded w-1/2"></div>
               </div>

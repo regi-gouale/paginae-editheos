@@ -1,5 +1,9 @@
 "use client";
 
+import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { AddMemberDialog } from "@/components/membres/add-member-dialog";
 import { EditMemberDialog } from "@/components/membres/edit-member-dialog";
 import { TablePagination } from "@/components/table-pagination";
@@ -25,12 +29,9 @@ import {
   addMember,
   deleteMember,
   getMembers,
-  Member,
-  MembersResponse,
+  type Member,
+  type MembersResponse,
 } from "@/lib/actions/members";
-import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
 
 type MemberRole = "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST";
 
@@ -79,7 +80,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
       });
       setData(result);
     },
-    500
+    500,
   );
 
   // Effect to handle search and filter changes
@@ -113,7 +114,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
       console.error("Error:", error);
       showError(
         "Erreur lors de l'ajout du membre",
-        "Une erreur inattendue s'est produite"
+        "Une erreur inattendue s'est produite",
       );
     } finally {
       setIsLoading(false);
@@ -127,7 +128,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
         title: "Supprimer le membre",
         confirmText: "Supprimer",
         cancelText: "Annuler",
-      }
+      },
     );
 
     if (!confirmed) {
@@ -153,7 +154,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
       console.error("Error:", error);
       showError(
         "Erreur lors de la suppression du membre",
-        "Une erreur inattendue s'est produite"
+        "Une erreur inattendue s'est produite",
       );
     }
   };

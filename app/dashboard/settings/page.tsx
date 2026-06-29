@@ -1,7 +1,7 @@
+import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { TaskTemplatesEditor } from "@/components/settings/task-templates-editor";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
-import { redirect } from "next/navigation";
 
 export default async function SettingsPage() {
   const session = await getCurrentSession();

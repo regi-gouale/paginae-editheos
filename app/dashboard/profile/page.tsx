@@ -1,7 +1,7 @@
+import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { ProfileForm } from "@/components/forms/profile-form";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
-import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   const session = await getCurrentSession();

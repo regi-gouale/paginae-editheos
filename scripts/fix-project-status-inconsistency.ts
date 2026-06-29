@@ -1,7 +1,9 @@
 import { getProjectStatusFromColumnName } from "@/lib/utils";
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
-const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+});
 
 async function fixProjectStatusInconsistency() {
   console.log("🔍 Recherche des incohérences entre statuts et colonnes...");
@@ -20,7 +22,7 @@ async function fixProjectStatusInconsistency() {
     for (const project of projects) {
       if (project.kanbanColumn) {
         const expectedStatus = getProjectStatusFromColumnName(
-          project.kanbanColumn.title
+          project.kanbanColumn.title,
         );
 
         if (project.status !== expectedStatus) {
@@ -41,11 +43,11 @@ async function fixProjectStatusInconsistency() {
     }
 
     console.log(
-      `📋 ${inconsistentProjects.length} incohérence(s) détectée(s) :`
+      `📋 ${inconsistentProjects.length} incohérence(s) détectée(s) :`,
     );
     inconsistentProjects.forEach((project) => {
       console.log(
-        `   - "${project.title}": ${project.currentStatus} → ${project.expectedStatus} (colonne: ${project.columnTitle})`
+        `   - "${project.title}": ${project.currentStatus} → ${project.expectedStatus} (colonne: ${project.columnTitle})`,
       );
     });
 

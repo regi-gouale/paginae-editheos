@@ -1,5 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import Link from "next/link";
+import { useQueryState } from "nuqs";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -15,14 +23,6 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
 import { loginFormSchema } from "@/lib/schemas/auth-schema";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import Link from "next/link";
-import { useQueryState } from "nuqs";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 export function LoginForm() {
   const [email, setEmail] = useQueryState("loginEmail");
@@ -74,7 +74,7 @@ export function LoginForm() {
                   <FormField
                     control={form.control}
                     name="email"
-                    render={({ field }: any) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
@@ -99,7 +99,7 @@ export function LoginForm() {
                   <FormField
                     control={form.control}
                     name="password"
-                    render={({ field }: any) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>Mot de passe</FormLabel>
                         <FormControl>

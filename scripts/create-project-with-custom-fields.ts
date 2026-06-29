@@ -1,6 +1,8 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
-const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+});
 
 async function createProjectWithCustomFields() {
   console.log("🔧 Création d'un projet avec champs personnalisés...");
@@ -64,7 +66,7 @@ async function createProjectWithCustomFields() {
     console.log(`✅ Projet créé avec ID: ${project.id}`);
     console.log("📋 4 champs personnalisés ajoutés");
     console.log(
-      "🎯 Vous pouvez maintenant tester l'édition des champs en cliquant sur les badges"
+      "🎯 Vous pouvez maintenant tester l'édition des champs en cliquant sur les badges",
     );
   } catch (error) {
     console.error("❌ Erreur lors de la création du projet :", error);

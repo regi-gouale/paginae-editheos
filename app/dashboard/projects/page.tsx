@@ -1,11 +1,11 @@
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { AddProjectDialog } from "@/components/projects/add-project-dialog";
 import { ProjectsBoard } from "@/components/projects/board";
 import { getKanbanData } from "@/lib/actions/kanban";
 import { auth } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function ProjectPage() {
   const session = await auth.api.getSession({
@@ -37,7 +37,8 @@ export default async function ProjectPage() {
               className="text-3xl font-extrabold tracking-tight line-clamp-1"
               style={{
                 fontFamily: "var(--font-lato)",
-              }}>
+              }}
+            >
               Gestion des projets
             </h1>
             <AddProjectDialog />

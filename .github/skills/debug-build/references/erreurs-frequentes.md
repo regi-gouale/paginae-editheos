@@ -95,14 +95,40 @@ pnpm build
 
 ---
 
-## ESLint (erreurs bloquantes uniquement)
+## Biome / Lint
 
-### `@typescript-eslint/no-explicit-any`
+### `assist/source/organizeImports`
+
+**Cause** : imports non triés selon la règle d'organisation automatique.  
+**Fix** :
+
+```bash
+pnpm lint:fix
+```
+
+### `lint/style/useTemplate`
+
+**Cause** : concaténation de strings au lieu de template literal.  
+**Fix** : préférer les templates :
+
+```typescript
+// ✅
+console.log(`\n${"─".repeat(60)}\n`);
+// ❌
+console.log("\n" + "─".repeat(60) + "\n");
+```
+
+### `lint/style/noNonNullAssertion`
+
+**Cause** : utilisation de `!` pour forcer un type potentiellement `undefined`.  
+**Fix** : utiliser une garde explicite ou un fallback (`??`) avant l'accès.
+
+### `no explicit any`
 
 **Cause** : `any` explicite dans le code.  
 **Fix** : typer correctement ou utiliser `unknown` avec un type guard.
 
-### `@typescript-eslint/consistent-type-definitions` (interface → type)
+### `consistent type definitions` (interface → type)
 
 **Cause** : `interface` utilisé à la place de `type`.  
 **Fix** :
@@ -116,7 +142,7 @@ interface MyProps {
 }
 ```
 
-### `react-hooks/exhaustive-deps` (en error, pas warning)
+### `react-hooks/exhaustive-deps` (si activé en erreur)
 
 **Cause** : dépendance manquante dans un `useEffect`.  
 **Fix** : ajouter la dépendance ou utiliser `useCallback` pour stabiliser les fonctions.

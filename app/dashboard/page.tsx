@@ -1,11 +1,11 @@
-import { DashboardHeader } from "@/components/dashboard/dashboard-header";
-import DashboardStats from "@/components/dashboard/dashboard-stats";
-import ProgressChart from "@/components/progress-chart";
-import RecentActivity from "@/components/dashboard/recent-activity";
-import RecentProjects from "@/components/dashboard/recent-projects";
-import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import DashboardStats from "@/components/dashboard/dashboard-stats";
+import RecentActivity from "@/components/dashboard/recent-activity";
+import RecentProjects from "@/components/dashboard/recent-projects";
+import ProgressChart from "@/components/progress-chart";
+import { auth } from "@/lib/auth/auth";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({

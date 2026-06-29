@@ -1,6 +1,8 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
-const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+});
 
 async function cleanupTestProjects() {
   console.log("🧹 Nettoyage des projets de test...");
@@ -45,7 +47,7 @@ async function cleanupTestProjects() {
     });
 
     console.log(
-      `✅ ${deleteResult.count} projet(s) de test supprimé(s) avec succès !`
+      `✅ ${deleteResult.count} projet(s) de test supprimé(s) avec succès !`,
     );
   } catch (error) {
     console.error("❌ Erreur lors du nettoyage :", error);

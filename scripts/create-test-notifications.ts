@@ -1,6 +1,8 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
-const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+});
 
 async function createTestNotifications() {
   try {
@@ -52,14 +54,14 @@ async function createTestNotifications() {
           userId: user.id,
           projectId: project.id,
           type: "PROJECT_MOVED",
-          title: "📋 Projet déplacé : " + project.title,
+          title: `📋 Projet déplacé : ${project.title}`,
           message: `Le projet "${project.title}" a été déplacé vers "En cours".`,
         },
       }),
     ]);
 
     console.log(
-      `✅ ${notifications.length} notifications de test créées avec succès !`
+      `✅ ${notifications.length} notifications de test créées avec succès !`,
     );
     console.log("Utilisateur:", user.email);
     console.log("Projet:", project.title);
@@ -70,7 +72,7 @@ async function createTestNotifications() {
   } catch (error) {
     console.error(
       "❌ Erreur lors de la création des notifications de test:",
-      error
+      error,
     );
   } finally {
     await prisma.$disconnect();

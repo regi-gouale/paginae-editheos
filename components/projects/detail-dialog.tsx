@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { ProjectCustomFieldsEditor } from "@/components/projects/custom-fields-editor";
 import { ProjectDescriptionDialog } from "@/components/projects/description-dialog";
 import ProjectTitleEditor from "@/components/projects/input-title";
@@ -16,8 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { getPriorityLabel } from "@/lib/utils";
-import { ProjectWithDetails } from "@/types/kanban";
-import { useEffect, useState } from "react";
+import type { ProjectWithDetails } from "@/types/kanban";
 
 interface ProjectDetailDialogProps {
   project: ProjectWithDetails | null;

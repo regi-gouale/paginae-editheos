@@ -1,11 +1,3 @@
-import { EditAuthorDialog } from "@/components/authors/edit-author-dialog";
-import { DashboardHeader } from "@/components/dashboard/dashboard-header";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAuthorBySlug } from "@/lib/actions/authors";
-import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
@@ -18,6 +10,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { EditAuthorDialog } from "@/components/authors/edit-author-dialog";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getAuthorBySlug } from "@/lib/actions/authors";
+import { getCurrentSession } from "@/lib/auth/auth-lib";
 
 export default async function AuthorDetailPage({
   params,

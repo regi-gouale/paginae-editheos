@@ -1,10 +1,12 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
-const prisma = new PrismaClient({ accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL! });
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+});
 
 async function createTestProjectWithTasks() {
   console.log(
-    "🔧 Création d'un projet de test pour les règles d'automatisation..."
+    "🔧 Création d'un projet de test pour les règles d'automatisation...",
   );
 
   try {
@@ -58,7 +60,7 @@ async function createTestProjectWithTasks() {
     console.log(`✅ Projet de test créé avec ID: ${project.id}`);
     console.log("📋 3 tâches complétées ajoutées");
     console.log(
-      "🎯 Ce projet devrait être automatiquement déplacé vers 'Terminé' lors du prochain chargement du board"
+      "🎯 Ce projet devrait être automatiquement déplacé vers 'Terminé' lors du prochain chargement du board",
     );
   } catch (error) {
     console.error("❌ Erreur lors de la création du projet de test :", error);

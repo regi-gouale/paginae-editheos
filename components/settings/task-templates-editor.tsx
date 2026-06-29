@@ -1,36 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  createTaskTemplate,
-  deleteTaskTemplate,
-  getTaskTemplates,
-  updateTaskTemplate,
-  reorderTaskTemplates,
-} from "@/lib/actions/task-templates.action";
-import type {
-  ProjectType,
-  TaskTemplate,
-} from "@/prisma/generated/prisma/client";
-import { GripVertical, Plus, Trash2, Check, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import {
-  DndContext,
   closestCenter,
+  DndContext,
+  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -40,6 +17,29 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Check, GripVertical, Plus, Trash2, X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  createTaskTemplate,
+  deleteTaskTemplate,
+  getTaskTemplates,
+  reorderTaskTemplates,
+  updateTaskTemplate,
+} from "@/lib/actions/task-templates.action";
+import type {
+  ProjectType,
+  TaskTemplate,
+} from "@/prisma/generated/prisma/client";
 
 type TaskTemplateWithEditing = TaskTemplate & { isEditing?: boolean };
 
@@ -114,11 +114,12 @@ function SortableTaskItem({
         </>
       ) : (
         <>
-          <span
-            className="flex-1 cursor-pointer"
+          <button
+            type="button"
+            className="flex-1 cursor-pointer text-left"
             onClick={() => onStartEdit(template.id)}>
             {template.title}
-          </span>
+          </button>
           <Button
             variant="ghost"
             size="sm"
@@ -156,12 +157,7 @@ export function TaskTemplatesEditor({
     }),
   );
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    loadTemplates();
-  }, [projectType]);
-
-  async function loadTemplates() {
+  const loadTemplates = useCallback(async () => {
     try {
       setIsLoading(true);
       const allTemplates = await getTaskTemplates();
@@ -174,7 +170,11 @@ export function TaskTemplatesEditor({
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [projectType]);
+
+  useEffect(() => {
+    loadTemplates();
+  }, [loadTemplates]);
 
   async function handleAddTemplate() {
     if (!newTaskTitle.trim()) return;
@@ -216,7 +216,7 @@ export function TaskTemplatesEditor({
     }
   }
 
-  function handleCancelEdit(id: string) {
+  function handleCancelEdit(_id: string) {
     setTemplates(
       templates.map((t) => ({
         ...t,

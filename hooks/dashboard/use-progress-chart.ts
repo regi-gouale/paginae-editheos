@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
 import {
   getProgressChartData,
   type MonthlyData,
   type ProgressChartData,
 } from "@/lib/actions/progress.action";
-import { useEffect, useState } from "react";
 
 export type { MonthlyData, ProgressChartData };
 

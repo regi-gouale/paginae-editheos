@@ -13,8 +13,8 @@ import {
   User2,
   Users2,
 } from "lucide-react";
-import * as React from "react";
-
+import Image from "next/image";
+import type * as React from "react";
 import { NavMain } from "@/components/dashboard/nav-main";
 import { NavProjects } from "@/components/dashboard/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useProjectStats } from "@/hooks/projects/use-project-stats";
 import { authClient } from "@/lib/auth/auth-client";
-import Image from "next/image";
+import Link from "next/link";
 
 const data = {
   user: {
@@ -124,7 +124,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link href="/dashboard">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-xl ring-1 ring-sidebar-primary/30 shadow-sm">
                   <Image
                     src="/logo-editheos.webp"
@@ -141,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     Editheos
                   </span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

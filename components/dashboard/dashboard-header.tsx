@@ -1,3 +1,4 @@
+import { SidebarActions } from "@/components/sidebar-actions";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,7 +9,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { SidebarActions } from "@/components/sidebar-actions";
 
 type DashboardHeaderProps = {
   breadcrumbs?: { label: string; href: string }[];
@@ -33,12 +33,11 @@ export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
               </BreadcrumbLink>
             </BreadcrumbItem>
             {breadcrumbs?.map((item, index) => (
-              <div key={`breadcrumb-${index}`} className="flex items-center">
-                <BreadcrumbSeparator
-                  className="hidden md:block"
-                  key={`separator-${index}`}
-                />
-                <BreadcrumbItem key={`item-${index}`}>
+              <div
+                key={`${item.href}-${item.label}`}
+                className="flex items-center">
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
                   {index === breadcrumbs.length - 1 ? (
                     <BreadcrumbPage className="ml-2">
                       {item.label}

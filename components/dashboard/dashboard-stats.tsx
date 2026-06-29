@@ -1,9 +1,9 @@
 "use client";
 
+import { AlertTriangle, CalendarClock, Lock, TrendingUp } from "lucide-react";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useDashboardStats } from "@/hooks/dashboard/use-dashboard-stats";
-import { AlertTriangle, CalendarClock, Lock, TrendingUp } from "lucide-react";
 
 export default function DashboardStats() {
   const { data, loading } = useDashboardStats();
@@ -49,8 +49,8 @@ export default function DashboardStats() {
   if (loading) {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {[...Array(4)].map((_, i) => (
-          <Card key={i} className="animate-pulse">
+        {["s1", "s2", "s3", "s4"].map((skeletonId) => (
+          <Card key={skeletonId} className="animate-pulse">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div className="h-4 rounded w-24 bg-muted"></div>
               <div className="size-4 rounded bg-muted"></div>

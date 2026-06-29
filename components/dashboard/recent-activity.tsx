@@ -1,12 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  getRecentActivities,
-  type ActivityItem,
-} from "@/lib/actions/activity.action";
 import {
   AlertTriangle,
   CheckCircle,
@@ -16,6 +9,13 @@ import {
   Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  type ActivityItem,
+  getRecentActivities,
+} from "@/lib/actions/activity.action";
 
 const activityConfig = {
   project_created: {
@@ -96,8 +96,10 @@ export default function RecentActivity() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex items-start space-x-4 animate-pulse">
+            {["s1", "s2", "s3", "s4", "s5"].map((skeletonId) => (
+              <div
+                key={skeletonId}
+                className="flex items-start space-x-4 animate-pulse">
                 <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
                 <div className="flex-1 space-y-2">
                   <div className="h-4 bg-gray-200 rounded w-3/4"></div>
