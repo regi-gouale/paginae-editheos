@@ -32,12 +32,8 @@ type AddAuthorFormData = z.infer<typeof addAuthorSchema>;
 
 // Pattern de résolution des actions serveur selon les instructions
 async function resolveActionResult<T>(actionPromise: Promise<T>): Promise<T> {
-  try {
-    const result = await actionPromise;
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const result = await actionPromise;
+  return result;
 }
 
 export function AddAuthorForm() {
@@ -84,8 +80,7 @@ export function AddAuthorForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4"
-      >
+        className="flex flex-col gap-4">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormField
             control={form.control}
@@ -175,7 +170,7 @@ export function AddAuthorForm() {
               <FormControl>
                 <Textarea
                   placeholder="Biographie de l'auteur..."
-                  className="min-h-[100px]"
+                  className="min-h-25"
                   {...field}
                 />
               </FormControl>

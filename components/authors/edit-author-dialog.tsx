@@ -44,12 +44,8 @@ type EditAuthorFormData = z.infer<typeof editAuthorSchema>;
 
 // Pattern de résolution des actions serveur selon les instructions
 async function resolveActionResult<T>(actionPromise: Promise<T>): Promise<T> {
-  try {
-    const result = await actionPromise;
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const result = await actionPromise;
+  return result;
 }
 
 type Props = {
@@ -128,7 +124,7 @@ export function EditAuthorDialog({
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-150">
         <DialogHeader>
           <DialogTitle>Modifier l&apos;auteur</DialogTitle>
           <DialogDescription>
@@ -251,8 +247,7 @@ export function EditAuthorDialog({
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
-                disabled={isPending}
-              >
+                disabled={isPending}>
                 Annuler
               </Button>
               <Button type="submit" disabled={isPending}>

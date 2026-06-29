@@ -31,7 +31,7 @@ async function testUserMemberRelation() {
       console.log("ℹ️  Aucun utilisateur trouvé dans la base de données");
     }
 
-    console.log("\n" + "─".repeat(60) + "\n");
+    console.log(`\n${"-".repeat(60)}\n`);
 
     // Test 2: Récupérer un membre avec son utilisateur
     console.log("📋 Test 2: Récupération d'un membre avec son utilisateur");
@@ -54,7 +54,7 @@ async function testUserMemberRelation() {
       console.log("ℹ️  Aucun membre trouvé dans la base de données");
     }
 
-    console.log("\n" + "─".repeat(60) + "\n");
+    console.log(`\n${"─".repeat(60)}\n`);
 
     // Test 3: Compter les utilisateurs et membres
     console.log("📋 Test 3: Comptage");
@@ -73,7 +73,9 @@ async function testUserMemberRelation() {
 
     const usersWithoutMembers = totalUsers - usersWithMembers;
     if (usersWithoutMembers > 0) {
-      console.log(`\n⚠️  ${usersWithoutMembers} utilisateur(s) sans membre lié`);
+      console.log(
+        `\n⚠️  ${usersWithoutMembers} utilisateur(s) sans membre lié`,
+      );
       console.log(`💡 Exécutez: pnpm sync-users-to-members`);
     } else {
       console.log(`\n✅ Tous les utilisateurs ont un membre lié !`);
