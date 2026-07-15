@@ -2,11 +2,7 @@ import {
   createProjectNotificationForMembers,
   createUserNotification,
 } from "@/lib/notifications-helpers";
-import { PrismaClient } from "@/prisma/generated/prisma/client";
-
-const prisma = new PrismaClient({
-  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
-});
+import { prisma } from "@/lib/prisma";
 
 async function testNotificationSystem() {
   try {
