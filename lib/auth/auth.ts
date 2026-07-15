@@ -2,6 +2,10 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import {
+  changeEmailHTML,
+  changeEmailText,
+} from "@/lib/email/change-email-template";
+import {
   resetPasswordEmailHTML,
   resetPasswordEmailText,
 } from "@/lib/email/reset-password-template";
@@ -31,6 +35,30 @@ export const auth = betterAuth({
       });
     },
     resetPasswordTokenExpiresIn: 3600, // 1 hour
+  },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      void sendEmail({
+        to: user.email,
+        subject: "Vérifiez votre adresse email — Paginae",
+        html: changeEmailHTML(user.name || "Utilisateur", url, user.email),
+        text: changeEmailText(user.name || "Utilisateur", url, user.email),
+      });
+    },
+    expiresIn: 3600, // 1 hour
+  },
+  user: {
+    changeEmail: {
+      enabled: true,
+      sendChangeEmailConfirmation: async ({ user, newEmail, url }) => {
+        void sendEmail({
+          to: user.email,
+          subject: "Confirmez le changement de votre email — Paginae",
+          html: changeEmailHTML(user.name || "Utilisateur", url, newEmail),
+          text: changeEmailText(user.name || "Utilisateur", url, newEmail),
+        });
+      },
+    },
   },
   plugins: [nextCookies()],
 });
