@@ -1,7 +1,9 @@
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
 const prisma = new PrismaClient({
-  accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+  ...(process.env.ACCELERATE_URL
+    ? { accelerateUrl: process.env.ACCELERATE_URL }
+    : {}),
 });
 
 async function createProjectWithCustomFields() {
