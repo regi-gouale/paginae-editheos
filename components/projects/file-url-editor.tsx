@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit3Icon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { updateProject } from "@/lib/actions/kanban";
 import { Button } from "../ui/button";
@@ -45,14 +46,14 @@ FileUrlEditorProps) {
           <div className="flex items-center space-x-1">
             <ExternalLinkIcon className="size-3" />
             {editedFileUrl && editedFileUrl.trim() !== "" ? (
-              <a
+              <Link
                 href={editedFileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:underline"
               >
                 Ouvrir le fichier
-              </a>
+              </Link>
             ) : (
               <span className="italic">Aucun fichier lié</span>
             )}

@@ -10,6 +10,7 @@ import {
   Trash2,
   User,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -535,7 +536,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                         {author.firstName} {author.lastName}
                       </div>
                       {author.website && (
-                        <a
+                        <Link
                           href={author.website}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -543,7 +544,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                           onClick={(e) => e.stopPropagation()}
                         >
                           Site web
-                        </a>
+                        </Link>
                       )}
                     </div>
                   </TableCell>
