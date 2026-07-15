@@ -3,7 +3,9 @@ import { PrismaClient } from "@/prisma/generated/prisma/client";
 // Définir les options du client Prisma pour optimiser les performances
 const prismaClientSingleton = () => {
   const client = new PrismaClient({
-    accelerateUrl: process.env.ACCELERATE_URL ?? process.env.DATABASE_URL!,
+    ...(process.env.ACCELERATE_URL
+      ? { accelerateUrl: process.env.ACCELERATE_URL }
+      : {}),
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
   // const optimizeApiKey = process.env.OPTIMIZE_API_KEY;
