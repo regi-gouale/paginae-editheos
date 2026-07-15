@@ -18,7 +18,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { updateUserProfileAction } from "@/lib/actions/user.profile.action";
+import {
+  type UpdateProfileResult,
+  updateUserProfileAction,
+} from "@/lib/actions/user.profile.action";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Le nom est requis"),
@@ -26,10 +29,6 @@ const profileSchema = z.object({
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
-
-async function resolveActionResult<T>(actionPromise: Promise<T>): Promise<T> {
-  return await actionPromise;
-}
 
 type ProfileFormProps = ProfileFormData & { image?: string };
 
@@ -42,21 +41,39 @@ export function ProfileForm({ initial }: { initial: ProfileFormProps }) {
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: ProfileFormData) => {
+    mutationFn: async (data: ProfileFormData): Promise<UpdateProfileResult> => {
       const formData = new FormData();
       Object.entries(data).forEach(([k, v]) => {
         formData.append(k, v as string);
       });
       if (file) formData.append("avatar", file);
-      return resolveActionResult(updateUserProfileAction(formData));
+      return updateUserProfileAction(formData);
     },
-    onSuccess: () => {
-      toast.success("Profil mis à jour");
+    onSuccess: (result) => {
+      if (!result.success) {
+        if (result.field === "email") {
+          form.setError("email", { message: result.error });
+        } else if (result.field === "name") {
+          form.setError("name", { message: result.error });
+        } else {
+          toast.error(result.error);
+        }
+        return;
+      }
+
+      if (result.emailVerificationSent) {
+        toast.success(
+          "Un email de confirmation a été envoyé à votre nouvelle adresse. Veuillez cliquer sur le lien pour valider le changement.",
+          { duration: 8000 },
+        );
+      } else {
+        toast.success("Profil mis à jour");
+      }
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
     },
     onError: (err) => {
       console.error("update profile error", err);
-      toast.error("Erreur lors de la mise à jour");
+      toast.error("Une erreur est survenue. Veuillez réessayer.");
     },
   });
 
@@ -157,6 +174,10 @@ export function ProfileForm({ initial }: { initial: ProfileFormProps }) {
                 />
               </FormControl>
               <FormMessage />
+              <p className="text-xs text-muted-foreground">
+                Un email de confirmation sera envoyé si vous modifiez votre
+                adresse.
+              </p>
             </FormItem>
           )}
         />
