@@ -4,6 +4,10 @@
 /node_modules
 /.pnp
 .pnp.*
+# non-bun lockfiles (this project uses bun)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
