@@ -14,13 +14,7 @@ import {
   verifyEmailHTML,
   verifyEmailText,
 } from "@/lib/email/verify-email-template";
-import { PrismaClient } from "@/prisma/generated/prisma/client";
-
-const prisma = new PrismaClient({
-  ...(process.env.ACCELERATE_URL
-    ? { accelerateUrl: process.env.ACCELERATE_URL }
-    : {}),
-});
+import { prisma } from "@/lib/prisma";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {

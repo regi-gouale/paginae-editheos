@@ -1,10 +1,4 @@
-import { PrismaClient } from "@/prisma/generated/prisma/client";
-
-const prisma = new PrismaClient({
-  ...(process.env.ACCELERATE_URL
-    ? { accelerateUrl: process.env.ACCELERATE_URL }
-    : {}),
-});
+import { prisma } from "@/lib/prisma";
 
 async function testUserMemberRelation() {
   console.log("🧪 Test de la relation User ↔ Member\n");
