@@ -76,6 +76,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
+      <head>
+        <script
+          defer
+          src="https://analytics.gouale.com/script.js"
+          data-website-id="dafac991-7f83-4055-b4d4-ecd1ef6ea873"
+          data-domains="paginae.cotizoo.com"
+        />
+      </head>
       <body className={`${uiSans.variable} ${uiDisplay.variable} antialiased`}>
         <ThemeProvider
           attribute={"class"}
