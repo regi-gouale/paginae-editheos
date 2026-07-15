@@ -55,7 +55,8 @@ export default function ProgressChart() {
         </div>
         <Badge
           variant={data.trend.direction === "up" ? "default" : "destructive"}
-          className="flex items-center gap-1">
+          className="flex items-center gap-1"
+        >
           {data.trend.direction === "up" ? (
             <TrendingUp className="size-3" />
           ) : (
@@ -71,7 +72,8 @@ export default function ProgressChart() {
         <ChartContainer config={chartConfig} className="h-60 w-full">
           <AreaChart
             data={chartData}
-            margin={{ left: 0, right: 12, top: 4, bottom: 0 }}>
+            margin={{ left: 0, right: 12, top: 4, bottom: 0 }}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"

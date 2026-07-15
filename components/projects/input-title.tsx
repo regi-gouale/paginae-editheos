@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit3Icon, Link2Icon } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -98,7 +99,7 @@ export default function ProjectTitleEditor({
             </div>
 
             {!isDetailView && (
-              <a
+              <Link
                 href={`/dashboard/projects/${slug}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -107,7 +108,7 @@ export default function ProjectTitleEditor({
                 className="rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer p-2"
               >
                 <Link2Icon className="size-4" />
-              </a>
+              </Link>
             )}
           </div>
         </div>

@@ -33,12 +33,12 @@ function NotificationIcon() {
   return (
     <div className="relative ">
       <Bell className="size-5" />
-      {!isLoading && unreadCount! > 0 && (
+      {!isLoading && (unreadCount ?? 0) > 0 && (
         <Badge
           variant="destructive"
           className="absolute -top-2 -right-2 size-5 flex items-center justify-center p-0 text-xs"
         >
-          {unreadCount! > 9 ? "9+" : unreadCount}
+          {(unreadCount ?? 0) > 9 ? "9+" : unreadCount}
         </Badge>
       )}
     </div>
