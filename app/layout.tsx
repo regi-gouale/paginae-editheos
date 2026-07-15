@@ -79,7 +79,7 @@ export default function RootLayout({
       <head>
         <script
           defer
-          src="https://analytics.gouale.com/script.js"
+          src="https://analytics.gouale.com/recorder.js"
           data-website-id="dafac991-7f83-4055-b4d4-ecd1ef6ea873"
           data-domains="paginae.cotizoo.com"
         />
