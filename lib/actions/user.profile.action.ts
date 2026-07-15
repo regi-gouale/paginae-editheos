@@ -99,7 +99,7 @@ export async function updateUserProfileAction(
         },
       });
 
-      if (!response || !("status" in response) || !response.status) {
+      if (!response?.status) {
         return {
           success: false,
           error:

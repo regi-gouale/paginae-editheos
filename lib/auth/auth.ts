@@ -10,6 +10,10 @@ import {
   resetPasswordEmailText,
 } from "@/lib/email/reset-password-template";
 import { sendEmail } from "@/lib/email/usesend";
+import {
+  verifyEmailHTML,
+  verifyEmailText,
+} from "@/lib/email/verify-email-template";
 import { PrismaClient } from "@/prisma/generated/prisma/client";
 
 const prisma = new PrismaClient({
@@ -41,8 +45,8 @@ export const auth = betterAuth({
       void sendEmail({
         to: user.email,
         subject: "Vérifiez votre adresse email — Paginae",
-        html: changeEmailHTML(user.name || "Utilisateur", url, user.email),
-        text: changeEmailText(user.name || "Utilisateur", url, user.email),
+        html: verifyEmailHTML(user.name || "Utilisateur", url),
+        text: verifyEmailText(user.name || "Utilisateur", url),
       });
     },
     expiresIn: 3600, // 1 hour
