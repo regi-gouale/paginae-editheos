@@ -317,7 +317,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
               <span className="hidden md:block md:ml-1">Auteur</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
+          <DialogContent className="sm:max-w-125">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <User className="size-5" />
@@ -477,7 +477,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
             value={selectedNationality}
             onValueChange={handleNationalityChange}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-45">
               <SelectValue placeholder="Filtrer par nationalité" />
             </SelectTrigger>
             <SelectContent>
