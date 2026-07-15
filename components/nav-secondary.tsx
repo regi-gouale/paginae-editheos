@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import type { Route } from "next";
 import Link from "next/link";
 import type * as React from "react";
 import {
@@ -26,7 +27,7 @@ export function NavSecondary({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm">
-                <Link href={item.url}>
+                <Link href={item.url as Route}>
                   <item.icon />
                   <span>{item.title}</span>
                 </Link>

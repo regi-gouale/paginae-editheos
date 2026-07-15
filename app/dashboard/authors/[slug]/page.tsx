@@ -138,14 +138,14 @@ export default async function AuthorDetailPage({
                       Site web
                     </span>
                   </div>
-                  <Link
+                  <a
                     href={author.website}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-medium text-primary hover:underline"
                   >
                     {author.website}
-                  </Link>
+                  </a>
                 </div>
               )}
             </CardContent>

@@ -303,14 +303,14 @@ export function ProjectDetailView({
                         {author.website && (
                           <div className="flex items-center gap-1 text-sm text-muted-foreground">
                             <ExternalLinkIcon className="h-3 w-3" />
-                            <Link
+                            <a
                               href={author.website}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="hover:underline"
                             >
                               Site web
-                            </Link>
+                            </a>
                           </div>
                         )}
                       </div>
