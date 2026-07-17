@@ -478,7 +478,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
             value={selectedNationality}
             onValueChange={handleNationalityChange}
           >
-            <SelectTrigger className="w-45">
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filtrer par nationalité" />
             </SelectTrigger>
             <SelectContent>
