@@ -21,10 +21,10 @@ export default function DashboardStats() {
       color: "text-red-600",
       bgColor: "bg-red-50",
       description:
-        data.overdue > 0 ? "Necessitent une action immediate" : "Aucun retard",
+        data.overdue > 0 ? "Nécessitent une action immédiate" : "Aucun retard",
     },
     {
-      title: "Echeances proches",
+      title: "Échéances proches",
       value: data.dueSoon,
       icon: IconCalendarClock,
       color: "text-amber-600",
@@ -32,16 +32,16 @@ export default function DashboardStats() {
       description: "Dans les 7 prochains jours",
     },
     {
-      title: "Projets bloques",
+      title: "Projets bloqués",
       value: data.blocked,
       icon: IconLock,
       color: "text-orange-600",
       bgColor: "bg-orange-50",
       description:
-        data.blocked > 0 ? "En attente de deblocage" : "Aucun blocage",
+        data.blocked > 0 ? "En attente de déblocage" : "Aucun blocage",
     },
     {
-      title: "Taux d'achevement",
+      title: "Taux d'achèvement",
       value: `${data.completionRate}%`,
       icon: IconTrendingUp,
       color: "text-emerald-600",

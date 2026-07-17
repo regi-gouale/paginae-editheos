@@ -61,7 +61,7 @@ export function AddAuthorForm() {
       return resolveActionResult(addAuthorAction(formData));
     },
     onSuccess: () => {
-      toast.success("Auteur ajouté avec succès!");
+      toast.success("Auteur ajouté avec succès !");
       form.reset();
       // Invalidate queries to refetch data
       queryClient.invalidateQueries({ queryKey: ["authors"] });

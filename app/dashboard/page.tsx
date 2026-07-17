@@ -28,14 +28,14 @@ export default async function DashboardPage() {
           <div className="absolute -bottom-20 left-1/3 h-44 w-44 rounded-full bg-accent/30 blur-3xl" />
           <div className="relative flex flex-col gap-2">
             <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              Espace editorial
+              Espace éditorial
             </p>
             <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
               Bienvenue, {session.user.name || session.user.email}
             </h1>
             <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
-              Voici un apercu de l&apos;activite de vos projets et de votre
-              equipe.
+              Voici un aperçu de l&apos;activité de vos projets et de votre
+              équipe.
             </p>
           </div>
         </div>
