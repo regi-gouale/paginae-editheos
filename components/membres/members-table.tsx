@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -261,7 +261,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="size-4" />
+                          <IconDots className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
@@ -273,7 +273,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
                             onSelect={(e) => e.preventDefault()}
                             className="cursor-pointer"
                           >
-                            <Edit className="size-4 mr-2" />
+                            <IconEdit className="size-4 mr-2" />
                             Modifier
                           </DropdownMenuItem>
                         </EditMemberDialog>
@@ -284,7 +284,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
                           }}
                           className="text-red-600 hover:text-red-800 cursor-pointer"
                         >
-                          <Trash2 className="size-4 mr-2" />
+                          <IconTrash className="size-4 mr-2" />
                           Supprimer
                         </DropdownMenuItem>
                       </DropdownMenuContent>

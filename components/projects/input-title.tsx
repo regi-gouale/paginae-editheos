@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit3Icon, Link2Icon } from "lucide-react";
+import { IconEdit, IconLink } from "@tabler/icons-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -83,7 +83,7 @@ export default function ProjectTitleEditor({
                   onClick={() => setIsEditing(true)}
                   className="rounded-full cursor-pointer"
                 >
-                  <Edit3Icon className="size-4" />
+                  <IconEdit className="size-4" />
                 </Button>
               </div>
               <span
@@ -107,7 +107,7 @@ export default function ProjectTitleEditor({
                 title="Ouvrir le projet dans une nouvelle fenêtre"
                 className="rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer p-2"
               >
-                <Link2Icon className="size-4" />
+                <IconLink className="size-4" />
               </Link>
             )}
           </div>

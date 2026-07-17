@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "lucide-react";
+import { IconUser } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import {
@@ -104,7 +104,7 @@ export function AuthorSelectionDropdown({
             <SelectValue placeholder="Sélectionner un auteur">
               {selectedAuthor && (
                 <div className="flex items-center gap-2">
-                  <User className="size-4" />
+                  <IconUser className="size-4" />
                   {`${selectedAuthor.firstName} ${selectedAuthor.lastName}`}
                 </div>
               )}
@@ -114,7 +114,7 @@ export function AuthorSelectionDropdown({
             {authors.map((author) => (
               <SelectItem key={author.id} value={author.id}>
                 <div className="flex items-center gap-2">
-                  <User className="size-4" />
+                  <IconUser className="size-4" />
                   {`${author.firstName} ${author.lastName}`}
                 </div>
               </SelectItem>

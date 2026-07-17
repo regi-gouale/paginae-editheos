@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  BookUser,
-  Calendar,
-  CheckSquare,
-  Printer,
-  SquareAsteriskIcon,
-} from "lucide-react";
+  IconBook,
+  IconCalendar,
+  IconPrinter,
+  IconSquareAsterisk,
+  IconSquareCheck,
+} from "@tabler/icons-react";
 import {
   cn,
   formatDate,
@@ -43,9 +43,9 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
       {project.authors.length > 0 && (
         <div className="flex items-center space-x-1 gap-2">
           {project.type === "EDITION" ? (
-            <BookUser className="size-3 text-blue-600 dark:text-blue-400 mx-2" />
+            <IconBook className="size-3 text-blue-600 dark:text-blue-400 mx-2" />
           ) : (
-            <Printer className="size-3 text-green-600 dark:text-green-400 mx-2" />
+            <IconPrinter className="size-3 text-green-600 dark:text-green-400 mx-2" />
           )}
 
           {project.authors.map((author) => (
@@ -91,21 +91,21 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
               "bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl",
             )}
           >
-            <Calendar className="size-3 mr-1" />
+            <IconCalendar className="size-3 mr-1" />
             <span className="truncate">{formatDate(project.dueDate)}</span>
           </div>
         )}
 
         {totalTasks > 0 && !isCompleted && (
           <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl">
-            <CheckSquare className="size-3 mr-1" />
+            <IconSquareCheck className="size-3 mr-1" />
             {completedTasks}/{totalTasks}
           </div>
         )}
 
         {project.customFields.length > 0 && !isCompleted && (
           <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl gap-2">
-            <SquareAsteriskIcon className="size-3 text-gray-500 dark:text-gray-400" />
+            <IconSquareAsterisk className="size-3 text-gray-500 dark:text-gray-400" />
             <span>{project.customFields.length} champs</span>
           </div>
         )}

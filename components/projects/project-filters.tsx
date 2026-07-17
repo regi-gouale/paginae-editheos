@@ -1,6 +1,6 @@
 "use client";
 
-import { Filter, Search, Share2, X } from "lucide-react";
+import { IconFilter, IconSearch, IconShare, IconX } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -146,9 +146,9 @@ export function ProjectFilters({
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-center">
-      {/* Search Input */}
+      {/* IconSearch Input */}
       <div className="relative flex-1 max-w-md">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-muted-foreground" />
+        <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-muted-foreground" />
         <Input
           type="text"
           placeholder="Rechercher un projet..."
@@ -159,11 +159,11 @@ export function ProjectFilters({
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-2">
-        {/* Status Filter */}
+        {/* Status IconFilter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="rounded-xl">
-              <Filter className="size-4 mr-2" />
+              <IconFilter className="size-4 mr-2" />
               Statut
               {filters.statuses.length > 0 && (
                 <Badge variant="secondary" className="ml-2">
@@ -189,11 +189,11 @@ export function ProjectFilters({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Type Filter */}
+        {/* Type IconFilter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="rounded-xl">
-              <Filter className="size-4 mr-2" />
+              <IconFilter className="size-4 mr-2" />
               Type
               {filters.types.length > 0 && (
                 <Badge variant="secondary" className="ml-2">
@@ -219,11 +219,11 @@ export function ProjectFilters({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Priority Filter */}
+        {/* Priority IconFilter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="rounded-xl">
-              <Filter className="size-4 mr-2" />
+              <IconFilter className="size-4 mr-2" />
               Priorité
               {filters.priorities.length > 0 && (
                 <Badge variant="secondary" className="ml-2">
@@ -249,11 +249,11 @@ export function ProjectFilters({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Due Date Filter */}
+        {/* Due Date IconFilter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="rounded-xl">
-              <Filter className="size-4 mr-2" />
+              <IconFilter className="size-4 mr-2" />
               Échéance
               {filters.dueDays.length > 0 && (
                 <Badge variant="secondary" className="ml-2">
@@ -290,7 +290,7 @@ export function ProjectFilters({
             onClick={handleShareUrl}
             className="shrink-0"
           >
-            <Share2 className="size-4 mr-2" />
+            <IconShare className="size-4 mr-2" />
             Partager
           </Button>
         )}
@@ -303,7 +303,7 @@ export function ProjectFilters({
             onClick={clearAllFilters}
             className="shrink-0"
           >
-            <X className="size-4 mr-2" />
+            <IconX className="size-4 mr-2" />
             Effacer ({getFilterCount()})
           </Button>
         )}

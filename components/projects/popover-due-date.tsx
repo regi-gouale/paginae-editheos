@@ -1,7 +1,7 @@
 "use client";
 
+import { IconCalendar } from "@tabler/icons-react";
 import { fr } from "date-fns/locale";
-import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
@@ -54,7 +54,7 @@ DeadlineSelectorPopoverProps) {
             variant={"outline"}
             className="w-full justify-start rounded-xl"
           >
-            <Calendar className="mr-2 size-4" />
+            <IconCalendar className="mr-2 size-4" />
             {PopoverDueDateLabel()}
           </Button>
         </PopoverTrigger>

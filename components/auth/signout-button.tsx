@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut } from "lucide-react";
+import { IconLogout } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 
@@ -14,7 +14,7 @@ export function SignOutButton() {
       }}
       className="text-sm p-0 text-destructive hover:bg-destructive/10 focus:bg-destructive/10 w-full justify-start"
     >
-      <LogOut className="ml-0 text-destructive" />
+      <IconLogout className="ml-0 text-destructive" />
       Se déconnecter
     </Button>
   );

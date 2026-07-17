@@ -1,18 +1,18 @@
 "use client";
 
 import {
-  BookAlert,
-  BookAudio,
-  BookLock,
-  BookOpen,
-  Home,
-  Kanban,
-  LifeBuoy,
-  Send,
-  Settings2,
-  User2,
-  Users2,
-} from "lucide-react";
+  IconBook,
+  IconBook2,
+  IconBookmarks,
+  IconBooks,
+  IconHome,
+  IconLayoutKanban,
+  IconLifebuoy,
+  IconSend,
+  IconSettings,
+  IconUser,
+  IconUsers,
+} from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import type * as React from "react";
@@ -42,39 +42,39 @@ const data = {
     {
       title: "Tableau de bord",
       url: "/dashboard",
-      icon: Home,
+      icon: IconHome,
     },
     {
       title: "Projets",
       url: "/dashboard/projects",
-      icon: Kanban,
+      icon: IconLayoutKanban,
     },
     {
       title: "Équipe",
       url: "/dashboard/team",
-      icon: Users2,
+      icon: IconUsers,
     },
     {
       title: "Auteurs",
       url: "/dashboard/authors",
-      icon: User2,
+      icon: IconUser,
     },
     {
       title: "Paramètres",
       url: "/dashboard/settings",
-      icon: Settings2,
+      icon: IconSettings,
     },
   ],
   navSecondary: [
     {
       title: "Support",
       url: "#",
-      icon: LifeBuoy,
+      icon: IconLifebuoy,
     },
     {
       title: "Contactez-nous",
       url: "#",
-      icon: Send,
+      icon: IconSend,
     },
   ],
 };
@@ -88,25 +88,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       name: "À faire",
       url: "/dashboard/projects?statuses=TODO",
       numberOfTasks: stats.todo,
-      icon: BookOpen,
+      icon: IconBook,
     },
     {
       name: "En cours",
       url: "/dashboard/projects?statuses=IN_PROGRESS",
       numberOfTasks: stats.inProgress,
-      icon: BookAudio,
+      icon: IconBook2,
     },
     {
       name: "Bloqués",
       url: "/dashboard/projects?statuses=BLOCKED",
       numberOfTasks: stats.blocked,
-      icon: BookLock,
+      icon: IconBooks,
     },
     {
       name: "Échéances bientôt",
       url: "/dashboard/projects?dueDays=7",
       numberOfTasks: stats.dueSoon,
-      icon: BookAlert,
+      icon: IconBookmarks,
     },
   ];
 

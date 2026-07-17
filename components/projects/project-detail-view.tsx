@@ -1,6 +1,11 @@
 "use client";
 
-import { ArrowLeft, ExternalLinkIcon, MailIcon, Trash2 } from "lucide-react";
+import {
+  IconArrowLeft,
+  IconExternalLink,
+  IconMail,
+  IconTrash,
+} from "@tabler/icons-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -106,7 +111,7 @@ export function ProjectDetailView({
           <div className="flex items-center gap-3 w-full">
             <Button asChild variant="ghost" className="rounded-full mr-4">
               <Link href="/dashboard/projects">
-                <ArrowLeft className="size-4" />
+                <IconArrowLeft className="size-4" />
               </Link>
             </Button>
 
@@ -135,7 +140,7 @@ export function ProjectDetailView({
                     disabled={isDeleting}
                     className="ml-auto rounded-xl"
                   >
-                    <Trash2 className="size-4" />
+                    <IconTrash className="size-4" />
                     Supprimer
                   </Button>
                 </AlertDialogTrigger>
@@ -298,12 +303,12 @@ export function ProjectDetailView({
                           {author.firstName} {author.lastName}
                         </p>
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <MailIcon className="h-3 w-3" />
+                          <IconMail className="h-3 w-3" />
                           <span>{author.email}</span>
                         </div>
                         {author.website && (
                           <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <ExternalLinkIcon className="h-3 w-3" />
+                            <IconExternalLink className="h-3 w-3" />
                             <Link
                               href={author.website as Route}
                               target="_blank"
@@ -340,7 +345,7 @@ export function ProjectDetailView({
                       <div className="flex-1">
                         <p className="font-medium">{member.name}</p>
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <MailIcon className="h-3 w-3" />
+                          <IconMail className="h-3 w-3" />
                           <span>{member.email}</span>
                         </div>
                         <Badge variant="outline" className="text-xs mt-1">

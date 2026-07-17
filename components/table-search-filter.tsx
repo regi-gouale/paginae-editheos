@@ -1,4 +1,4 @@
-import { Filter, Search } from "lucide-react";
+import { IconFilter, IconSearch } from "@tabler/icons-react";
 import type React from "react";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,7 +26,7 @@ export const TableSearchFilter: React.FC<TableSearchFilterProps> = ({
     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
       <div className="flex-1">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4" />
+          <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4" />
           <Input
             placeholder="Rechercher par nom ou email..."
             value={searchValue}
@@ -36,9 +36,9 @@ export const TableSearchFilter: React.FC<TableSearchFilterProps> = ({
         </div>
       </div>
       <div className="flex gap-2 items-center">
-        <Filter className="size-4 text-gray-400" />
+        <IconFilter className="size-4 text-gray-400" />
         <Select value={selectedRole} onValueChange={onRoleChange}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-45">
             <SelectValue placeholder="Filtrer par rôle" />
           </SelectTrigger>
           <SelectContent>

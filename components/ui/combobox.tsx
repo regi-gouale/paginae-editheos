@@ -1,7 +1,7 @@
 "use client";
 
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
-import { CheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
+import { IconCheck, IconChevronDown, IconX } from "@tabler/icons-react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,7 +30,7 @@ function ComboboxTrigger({
       {...props}
     >
       {children}
-      <ChevronDownIcon
+      <IconChevronDown
         data-slot="combobox-trigger-icon"
         className="pointer-events-none size-4 text-muted-foreground"
       />
@@ -46,7 +46,7 @@ function ComboboxClear({ className, ...props }: ComboboxPrimitive.Clear.Props) {
       className={cn(className)}
       {...props}
     >
-      <XIcon className="pointer-events-none" />
+      <IconX className="pointer-events-none" />
     </ComboboxPrimitive.Clear>
   );
 }
@@ -115,7 +115,7 @@ function ComboboxContent({
           data-slot="combobox-content"
           data-chips={!!anchor}
           className={cn(
-            "group/combobox-content relative max-h-96 w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] origin-(--transform-origin) overflow-hidden rounded-md bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100 data-[chips=true]:min-w-(--anchor-width) data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-8 *:data-[slot=input-group]:border-input/30 *:data-[slot=input-group]:bg-input/30 *:data-[slot=input-group]:shadow-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+            "group/combobox-content relative max-h-96 w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+(--spacing(7)))] origin-(--transform-origin) overflow-hidden rounded-md bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100 data-[chips=true]:min-w-(--anchor-width) data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-8 *:data-[slot=input-group]:border-input/30 *:data-[slot=input-group]:bg-input/30 *:data-[slot=input-group]:shadow-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
             className,
           )}
           {...props}
@@ -130,7 +130,7 @@ function ComboboxList({ className, ...props }: ComboboxPrimitive.List.Props) {
     <ComboboxPrimitive.List
       data-slot="combobox-list"
       className={cn(
-        "max-h-[min(calc(--spacing(96)---spacing(9)),calc(var(--available-height)---spacing(9)))] scroll-py-1 overflow-y-auto p-1 data-empty:p-0",
+        "max-h-[min(calc(--spacing(96)-(--spacing(9))),calc(var(--available-height)-(--spacing(9))))] scroll-py-1 overflow-y-auto p-1 data-empty:p-0",
         className,
       )}
       {...props}
@@ -159,7 +159,7 @@ function ComboboxItem({
           <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center" />
         }
       >
-        <CheckIcon className="pointer-events-none size-4 pointer-coarse:size-5" />
+        <IconCheck className="pointer-events-none size-4 pointer-coarse:size-5" />
       </ComboboxPrimitive.ItemIndicator>
     </ComboboxPrimitive.Item>
   );
@@ -264,7 +264,7 @@ function ComboboxChip({
           className="-ml-1 opacity-50 hover:opacity-100"
           data-slot="combobox-chip-remove"
         >
-          <XIcon className="pointer-events-none" />
+          <IconX className="pointer-events-none" />
         </ComboboxPrimitive.ChipRemove>
       )}
     </ComboboxPrimitive.Chip>

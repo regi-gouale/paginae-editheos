@@ -1,4 +1,4 @@
-import type { LucideProps } from "lucide-react";
+import type { IconProps } from "@tabler/icons-react";
 import type { ForwardRefExoticComponent, RefAttributes } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,8 +7,8 @@ interface MainStatsCardProps {
   title: string;
   value: string | number;
   icon: ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
-  >; // Icon component from lucide-react
+    Omit<IconProps, "ref"> & RefAttributes<SVGSVGElement>
+  >; // Icon component from @tabler/icons-react
   color?: string; // Optional color for the icon background
   bgColor?: string; // Optional background color for the icon
   description?: string; // Optional description text

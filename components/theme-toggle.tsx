@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { IconMoon, IconSun } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
@@ -29,14 +29,14 @@ export function ThemeToggle() {
   const isChecked = resolvedTheme === "dark";
 
   return (
-    <div className="flex items-center space-x-2 hidden md:flex">
-      <Sun className="size-5" />
+    <div className="items-center space-x-2 hidden md:flex">
+      <IconSun className="size-5" />
       <Switch
         id="theme-toggle"
         checked={isChecked}
         onCheckedChange={handleThemeChange}
       />
-      <Moon className="size-5" />
+      <IconMoon className="size-5" />
       <Label htmlFor="theme-toggle" className="sr-only">
         Activer le mode sombre
       </Label>

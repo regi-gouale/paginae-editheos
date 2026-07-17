@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingDown, TrendingUp } from "lucide-react";
+import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -58,9 +58,9 @@ export default function ProgressChart() {
           className="flex items-center gap-1"
         >
           {data.trend.direction === "up" ? (
-            <TrendingUp className="size-3" />
+            <IconTrendingUp className="size-3" />
           ) : (
-            <TrendingDown className="size-3" />
+            <IconTrendingDown className="size-3" />
           )}
           <span>
             {data.trend.direction === "up" ? "+" : "-"}

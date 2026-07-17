@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { IconPlus } from "@tabler/icons-react";
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -82,7 +82,7 @@ export function AddProjectDialog({
               : "flex items-center justify-center rounded-full md:rounded-xl"
           }
         >
-          <Plus className="size-4" />
+          <IconPlus className="size-4" />
           <span className={cn(!isInColumn && "hidden md:block")}>
             Ajouter un projet
           </span>
