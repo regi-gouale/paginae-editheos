@@ -318,7 +318,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
               <span className="hidden md:block md:ml-1">Auteur</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-125">
+          <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <IconUser className="size-5" />
