@@ -1,8 +1,13 @@
 "use client";
 
+import {
+  IconBell,
+  IconCheck,
+  IconChecks,
+  IconTrash,
+} from "@tabler/icons-react";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Bell, Check, CheckCheck, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,7 +37,7 @@ function NotificationIcon() {
 
   return (
     <div className="relative ">
-      <Bell className="size-5" />
+      <IconBell className="size-5" />
       {!isLoading && (unreadCount ?? 0) > 0 && (
         <Badge
           variant="destructive"
@@ -122,7 +127,7 @@ function NotificationItem({
               onMarkAsRead(notification.id);
             }}
           >
-            <Check className="h-3 w-3" />
+            <IconCheck className="h-3 w-3" />
           </Button>
         )}
         <Button
@@ -135,7 +140,7 @@ function NotificationItem({
             onDelete(notification.id);
           }}
         >
-          <Trash2 className="h-3 w-3" />
+          <IconTrash className="h-3 w-3" />
         </Button>
       </div>
 
@@ -189,7 +194,7 @@ export function NotificationsDropdown() {
               onClick={handleMarkAllAsRead}
               disabled={markAllAsRead.isPending}
             >
-              <CheckCheck className="h-3 w-3 mr-1" />
+              <IconChecks className="h-3 w-3 mr-1" />
               Tout marquer comme lu
             </Button>
           )}
@@ -221,7 +226,7 @@ export function NotificationsDropdown() {
           ) : !notifications || notifications.length === 0 ? (
             // Aucune notification
             <div className="p-4 text-center text-sm text-muted-foreground">
-              <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
+              <IconBell className="h-8 w-8 mx-auto mb-2 opacity-50" />
               Aucune notification
             </div>
           ) : (

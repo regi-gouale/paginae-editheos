@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit3Icon, ExternalLinkIcon } from "lucide-react";
+import { IconEdit, IconExternalLink } from "@tabler/icons-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -45,7 +45,7 @@ FileUrlEditorProps) {
       {!isEditing && (
         <div className="flex items-center space-x-1 justify-between w-full">
           <div className="flex items-center space-x-1">
-            <ExternalLinkIcon className="size-3" />
+            <IconExternalLink className="size-3" />
             {editedFileUrl && editedFileUrl.trim() !== "" ? (
               <Link
                 href={editedFileUrl as Route}
@@ -64,7 +64,7 @@ FileUrlEditorProps) {
             variant={"ghost"}
             className="rounded-full p-0"
           >
-            <Edit3Icon className="size-3 p-0" />
+            <IconEdit className="size-3 p-0" />
           </Button>
         </div>
       )}

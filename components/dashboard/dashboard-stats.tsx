@@ -1,6 +1,11 @@
 "use client";
 
-import { AlertTriangle, CalendarClock, Lock, TrendingUp } from "lucide-react";
+import {
+  IconAlertTriangle,
+  IconCalendarClock,
+  IconLock,
+  IconTrendingUp,
+} from "@tabler/icons-react";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useDashboardStats } from "@/hooks/dashboard/use-dashboard-stats";
@@ -12,7 +17,7 @@ export default function DashboardStats() {
     {
       title: "Projets en retard",
       value: data.overdue,
-      icon: AlertTriangle,
+      icon: IconAlertTriangle,
       color: "text-red-600",
       bgColor: "bg-red-50",
       description:
@@ -21,7 +26,7 @@ export default function DashboardStats() {
     {
       title: "Echeances proches",
       value: data.dueSoon,
-      icon: CalendarClock,
+      icon: IconCalendarClock,
       color: "text-amber-600",
       bgColor: "bg-amber-50",
       description: "Dans les 7 prochains jours",
@@ -29,7 +34,7 @@ export default function DashboardStats() {
     {
       title: "Projets bloques",
       value: data.blocked,
-      icon: Lock,
+      icon: IconLock,
       color: "text-orange-600",
       bgColor: "bg-orange-50",
       description:
@@ -38,7 +43,7 @@ export default function DashboardStats() {
     {
       title: "Taux d'achevement",
       value: `${data.completionRate}%`,
-      icon: TrendingUp,
+      icon: IconTrendingUp,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
       change: data.completionTrend.value,

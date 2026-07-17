@@ -1,8 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IconEdit } from "@tabler/icons-react";
 import { format } from "date-fns";
-import { EditIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -119,7 +119,7 @@ export function EditAuthorDialog({
       {externalOpen === undefined && (
         <DialogTrigger asChild>
           <Button variant="outline" className="rounded-full md:rounded-xl">
-            <EditIcon className="size-4" />
+            <IconEdit className="size-4" />
             <span className="hidden md:block md:ml-2">Modifier</span>
           </Button>
         </DialogTrigger>

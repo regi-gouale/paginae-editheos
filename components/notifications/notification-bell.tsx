@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell } from "lucide-react";
+import { IconBell } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useUnreadNotificationsCount } from "@/hooks/use-notifications";
@@ -13,7 +13,7 @@ export function NotificationBell() {
 
   return (
     <Button variant="ghost" size="sm" className="relative">
-      <Bell className="h-5 w-5" />
+      <IconBell className="h-5 w-5" />
       {!isLoading && unreadCount && unreadCount > 0 && (
         <Badge
           variant="destructive"

@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Trash2 } from "lucide-react";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ function AddCustomFieldButton({
           onClick={onAddClick}
           className="rounded-xl"
         >
-          <Plus className="size-4 mr-1" />
+          <IconPlus className="size-4 mr-1" />
           Ajouter
         </Button>
       </div>
@@ -48,7 +48,7 @@ function AddCustomFieldButton({
         onClick={onAddClick}
         className="rounded-xl"
       >
-        <Plus className="size-4 mr-1" />
+        <IconPlus className="size-4 mr-1" />
         Ajouter
       </Button>
     </div>
@@ -291,7 +291,7 @@ export function ProjectCustomFieldsEditor({
               className="invisible group-hover:visible"
               onClick={() => onDeleteField(field.id)}
             >
-              <Trash2 className="size-4 text-destructive" />
+              <IconTrash className="size-4 text-destructive" />
             </Button>
           </div>
         ))}

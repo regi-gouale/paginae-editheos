@@ -1,13 +1,13 @@
+import {
+  IconArrowLeft,
+  IconCalendar,
+  IconFlag,
+  IconMail,
+  IconUser,
+  IconWorld,
+} from "@tabler/icons-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import {
-  ArrowLeft,
-  CalendarIcon,
-  FlagIcon,
-  GlobeIcon,
-  MailIcon,
-  UserIcon,
-} from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -59,7 +59,7 @@ export default async function AuthorDetailPage({
           <div className="flex items-center gap-4">
             <Link href="/dashboard/authors">
               <Button variant="ghost" size="icon">
-                <ArrowLeft className="size-4" />
+                <IconArrowLeft className="size-4" />
               </Button>
             </Link>
             <div className="flex items-center gap-4">
@@ -90,14 +90,14 @@ export default async function AuthorDetailPage({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <UserIcon className="size-5" />
+                <IconUser className="size-5" />
                 Informations personnelles
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-x-2 flex items-center">
                 <div className="flex items-center gap-2">
-                  <MailIcon className="size-4 text-muted-foreground" />
+                  <IconMail className="size-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Email :</span>
                 </div>
                 <p className="font-medium">{author.email}</p>
@@ -106,7 +106,7 @@ export default async function AuthorDetailPage({
               {author.nationality && (
                 <div className="space-x-2 flex items-center">
                   <div className="flex items-center gap-2">
-                    <FlagIcon className="size-4 text-muted-foreground" />
+                    <IconFlag className="size-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
                       Nationalité :
                     </span>
@@ -118,7 +118,7 @@ export default async function AuthorDetailPage({
               {author.birthDate && (
                 <div className="space-x-2 flex items-center">
                   <div className="flex items-center gap-2">
-                    <CalendarIcon className="size-4 text-muted-foreground" />
+                    <IconCalendar className="size-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
                       Date de naissance :
                     </span>
@@ -134,7 +134,7 @@ export default async function AuthorDetailPage({
               {author.website && (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <GlobeIcon className="size-4 text-muted-foreground" />
+                    <IconWorld className="size-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
                       Site web
                     </span>

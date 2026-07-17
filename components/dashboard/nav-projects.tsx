@@ -1,6 +1,6 @@
 "use client";
 
-import type { LucideIcon } from "lucide-react";
+import type { TablerIcon } from "@tabler/icons-react";
 import type { Route } from "next";
 import Link from "next/link";
 import {
@@ -18,7 +18,7 @@ export function NavProjects({
     name: string;
     url: string;
     numberOfTasks?: number;
-    icon: LucideIcon;
+    icon: TablerIcon;
   }[];
 }) {
   return (

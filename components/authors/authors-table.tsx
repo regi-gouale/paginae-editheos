@@ -1,15 +1,15 @@
 "use client";
 
-import { fr } from "date-fns/locale";
 import {
-  Edit,
-  Filter,
-  MoreHorizontal,
-  Plus,
-  Search,
-  Trash2,
-  User,
-} from "lucide-react";
+  IconDots,
+  IconEdit,
+  IconFilter,
+  IconPlus,
+  IconSearch,
+  IconTrash,
+  IconUser,
+} from "@tabler/icons-react";
+import { fr } from "date-fns/locale";
 import type { Route } from "next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -94,7 +94,7 @@ function AuthorActionsDropdown({
           onClick={(e) => e.stopPropagation()}
         >
           <span className="sr-only">Ouvrir le menu</span>
-          <MoreHorizontal className="size-4" />
+          <IconDots className="size-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -105,7 +105,7 @@ function AuthorActionsDropdown({
           }}
           className="cursor-pointer"
         >
-          <Edit className="mr-2 size-4" />
+          <IconEdit className="mr-2 size-4" />
           Modifier
         </DropdownMenuItem>
         <DropdownMenuItem
@@ -115,7 +115,7 @@ function AuthorActionsDropdown({
           }}
           className="cursor-pointer text-red-600 focus:text-red-600"
         >
-          <Trash2 className="mr-2 size-4" />
+          <IconTrash className="mr-2 size-4" />
           Supprimer
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -314,14 +314,14 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button className="font-semibold rounded-full md:rounded-xl">
-              <Plus className="size-4" />
+              <IconPlus className="size-4" />
               <span className="hidden md:block md:ml-1">Auteur</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-125">
+          <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <User className="size-5" />
+                <IconUser className="size-5" />
                 Ajouter un nouvel auteur
               </DialogTitle>
               <DialogDescription>
@@ -463,7 +463,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
         <div className="flex-1">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4" />
+            <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4" />
             <Input
               placeholder="Rechercher par nom, prénom ou email..."
               value={searchTerm}
@@ -473,12 +473,12 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
           </div>
         </div>
         <div className="flex gap-2 items-center">
-          <Filter className="size-4 text-gray-400" />
+          <IconFilter className="size-4 text-gray-400" />
           <Select
             value={selectedNationality}
             onValueChange={handleNationalityChange}
           >
-            <SelectTrigger className="w-45">
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filtrer par nationalité" />
             </SelectTrigger>
             <SelectContent>

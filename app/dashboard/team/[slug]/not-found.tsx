@@ -1,4 +1,4 @@
-import { ArrowLeft, UserX } from "lucide-react";
+import { IconArrowLeft, IconUserX } from "@tabler/icons-react";
 import Link from "next/link";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ export default function MemberNotFound() {
         <div className="flex items-center gap-4">
           <Link href="/dashboard/team">
             <Button variant="ghost" size="sm">
-              <ArrowLeft className="size-4 mr-2" />
+              <IconArrowLeft className="size-4 mr-2" />
               Retour à l&apos;équipe
             </Button>
           </Link>
@@ -26,7 +26,7 @@ export default function MemberNotFound() {
         <Card className="text-center py-12">
           <CardHeader>
             <div className="mx-auto size-12 rounded-full bg-muted flex items-center justify-center mb-4">
-              <UserX className="size-6 text-muted-foreground" />
+              <IconUserX className="size-6 text-muted-foreground" />
             </div>
             <CardTitle className="text-2xl font-bold">
               Membre introuvable

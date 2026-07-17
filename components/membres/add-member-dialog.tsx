@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { IconPlus } from "@tabler/icons-react";
 import type React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -56,7 +56,7 @@ export const AddMemberDialog: React.FC<AddMemberDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="font-semibold rounded-full md:rounded-xl">
-          <Plus className="size-4" />
+          <IconPlus className="size-4" />
           <span className="hidden md:block md:ml-1">Membre</span>
         </Button>
       </DialogTrigger>

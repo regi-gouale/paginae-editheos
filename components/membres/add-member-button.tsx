@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { IconPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -98,7 +98,7 @@ export function AddMemberButton() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="font-semibold rounded-full md:rounded-xl">
-          <Plus className="size-4" />
+          <IconPlus className="size-4" />
           <span className="hidden md:block md:ml-1">Membre</span>
         </Button>
       </DialogTrigger>

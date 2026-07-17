@@ -17,7 +17,13 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Check, GripVertical, Plus, Trash2, X } from "lucide-react";
+import {
+  IconCheck,
+  IconGripVertical,
+  IconPlus,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -81,7 +87,7 @@ function SortableTaskItem({
         {...listeners}
         className="cursor-grab active:cursor-grabbing"
       >
-        <GripVertical className="size-4 text-muted-foreground" />
+        <IconGripVertical className="size-4 text-muted-foreground" />
       </div>
 
       {template.isEditing ? (
@@ -105,7 +111,7 @@ function SortableTaskItem({
             onClick={() => onEdit(template.id, editTitle)}
             className="size-8 p-0"
           >
-            <Check className="size-4 text-green-600" />
+            <IconCheck className="size-4 text-green-600" />
           </Button>
           <Button
             variant="ghost"
@@ -113,7 +119,7 @@ function SortableTaskItem({
             onClick={() => onCancelEdit(template.id)}
             className="size-8 p-0"
           >
-            <X className="size-4 text-muted-foreground" />
+            <IconX className="size-4 text-muted-foreground" />
           </Button>
         </>
       ) : (
@@ -131,7 +137,7 @@ function SortableTaskItem({
             onClick={() => onDelete(template.id)}
             className="size-8 p-0 opacity-0 group-hover:opacity-100"
           >
-            <Trash2 className="size-4 text-destructive" />
+            <IconTrash className="size-4 text-destructive" />
           </Button>
         </>
       )}
@@ -333,7 +339,7 @@ export function TaskTemplatesEditor({
                   }}
                 />
                 <Button onClick={handleAddTemplate} size="sm">
-                  <Check className="size-4" />
+                  <IconCheck className="size-4" />
                 </Button>
                 <Button
                   variant="ghost"
@@ -343,7 +349,7 @@ export function TaskTemplatesEditor({
                     setNewTaskTitle("");
                   }}
                 >
-                  <X className="size-4" />
+                  <IconX className="size-4" />
                 </Button>
               </div>
             ) : (
@@ -353,7 +359,7 @@ export function TaskTemplatesEditor({
                 onClick={() => setIsAdding(true)}
                 className="w-full"
               >
-                <Plus className="size-4 mr-2" />
+                <IconPlus className="size-4 mr-2" />
                 Ajouter une tâche
               </Button>
             )}

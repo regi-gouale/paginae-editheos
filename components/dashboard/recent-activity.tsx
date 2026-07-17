@@ -1,13 +1,13 @@
 "use client";
 
 import {
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Edit,
-  Plus,
-  Users,
-} from "lucide-react";
+  IconAlertTriangle,
+  IconCircleCheck,
+  IconClock,
+  IconEdit,
+  IconPlus,
+  IconUsers,
+} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -19,31 +19,31 @@ import {
 
 const activityConfig = {
   project_created: {
-    icon: Plus,
+    icon: IconPlus,
     color: "text-green-600",
     bgColor: "bg-green-100",
     label: "Projet créé",
   },
   project_updated: {
-    icon: Edit,
+    icon: IconEdit,
     color: "text-blue-600",
     bgColor: "bg-blue-100",
     label: "Projet modifié",
   },
   project_completed: {
-    icon: CheckCircle,
+    icon: IconCircleCheck,
     color: "text-emerald-600",
     bgColor: "bg-emerald-100",
     label: "Projet terminé",
   },
   member_added: {
-    icon: Users,
+    icon: IconUsers,
     color: "text-purple-600",
     bgColor: "bg-purple-100",
     label: "Membre ajouté",
   },
   deadline_approaching: {
-    icon: AlertTriangle,
+    icon: IconAlertTriangle,
     color: "text-orange-600",
     bgColor: "bg-orange-100",
     label: "Échéance proche",
@@ -118,7 +118,7 @@ export default function RecentActivity() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <Clock className="size-5" />
+          <IconClock className="size-5" />
           <span>Activité récente</span>
         </CardTitle>
       </CardHeader>

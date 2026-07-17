@@ -1,6 +1,11 @@
 "use client";
 
-import { CheckSquare, Plus, Square, Trash2 } from "lucide-react";
+import {
+  IconPlus,
+  IconSquare,
+  IconSquareCheck,
+  IconTrash,
+} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +40,7 @@ function AddTaskButton({
           onClick={onAddClick}
           className="rounded-xl"
         >
-          <Plus className="size-4 mr-1" />
+          <IconPlus className="size-4 mr-1" />
           Ajouter
         </Button>
       </div>
@@ -53,7 +58,7 @@ function AddTaskButton({
         onClick={onAddClick}
         className="rounded-xl"
       >
-        <Plus className="size-4 mr-1" />
+        <IconPlus className="size-4 mr-1" />
         Ajouter
       </Button>
     </div>
@@ -221,9 +226,9 @@ export function ProjectTasksEditor({
               className="p-1 size-6"
             >
               {task.completed ? (
-                <CheckSquare className="size-4 text-green-600" />
+                <IconSquareCheck className="size-4 text-green-600" />
               ) : (
-                <Square className="size-4" />
+                <IconSquare className="size-4" />
               )}
             </Button>
             <span
@@ -239,7 +244,7 @@ export function ProjectTasksEditor({
               onClick={() => onDeleteTask(task.id)}
               className="p-1 size-6 opacity-0 group-hover:opacity-100"
             >
-              <Trash2 className="size-4 text-destructive" />
+              <IconTrash className="size-4 text-destructive" />
             </Button>
           </div>
         ))}

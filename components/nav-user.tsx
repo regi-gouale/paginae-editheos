@@ -1,6 +1,10 @@
 "use client";
 
-import { BadgeCheck, Bell, ChevronsUpDown } from "lucide-react";
+import {
+  IconBell,
+  IconRosetteDiscountCheck,
+  IconSelector,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { SignOutButton } from "@/components/auth/signout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -55,7 +59,7 @@ export function NavUser({
                 <span className="truncate font-medium">{user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <IconSelector className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -95,12 +99,12 @@ export function NavUser({
                   href="/dashboard/profile"
                   className="w-full justify-start p-0 m-0 flex gap-2 items-center"
                 >
-                  <BadgeCheck />
+                  <IconRosetteDiscountCheck />
                   Profil
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Bell />
+                <IconBell />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>

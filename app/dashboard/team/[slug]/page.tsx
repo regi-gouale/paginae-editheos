@@ -1,4 +1,10 @@
-import { ArrowLeft, Calendar, Edit, Mail, User } from "lucide-react";
+import {
+  IconArrowLeft,
+  IconCalendar,
+  IconEdit,
+  IconMail,
+  IconUser,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
@@ -60,7 +66,7 @@ export default async function MemberDetailPage({
           <div className="flex items-center gap-4">
             <Link href="/dashboard/team">
               <Button variant="ghost" size="icon">
-                <ArrowLeft className="size-4" />
+                <IconArrowLeft className="size-4" />
               </Button>
             </Link>
             <div>
@@ -76,7 +82,7 @@ export default async function MemberDetailPage({
           </div>
           <EditMemberDialog member={member}>
             <Button variant={"outline"} className="rounded-full md:rounded-xl">
-              <Edit className="size-4" />
+              <IconEdit className="size-4" />
               <span className="hidden md:ml-2 md:block">Modifier</span>
             </Button>
           </EditMemberDialog>
@@ -86,7 +92,7 @@ export default async function MemberDetailPage({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <User className="size-5" />
+                <IconUser className="size-5" />
                 Informations générales
               </CardTitle>
             </CardHeader>
@@ -103,7 +109,7 @@ export default async function MemberDetailPage({
                     Adresse email
                   </Label>
                   <div className="flex items-center gap-2">
-                    <Mail className="size-4 text-muted-foreground" />
+                    <IconMail className="size-4 text-muted-foreground" />
                     <p className="text-base">{member.email}</p>
                   </div>
                 </div>
@@ -135,7 +141,7 @@ export default async function MemberDetailPage({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Calendar className="size-5" />
+                <IconCalendar className="size-5" />
                 Informations temporelles
               </CardTitle>
             </CardHeader>
