@@ -10,6 +10,7 @@ import {
   Trash2,
   User,
 } from "lucide-react";
+import type { Route } from "next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type React from "react";
@@ -537,7 +538,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                       </div>
                       {author.website && (
                         <Link
-                          href={author.website}
+                          href={author.website as Route}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:underline text-sm"

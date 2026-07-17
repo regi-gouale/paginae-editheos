@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit3Icon, ExternalLinkIcon } from "lucide-react";
+import type { Route } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { updateProject } from "@/lib/actions/kanban";
@@ -47,7 +48,7 @@ FileUrlEditorProps) {
             <ExternalLinkIcon className="size-3" />
             {editedFileUrl && editedFileUrl.trim() !== "" ? (
               <Link
-                href={editedFileUrl}
+                href={editedFileUrl as Route}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:underline"

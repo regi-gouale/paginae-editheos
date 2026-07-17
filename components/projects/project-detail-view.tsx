@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, ExternalLinkIcon, MailIcon, Trash2 } from "lucide-react";
+import type { Route } from "next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -304,7 +305,7 @@ export function ProjectDetailView({
                           <div className="flex items-center gap-1 text-sm text-muted-foreground">
                             <ExternalLinkIcon className="h-3 w-3" />
                             <Link
-                              href={author.website}
+                              href={author.website as Route}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="hover:underline"
