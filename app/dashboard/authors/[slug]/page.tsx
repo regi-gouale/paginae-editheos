@@ -8,6 +8,7 @@ import {
   MailIcon,
   UserIcon,
 } from "lucide-react";
+import type { Route } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { EditAuthorDialog } from "@/components/authors/edit-author-dialog";
@@ -138,14 +139,14 @@ export default async function AuthorDetailPage({
                       Site web
                     </span>
                   </div>
-                  <a
-                    href={author.website}
+                  <Link
+                    href={author.website as Route}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-medium text-primary hover:underline"
                   >
                     {author.website}
-                  </a>
+                  </Link>
                 </div>
               )}
             </CardContent>

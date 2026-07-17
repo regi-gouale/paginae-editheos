@@ -1,7 +1,8 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-
+import type { Route } from "next";
+import Link from "next/link";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -22,15 +23,15 @@ export function NavProjects({
 }) {
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel className="uppercase">Stats Rapide</SidebarGroupLabel>
+      <SidebarGroupLabel className="uppercase">Aperçu</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name} className="flex items-center gap-4">
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <Link href={item.url as Route}>
                 <item.icon />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
             {item.numberOfTasks ? (
               <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs font-medium tabular-nums">
