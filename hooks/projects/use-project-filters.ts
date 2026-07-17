@@ -14,15 +14,6 @@ import type {
   ProjectType,
 } from "@/prisma/generated/prisma/client";
 
-// Interface pour les filtres avec dueDays en string (pour nuqs)
-interface ProjectFiltersState {
-  statuses: ProjectStatus[];
-  types: ProjectType[];
-  priorities: Priority[];
-  dueDays: string[];
-  search: string;
-}
-
 // Définir les parsers pour chaque type de filtre
 const statusParser = parseAsArrayOf(
   parseAsStringEnum<ProjectStatus>(
