@@ -8,6 +8,21 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import {
+  Message,
+  MessageAvatar,
+  MessageContent,
+  MessageFooter,
+  MessageHeader,
+} from "@/components/ui/message";
+import {
+  MessageScroller,
+  MessageScrollerButton,
+  MessageScrollerContent,
+  MessageScrollerItem,
+  MessageScrollerProvider,
+  MessageScrollerViewport,
+} from "@/components/ui/message-scroller";
 import { Textarea } from "@/components/ui/textarea";
 import { createProjectComment, getProjectComments } from "@/lib/actions/kanban";
 
@@ -129,7 +144,7 @@ export function ProjectCommentsEditor({
         </p>
       )}
 
-      <div className="flex flex-col gap-3 max-h-72 overflow-y-auto pr-1">
+      <div className="h-72">
         {isLoading ? (
           <p className="text-sm text-muted-foreground">Chargement...</p>
         ) : comments.length === 0 ? (
@@ -137,29 +152,45 @@ export function ProjectCommentsEditor({
             Aucun commentaire pour le moment.
           </p>
         ) : (
-          comments.map((comment) => (
-            <div key={comment.id} className="border rounded-xl p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <Avatar className="size-7">
-                  <AvatarFallback>
-                    {getInitials(comment.user.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">
-                    {comment.user.name}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {formatDistanceToNow(new Date(comment.createdAt), {
-                      addSuffix: true,
-                      locale: fr,
-                    })}
-                  </span>
-                </div>
-              </div>
-              <p className="text-sm whitespace-pre-wrap">{comment.content}</p>
-            </div>
-          ))
+          <MessageScrollerProvider>
+            <MessageScroller>
+              <MessageScrollerViewport className="pr-1">
+                <MessageScrollerContent className="gap-3">
+                  {comments.map((comment) => (
+                    <MessageScrollerItem key={comment.id}>
+                      <Message>
+                        <MessageAvatar className="bg-transparent self-start">
+                          <Avatar className="size-7">
+                            <AvatarFallback>
+                              {getInitials(comment.user.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                        </MessageAvatar>
+                        <MessageContent>
+                          <MessageHeader className="px-0 text-sm font-medium text-foreground">
+                            {comment.user.name}
+                          </MessageHeader>
+                          <div className="border rounded-xl px-3 py-2">
+                            <p className="text-sm whitespace-pre-wrap">
+                              {comment.content}
+                            </p>
+                          </div>
+                          <MessageFooter className="px-0 text-xs text-muted-foreground">
+                            {formatDistanceToNow(new Date(comment.createdAt), {
+                              addSuffix: true,
+                              locale: fr,
+                            })}
+                          </MessageFooter>
+                        </MessageContent>
+                      </Message>
+                    </MessageScrollerItem>
+                  ))}
+                </MessageScrollerContent>
+              </MessageScrollerViewport>
+              <MessageScrollerButton direction="start" />
+              <MessageScrollerButton direction="end" />
+            </MessageScroller>
+          </MessageScrollerProvider>
         )}
       </div>
     </div>
