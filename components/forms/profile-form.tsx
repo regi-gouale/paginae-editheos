@@ -33,6 +33,7 @@ type ProfileFormData = z.infer<typeof profileSchema>;
 type ProfileFormProps = ProfileFormData & { image?: string };
 
 export function ProfileForm({ initial }: { initial: ProfileFormProps }) {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
 
   const form = useForm<ProfileFormData>({
@@ -118,7 +119,7 @@ export function ProfileForm({ initial }: { initial: ProfileFormProps }) {
             <Label>Photo de profil</Label>
             <div className="flex items-center gap-4 mt-2">
               <input
-                id="avatar-input"
+                ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
@@ -129,11 +130,13 @@ export function ProfileForm({ initial }: { initial: ProfileFormProps }) {
                 className="hidden"
               />
 
-              <label htmlFor="avatar-input">
-                <button type="button" className="btn btn-outline">
-                  Choisir une photo
-                </button>
-              </label>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                Choisir une photo
+              </Button>
 
               <div className="text-sm text-muted-foreground">
                 {file ? file.name : "Aucun fichier choisi"}

@@ -178,7 +178,7 @@ export function TaskTemplatesEditor({
       );
       setTemplates(filtered);
     } catch {
-      toast.error("Erreur lors du chargement des templates");
+      toast.error("Erreur lors du chargement des modèles de tâches");
     } finally {
       setIsLoading(false);
     }
@@ -198,20 +198,20 @@ export function TaskTemplatesEditor({
       });
       setNewTaskTitle("");
       setIsAdding(false);
-      toast.success("Template ajouté avec succès");
+      toast.success("Modèle de tâche ajouté avec succès");
       await loadTemplates();
     } catch {
-      toast.error("Erreur lors de l'ajout du template");
+      toast.error("Erreur lors de l'ajout du modèle de tâche");
     }
   }
 
   async function handleDeleteTemplate(id: string) {
     try {
       await deleteTaskTemplate(id);
-      toast.success("Template supprimé avec succès");
+      toast.success("Modèle de tâche supprimé avec succès");
       await loadTemplates();
     } catch {
-      toast.error("Erreur lors de la suppression du template");
+      toast.error("Erreur lors de la suppression du modèle de tâche");
     }
   }
 
@@ -243,11 +243,11 @@ export function TaskTemplatesEditor({
 
     try {
       await updateTaskTemplate(id, { title });
-      toast.success("Template modifié avec succès");
+      toast.success("Modèle de tâche modifié avec succès");
       await loadTemplates();
       setEditTitle("");
     } catch {
-      toast.error("Erreur lors de la modification du template");
+      toast.error("Erreur lors de la modification du modèle de tâche");
     }
   }
 
@@ -317,8 +317,8 @@ export function TaskTemplatesEditor({
 
             {templates.length === 0 && !isAdding && (
               <div className="text-center text-muted-foreground py-8">
-                Aucun template défini. Cliquez sur &quot;Ajouter une tâche&quot;
-                pour commencer.
+                Aucun modèle de tâche défini. Cliquez sur &quot;Ajouter une
+                tâche&quot; pour commencer.
               </div>
             )}
 
