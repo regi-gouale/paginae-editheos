@@ -1,12 +1,21 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { canManageTeam, getAccessContext } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import type { ProjectType } from "@/prisma/generated/prisma/client";
+
+async function assertCanManageTaskTemplates() {
+  const access = await getAccessContext();
+  if (!canManageTeam(access.role)) {
+    throw new Error("Acces refuse");
+  }
+}
 
 // Récupérer tous les templates de tâches
 export async function getTaskTemplates() {
   try {
+    await assertCanManageTaskTemplates();
     const templates = await prisma.taskTemplate.findMany({
       orderBy: [{ projectType: "asc" }, { order: "asc" }],
     });
@@ -20,6 +29,7 @@ export async function getTaskTemplates() {
 // Récupérer les templates par type de projet
 export async function getTaskTemplatesByType(projectType: ProjectType) {
   try {
+    await assertCanManageTaskTemplates();
     const templates = await prisma.taskTemplate.findMany({
       where: { projectType },
       orderBy: { order: "asc" },
@@ -38,6 +48,7 @@ export async function createTaskTemplate(data: {
   order?: number;
 }) {
   try {
+    await assertCanManageTaskTemplates();
     // Si l'ordre n'est pas spécifié, le mettre à la fin
     if (data.order === undefined) {
       const maxOrder = await prisma.taskTemplate.findFirst({
@@ -69,6 +80,7 @@ export async function updateTaskTemplate(
   },
 ) {
   try {
+    await assertCanManageTaskTemplates();
     const template = await prisma.taskTemplate.update({
       where: { id },
       data,
@@ -85,6 +97,7 @@ export async function updateTaskTemplate(
 // Supprimer un template
 export async function deleteTaskTemplate(id: string) {
   try {
+    await assertCanManageTaskTemplates();
     await prisma.taskTemplate.delete({
       where: { id },
     });
@@ -102,6 +115,7 @@ export async function reorderTaskTemplates(
   templates: { id: string; order: number }[],
 ) {
   try {
+    await assertCanManageTaskTemplates();
     // Utiliser une transaction pour mettre à jour tous les templates en une fois
     await prisma.$transaction(
       templates.map((template) =>
@@ -126,6 +140,7 @@ export async function replaceTaskTemplatesForType(
   titles: string[],
 ) {
   try {
+    await assertCanManageTaskTemplates();
     await prisma.$transaction(async (tx) => {
       // Supprimer tous les templates existants pour ce type
       await tx.taskTemplate.deleteMany({

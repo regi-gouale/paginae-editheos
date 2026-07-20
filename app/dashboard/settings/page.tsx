@@ -2,11 +2,17 @@ import { redirect } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { TaskTemplatesEditor } from "@/components/settings/task-templates-editor";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
+import { canManageTeam, getAccessContext } from "@/lib/auth/permissions";
 
 export default async function SettingsPage() {
   const session = await getCurrentSession();
 
   if (!session) redirect("/auth");
+
+  const access = await getAccessContext();
+  if (!canManageTeam(access.role)) {
+    redirect("/dashboard/projects");
+  }
 
   const breadcrumbs = [{ label: "Paramètres", href: "/dashboard/settings" }];
 

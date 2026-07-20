@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { auth } from "@/lib/auth/auth";
+import { canManageAuthors, getAccessContext } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@/prisma/generated/prisma/client";
 
@@ -53,6 +54,11 @@ export async function addAuthorAction(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/auth");
 
+  const access = await getAccessContext();
+  if (!canManageAuthors(access.role)) {
+    throw new Error("Acces refuse");
+  }
+
   try {
     const data = {
       firstName: formData.get("firstName") as string,
@@ -85,6 +91,11 @@ export async function addAuthorAction(formData: FormData) {
 export async function updateAuthorAction(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/auth");
+
+  const access = await getAccessContext();
+  if (!canManageAuthors(access.role)) {
+    throw new Error("Acces refuse");
+  }
 
   try {
     const id = formData.get("id") as string;
@@ -120,6 +131,11 @@ export async function updateAuthorAction(formData: FormData) {
 export async function deleteAuthorAction(formData: FormData) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/auth");
+
+  const access = await getAccessContext();
+  if (!canManageAuthors(access.role)) {
+    throw new Error("Acces refuse");
+  }
 
   try {
     const id = formData.get("id") as string;
@@ -211,6 +227,11 @@ export async function addAuthor(data: {
   birthDate?: Date;
 }): Promise<{ success: boolean; author?: Author; error?: string }> {
   try {
+    const access = await getAccessContext();
+    if (!canManageAuthors(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     const author = await prisma.author.create({
       data,
     });
@@ -234,6 +255,11 @@ export async function deleteAuthor(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const access = await getAccessContext();
+    if (!canManageAuthors(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     await prisma.author.delete({
       where: { id },
     });
