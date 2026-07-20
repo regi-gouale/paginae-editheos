@@ -181,6 +181,75 @@ export async function deleteCustomField(id: string) {
   }
 }
 
+// Get comments for a project
+export async function getProjectComments(projectId: string) {
+  try {
+    return await prisma.projectComment.findMany({
+      where: { projectId },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching project comments:", error);
+    throw new Error("Failed to fetch project comments");
+  }
+}
+
+// Create a comment for a project
+export async function createProjectComment(data: {
+  projectId: string;
+  content: string;
+}) {
+  const session = await getCurrentSession();
+
+  if (!session?.user?.id) {
+    throw new Error("Vous devez être connecté pour commenter un projet");
+  }
+
+  const content = data.content.trim();
+  if (!content) {
+    throw new Error("Le commentaire ne peut pas être vide");
+  }
+
+  try {
+    const comment = await prisma.projectComment.create({
+      data: {
+        projectId: data.projectId,
+        content,
+        userId: session.user.id,
+      },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    revalidatePath("/dashboard/projects");
+    revalidatePath("/dashboard/projects/[slug]", "page");
+    return comment;
+  } catch (error) {
+    console.error("Error creating project comment:", error);
+    throw new Error("Failed to create project comment");
+  }
+}
+
 // Get a specific project by ID with all details
 export async function getProjectById(id: string) {
   try {
@@ -212,6 +281,9 @@ export async function getProjectById(id: string) {
         },
         tasks: {
           orderBy: { createdAt: "asc" },
+        },
+        comments: {
+          orderBy: { createdAt: "desc" },
         },
         customFields: {
           orderBy: { name: "asc" },
@@ -246,6 +318,9 @@ export async function getProjectBySlug(slug: string) {
         members: true,
         tasks: {
           orderBy: { createdAt: "asc" },
+        },
+        comments: {
+          orderBy: { createdAt: "desc" },
         },
         customFields: {
           orderBy: { name: "asc" },
@@ -344,6 +419,7 @@ export async function getKanbanData(): Promise<KanbanColumnWithProjects[]> {
             authors: true,
             members: true,
             tasks: true,
+            comments: true,
             customFields: true,
           },
         },
@@ -399,6 +475,7 @@ export async function getKanbanData(): Promise<KanbanColumnWithProjects[]> {
               authors: true,
               members: true,
               tasks: true,
+              comments: true,
               customFields: true,
             },
           },
@@ -428,6 +505,7 @@ export async function createKanbanColumn(data: {
             authors: true,
             members: true,
             tasks: true,
+            comments: true,
             customFields: true,
             kanbanColumn: true,
           },
@@ -540,6 +618,7 @@ export async function createProject(data: {
         authors: true,
         members: true,
         tasks: true,
+        comments: true,
         customFields: true,
         kanbanColumn: true,
       },
@@ -633,16 +712,38 @@ export async function updateProject(
     authorIds?: string[];
     slug?: string;
     fileUrl?: string;
+    statusComment?: string;
   },
 ) {
   try {
-    const { authorIds, ...updateData } = data;
+    const { authorIds, statusComment, ...updateData } = data;
 
     // Récupérer le projet actuel pour comparaison
     const currentProject = await prisma.project.findUnique({
       where: { id },
       include: { members: true },
     });
+
+    const isStatusChange = Boolean(
+      updateData.status &&
+        currentProject &&
+        currentProject.status !== updateData.status,
+    );
+
+    const session = await getCurrentSession();
+    const trimmedStatusComment = statusComment?.trim();
+
+    if (isStatusChange && !trimmedStatusComment) {
+      throw new Error(
+        "Un commentaire est obligatoire pour changer le statut du projet",
+      );
+    }
+
+    if (isStatusChange && !session?.user?.id) {
+      throw new Error(
+        "Vous devez être connecté pour changer le statut d'un projet",
+      );
+    }
 
     // Préparer les données de mise à jour
     let finalUpdateData = { ...updateData };
@@ -688,23 +789,37 @@ export async function updateProject(
       }
     }
 
-    const project = await prisma.project.update({
-      where: { id },
-      data: {
-        ...finalUpdateData,
-        ...(authorIds && {
-          authors: {
-            set: authorIds.map((authorId) => ({ id: authorId })),
+    const project = await prisma.$transaction(async (tx) => {
+      const updatedProject = await tx.project.update({
+        where: { id },
+        data: {
+          ...finalUpdateData,
+          ...(authorIds && {
+            authors: {
+              set: authorIds.map((authorId) => ({ id: authorId })),
+            },
+          }),
+        },
+        include: {
+          authors: true,
+          members: true,
+          tasks: true,
+          customFields: true,
+          kanbanColumn: true,
+        },
+      });
+
+      if (isStatusChange && session?.user?.id && trimmedStatusComment) {
+        await tx.projectComment.create({
+          data: {
+            projectId: id,
+            content: trimmedStatusComment,
+            userId: session.user.id,
           },
-        }),
-      },
-      include: {
-        authors: true,
-        members: true,
-        tasks: true,
-        customFields: true,
-        kanbanColumn: true,
-      },
+        });
+      }
+
+      return updatedProject;
     });
 
     // Créer une notification si des changements significatifs ont été apportés
@@ -715,7 +830,6 @@ export async function updateProject(
         updateData.dueDate ||
         updateData.status)
     ) {
-      const session = await getCurrentSession();
       await createProjectNotificationForMembers(
         project.id,
         "PROJECT_UPDATED",
@@ -729,6 +843,9 @@ export async function updateProject(
     return project;
   } catch (error) {
     console.error("Error updating project:", error);
+    if (error instanceof Error) {
+      throw error;
+    }
     throw new Error("Failed to update project");
   }
 }
@@ -766,6 +883,7 @@ export async function moveProject(projectId: string, columnId: string | null) {
         authors: true,
         members: true,
         tasks: true,
+        comments: true,
         customFields: true,
         kanbanColumn: true,
       },
@@ -934,6 +1052,14 @@ export async function applyAutomationRules(
   }[],
 ) {
   try {
+    const session = await getCurrentSession();
+
+    if (!session?.user?.id) {
+      throw new Error(
+        "Vous devez être connecté pour appliquer les règles d'automatisation",
+      );
+    }
+
     // Optimisation 1: Récupérer toutes les colonnes cibles en une seule requête
     const targetColumnIds = [
       ...new Set(projectsToMove.map((p) => p.targetColumnId)),
@@ -967,32 +1093,43 @@ export async function applyAutomationRules(
 
         const newStatus = getProjectStatusFromColumnName(targetColumn.title);
 
-        return prisma.project
-          .update({
-            where: { id: projectId },
-            data: {
-              columnId: targetColumnId,
-              status: newStatus,
-            },
-            select: {
-              id: true,
-              title: true,
-              status: true,
-              // Sélection plus limitée pour améliorer les performances
-              authors: {
-                select: {
-                  id: true,
-                  firstName: true,
-                  lastName: true,
+        return prisma
+          .$transaction(async (tx) => {
+            const project = await tx.project.update({
+              where: { id: projectId },
+              data: {
+                columnId: targetColumnId,
+                status: newStatus,
+              },
+              select: {
+                id: true,
+                title: true,
+                status: true,
+                // Sélection plus limitée pour améliorer les performances
+                authors: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                  },
                 },
               },
-            },
+            });
+
+            await tx.projectComment.create({
+              data: {
+                projectId,
+                userId: session.user.id,
+                content: `Changement automatique de statut vers "${targetColumn.title}" (règle d'automatisation).`,
+              },
+            });
+
+            return {
+              success: true,
+              project,
+              targetColumnTitle: targetColumn.title,
+            };
           })
-          .then((project) => ({
-            success: true,
-            project,
-            targetColumnTitle: targetColumn.title,
-          }))
           .catch((error) => ({
             success: false,
             projectId,

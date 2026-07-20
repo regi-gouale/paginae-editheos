@@ -6,6 +6,17 @@ import { toast } from "sonner";
 import { ProjectDetailDialog } from "@/components/projects/detail-dialog";
 import { KanbanColumn } from "@/components/projects/kanban-column";
 import { ProjectFilters } from "@/components/projects/project-filters";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useProjectFilters } from "@/hooks/projects/use-project-filters";
 import { applyAutomationRules, updateProject } from "@/lib/actions/kanban";
 import { filterKanbanColumns } from "@/lib/project-filters";
@@ -26,6 +37,15 @@ export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
     useState<KanbanColumnWithProjects[]>(initialColumns);
   const [selectedProject, setSelectedProject] =
     useState<ProjectWithDetails | null>(null);
+  const [isCommentDialogOpen, setIsCommentDialogOpen] = useState(false);
+  const [moveComment, setMoveComment] = useState("");
+  const [isMoveSaving, setIsMoveSaving] = useState(false);
+  const [pendingMove, setPendingMove] = useState<{
+    draggableId: string;
+    sourceId: string;
+    destinationId: string;
+    destinationIndex: number;
+  } | null>(null);
 
   // Utiliser le hook nuqs pour les filtres
   const { filters, updateFilters, getFilteredUrl } = useProjectFilters();
@@ -195,38 +215,79 @@ export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
     );
     if (!sourceColumn || !destColumn) return;
 
-    // Créer les nouveaux tableaux de colonnes
-    const newColumns = [...columns];
-    const sourceColIndex = newColumns.findIndex(
-      (col) => col.id === source.droppableId,
-    );
-    const destColIndex = newColumns.findIndex(
-      (col) => col.id === destination.droppableId,
-    );
-
     // Trouver le projet déplacé
     const project = sourceColumn.projects.find((p) => p.id === draggableId);
     if (!project) return;
 
-    // Déterminer le nouveau statut
+    setPendingMove({
+      draggableId,
+      sourceId: source.droppableId,
+      destinationId: destination.droppableId,
+      destinationIndex: destination.index,
+    });
+    setMoveComment("");
+    setIsCommentDialogOpen(true);
+  };
+
+  const applyPendingMove = async () => {
+    if (!pendingMove) return;
+
+    const comment = moveComment.trim();
+    if (!comment) {
+      toast.error("Un commentaire est obligatoire pour changer le statut");
+      return;
+    }
+
+    const sourceColumn = columns.find((col) => col.id === pendingMove.sourceId);
+    const destColumn = columns.find(
+      (col) => col.id === pendingMove.destinationId,
+    );
+    if (!sourceColumn || !destColumn) {
+      setPendingMove(null);
+      setIsCommentDialogOpen(false);
+      return;
+    }
+
+    const newColumns = [...columns];
+    const sourceColIndex = newColumns.findIndex(
+      (col) => col.id === pendingMove.sourceId,
+    );
+    const destColIndex = newColumns.findIndex(
+      (col) => col.id === pendingMove.destinationId,
+    );
+
+    const project = sourceColumn.projects.find(
+      (p) => p.id === pendingMove.draggableId,
+    );
+    if (!project) {
+      setPendingMove(null);
+      setIsCommentDialogOpen(false);
+      return;
+    }
+
     const newStatus = getProjectStatusFromColumnName(destColumn.title);
 
-    // Appel de l'action server pour mettre à jour le statut en base
+    setIsMoveSaving(true);
     try {
       await updateProject(project.id, {
         status: newStatus,
         columnId: destColumn.id,
+        statusComment: comment,
       });
     } catch {
       toast.error("Erreur lors du déplacement", {
         description: `Impossible de mettre à jour le projet en base : ${project.title}`,
       });
+      setIsMoveSaving(false);
       return;
     }
+
     // Mise à jour locale
     newColumns[sourceColIndex] = {
       ...sourceColumn,
-      projects: sourceColumn.projects.filter((t) => t.id !== draggableId),
+      projects: sourceColumn.projects.filter(
+        (t) => t.id !== pendingMove.draggableId,
+      ),
     };
     const updatedProject = {
       ...project,
@@ -235,21 +296,26 @@ export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
     newColumns[destColIndex] = {
       ...destColumn,
       projects: [
-        ...destColumn.projects.slice(0, destination.index),
+        ...destColumn.projects.slice(0, pendingMove.destinationIndex),
         updatedProject,
-        ...destColumn.projects.slice(destination.index),
+        ...destColumn.projects.slice(pendingMove.destinationIndex),
       ],
     };
     setColumns(newColumns);
 
     // Mettre à jour le projet sélectionné si besoin
-    if (selectedProject && selectedProject.id === draggableId) {
+    if (selectedProject && selectedProject.id === pendingMove.draggableId) {
       setSelectedProject(updatedProject);
     }
 
     toast.info("Projet déplacé", {
       description: `"${project.title}" déplacé vers ${destColumn.title}`,
     });
+
+    setIsMoveSaving(false);
+    setIsCommentDialogOpen(false);
+    setPendingMove(null);
+    setMoveComment("");
   };
 
   return (
@@ -276,6 +342,62 @@ export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
           }}
         />
       </div>
+
+      <Dialog
+        open={isCommentDialogOpen}
+        onOpenChange={(open) => {
+          setIsCommentDialogOpen(open);
+          if (!open) {
+            setPendingMove(null);
+            setMoveComment("");
+          }
+        }}
+      >
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Commentaire requis</DialogTitle>
+            <DialogDescription>
+              Ajoutez un commentaire pour confirmer ce changement de statut.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="board-status-comment">Commentaire</Label>
+            <Textarea
+              id="board-status-comment"
+              value={moveComment}
+              onChange={(event) => setMoveComment(event.target.value)}
+              placeholder="Expliquez la raison du changement..."
+              rows={4}
+              className="rounded-xl"
+            />
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsCommentDialogOpen(false);
+                setPendingMove(null);
+                setMoveComment("");
+              }}
+              disabled={isMoveSaving}
+              className="rounded-xl"
+            >
+              Annuler
+            </Button>
+            <Button
+              type="button"
+              onClick={applyPendingMove}
+              disabled={isMoveSaving}
+              className="rounded-xl"
+            >
+              {isMoveSaving ? "Enregistrement..." : "Confirmer le déplacement"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className={`grid grid-cols-1 md:grid-cols-5 gap-4 h-fit mx-auto`}>

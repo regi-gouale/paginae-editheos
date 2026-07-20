@@ -4,6 +4,7 @@ import type {
   KanbanColumn,
   Member,
   Project,
+  ProjectComment,
   ProjectStatus,
   ProjectTask,
 } from "@/prisma/generated/prisma/client";
@@ -14,6 +15,7 @@ export interface ProjectWithDetails extends Project {
   members: Member[];
   tasks: ProjectTask[];
   customFields: CustomField[];
+  comments?: ProjectComment[];
   kanbanColumn?: KanbanColumn | null;
 }
 

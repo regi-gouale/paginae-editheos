@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { ProjectCommentsEditor } from "@/components/projects/comments-editor";
 import { ProjectCustomFieldsEditor } from "@/components/projects/custom-fields-editor";
 import { ProjectDescriptionDialog } from "@/components/projects/description-dialog";
 import ProjectTitleEditor from "@/components/projects/input-title";
@@ -106,6 +107,11 @@ export function ProjectDetailDialog({
               projectId={editedProject.id}
               customFields={editedProject.customFields}
             />
+          </div>
+
+          <Separator />
+          <div className="space-y-4">
+            <ProjectCommentsEditor projectId={editedProject.id} />
           </div>
         </div>
       </DialogContent>

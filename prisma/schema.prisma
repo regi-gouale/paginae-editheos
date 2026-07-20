@@ -24,6 +24,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   notifications Notification[]
+  projectComments ProjectComment[]
   member        Member?        @relation("UserMember")
 
   @@unique([email])
@@ -179,11 +180,27 @@ model Project {
   members       Member[]       @relation("ProjectMembers")
   tasks         ProjectTask[]
   customFields  CustomField[]
+  comments      ProjectComment[]
   notifications Notification[]
   kanbanColumn  KanbanColumn?  @relation(fields: [columnId], references: [id])
   columnId      String?
 
   @@map("project")
+}
+
+model ProjectComment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  // Relations
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@map("project_comment")
 }
 
 model ProjectTask {

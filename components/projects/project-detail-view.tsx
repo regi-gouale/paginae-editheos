@@ -39,6 +39,7 @@ import {
   projectTypes,
 } from "@/lib/utils";
 import type { ProjectWithDetails } from "@/types/kanban";
+import { ProjectCommentsEditor } from "./comments-editor";
 import { ProjectCustomFieldsEditor } from "./custom-fields-editor";
 import { ProjectFileUrlEditor } from "./file-url-editor";
 import { DeadlineSelectorPopover } from "./popover-due-date";
@@ -274,6 +275,15 @@ export function ProjectDetailView({
               </CardContent>
             </Card>
           )}
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Historique des commentaires</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ProjectCommentsEditor projectId={project.id} />
+            </CardContent>
+          </Card>
         </div>
 
         {/* Colonne latérale */}
