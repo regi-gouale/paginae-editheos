@@ -1,5 +1,6 @@
 "use server";
 
+import { getAccessContext } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import type {
   Priority,
@@ -61,6 +62,7 @@ const STATUS_LABELS: Record<string, { label: string; fill: string }> = {
 
 export async function getDashboardStats(): Promise<DashboardStatsData> {
   try {
+    const access = await getAccessContext();
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
     const todayPlus7 = new Date();
@@ -81,6 +83,16 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
 
     const activeStatuses: ProjectStatus[] = ["TODO", "IN_PROGRESS", "BLOCKED"];
 
+    const projectScope = access.isAdmin
+      ? {}
+      : {
+          members: {
+            some: {
+              userId: access.userId,
+            },
+          },
+        };
+
     const [
       overdueCount,
       dueSoonCount,
@@ -97,6 +109,7 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
       // Projets en retard : date depassee, pas termines ni rejetes
       prisma.project.count({
         where: {
+          ...projectScope,
           dueDate: { lt: startOfToday },
           status: { in: activeStatuses },
         },
@@ -104,46 +117,52 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
       // Echeances dans les 7 prochains jours (non en retard)
       prisma.project.count({
         where: {
+          ...projectScope,
           dueDate: { gte: startOfToday, lte: todayPlus7 },
           status: { in: activeStatuses },
         },
       }),
       prisma.project.count({
-        where: { status: "BLOCKED" },
+        where: { ...projectScope, status: "BLOCKED" },
       }),
       prisma.project.count({
-        where: { status: "IN_PROGRESS" },
+        where: { ...projectScope, status: "IN_PROGRESS" },
       }),
       prisma.project.count({
-        where: {},
+        where: projectScope,
       }),
       prisma.project.count({
-        where: { status: "DONE" },
+        where: { ...projectScope, status: "DONE" },
       }),
       prisma.project.count({
         where: {
+          ...projectScope,
           status: "DONE",
           updatedAt: { gte: startOfThisMonth },
         },
       }),
       prisma.project.count({
         where: {
+          ...projectScope,
           status: "DONE",
           updatedAt: { gte: startOfLastMonth, lte: endOfLastMonth },
         },
       }),
       prisma.project.count({
         where: {
+          ...projectScope,
           createdAt: { gte: startOfThisMonth },
         },
       }),
       prisma.project.count({
         where: {
+          ...projectScope,
           createdAt: { gte: startOfLastMonth, lte: endOfLastMonth },
         },
       }),
       // Distribution par statut
       prisma.project.groupBy({
+        where: projectScope,
         by: ["status"],
         _count: { status: true },
       }),
@@ -205,6 +224,7 @@ export async function getProjectsNeedingAttention(): Promise<
   AttentionProject[]
 > {
   try {
+    const access = await getAccessContext();
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
     const todayPlus7 = new Date();
@@ -213,10 +233,21 @@ export async function getProjectsNeedingAttention(): Promise<
 
     const activeStatuses: ProjectStatus[] = ["TODO", "IN_PROGRESS", "BLOCKED"];
 
+    const projectScope = access.isAdmin
+      ? {}
+      : {
+          members: {
+            some: {
+              userId: access.userId,
+            },
+          },
+        };
+
     const [overdueProjects, dueSoonProjects, blockedProjects] =
       await Promise.all([
         prisma.project.findMany({
           where: {
+            ...projectScope,
             dueDate: { lt: startOfToday },
             status: { in: activeStatuses },
           },
@@ -235,6 +266,7 @@ export async function getProjectsNeedingAttention(): Promise<
         }),
         prisma.project.findMany({
           where: {
+            ...projectScope,
             dueDate: { gte: startOfToday, lte: todayPlus7 },
             status: { in: activeStatuses },
           },
@@ -253,6 +285,7 @@ export async function getProjectsNeedingAttention(): Promise<
         }),
         prisma.project.findMany({
           where: {
+            ...projectScope,
             status: "BLOCKED",
           },
           select: {
@@ -320,8 +353,21 @@ export async function getProjectsNeedingAttention(): Promise<
 
 export async function getActiveTaskProgress(): Promise<TaskProgressProject[]> {
   try {
+    const access = await getAccessContext();
+
+    const projectScope = access.isAdmin
+      ? {}
+      : {
+          members: {
+            some: {
+              userId: access.userId,
+            },
+          },
+        };
+
     const projects = await prisma.project.findMany({
       where: {
+        ...projectScope,
         status: { in: ["TODO", "IN_PROGRESS"] },
       },
       select: {

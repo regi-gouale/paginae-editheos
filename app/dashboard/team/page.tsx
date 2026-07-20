@@ -4,6 +4,7 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { MembersTable } from "@/components/membres/members-table";
 import { getMembers } from "@/lib/actions/members";
 import { auth } from "@/lib/auth/auth";
+import { canManageTeam, getAccessContext } from "@/lib/auth/permissions";
 
 export default async function TeamPage() {
   const session = await auth.api.getSession({
@@ -12,6 +13,11 @@ export default async function TeamPage() {
 
   if (!session) {
     redirect("/auth");
+  }
+
+  const access = await getAccessContext();
+  if (!canManageTeam(access.role)) {
+    redirect("/dashboard/projects");
   }
 
   const initialData = await getMembers({ page: 1, limit: 10 });

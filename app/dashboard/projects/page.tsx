@@ -5,7 +5,7 @@ import { AddProjectDialog } from "@/components/projects/add-project-dialog";
 import { ProjectsBoard } from "@/components/projects/board";
 import { getKanbanData } from "@/lib/actions/kanban";
 import { auth } from "@/lib/auth/auth";
-import { prisma } from "@/lib/prisma";
+import { canCreateProject, getAccessContext } from "@/lib/auth/permissions";
 
 export default async function ProjectPage() {
   const session = await auth.api.getSession({
@@ -16,12 +16,9 @@ export default async function ProjectPage() {
     redirect("/auth");
   }
 
-  const currentMember = await prisma.member.findUnique({
-    where: { userId: session.user.id },
-    select: { role: true },
-  });
-
-  const isAdmin = currentMember?.role === "ADMIN";
+  const access = await getAccessContext();
+  const isAdmin = access.isAdmin;
+  const canCreate = canCreateProject(access.role);
 
   const columns = await getKanbanData();
 
@@ -41,7 +38,7 @@ export default async function ProjectPage() {
             >
               Gestion des projets
             </h1>
-            <AddProjectDialog />
+            {canCreate ? <AddProjectDialog /> : null}
           </div>
         </div>
         <ProjectsBoard initialColumns={columns} isAdmin={isAdmin} />

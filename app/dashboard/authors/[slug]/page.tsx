@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAuthorBySlug } from "@/lib/actions/authors";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
+import { canManageAuthors, getAccessContext } from "@/lib/auth/permissions";
 
 export default async function AuthorDetailPage({
   params,
@@ -30,6 +31,11 @@ export default async function AuthorDetailPage({
 
   if (!session) {
     redirect("/auth");
+  }
+
+  const access = await getAccessContext();
+  if (!canManageAuthors(access.role)) {
+    redirect("/dashboard/projects");
   }
 
   const author = await getAuthorBySlug(resolvedParams.slug);

@@ -4,7 +4,7 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { ProjectDetailView } from "@/components/projects/project-detail-view";
 import { getProjectBySlug } from "@/lib/actions/kanban";
 import { auth } from "@/lib/auth/auth";
-import { prisma } from "@/lib/prisma";
+import { getAccessContext } from "@/lib/auth/permissions";
 import type { ProjectWithDetails } from "@/types/kanban";
 
 export default async function ProjectDetailPage({
@@ -24,12 +24,8 @@ export default async function ProjectDetailPage({
 
   try {
     const project = await getProjectBySlug(resolvedParams.slug);
-    const currentMember = await prisma.member.findUnique({
-      where: { userId: session.user.id },
-      select: { role: true },
-    });
-
-    const isAdmin = currentMember?.role === "ADMIN";
+    const access = await getAccessContext();
+    const isAdmin = access.isAdmin;
 
     const breadcrumbs = [
       { label: "Projets", href: "/dashboard/projects" },

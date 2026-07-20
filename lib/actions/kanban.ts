@@ -3,6 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
 import {
+  assertProjectVisibility,
+  assertProjectVisibilityBySlug,
+  canCommentOnProject,
+  canCreateProject,
+  canManageProjectWork,
+  canUpdateProjectPayload,
+  getAccessContext,
+} from "@/lib/auth/permissions";
+import {
   createProjectNotificationForMembers,
   createUserNotification,
 } from "@/lib/notifications-helpers";
@@ -17,6 +26,7 @@ import type { KanbanColumnWithProjects } from "@/types/kanban";
 // Get project statistics for the sidebar
 export async function getProjectStats() {
   try {
+    const access = await getAccessContext();
     const today = new Date();
     today.setHours(23, 59, 59, 999); // End of today
     const startOfToday = new Date();
@@ -25,23 +35,33 @@ export async function getProjectStats() {
     todayPlus7.setDate(todayPlus7.getDate() + 7);
     todayPlus7.setHours(23, 59, 59, 999); // End of the day in 7 days
 
+    const projectScope = access.isAdmin
+      ? {}
+      : {
+          members: {
+            some: {
+              userId: access.userId,
+            },
+          },
+        };
+
     // Optimisation 1: Exécution groupée pour les colonnes avec comptage
     const columns = await prisma.$transaction([
       prisma.kanbanColumn.findFirst({
         where: { title: "À faire" },
-        include: { _count: { select: { projects: true } } },
+        include: { _count: { select: { projects: { where: projectScope } } } },
       }),
       prisma.kanbanColumn.findFirst({
         where: { title: "En cours" },
-        include: { _count: { select: { projects: true } } },
+        include: { _count: { select: { projects: { where: projectScope } } } },
       }),
       prisma.kanbanColumn.findFirst({
         where: { title: "Bloqué" },
-        include: { _count: { select: { projects: true } } },
+        include: { _count: { select: { projects: { where: projectScope } } } },
       }),
       prisma.kanbanColumn.findFirst({
         where: { title: "Terminé" },
-        include: { _count: { select: { projects: true } } },
+        include: { _count: { select: { projects: { where: projectScope } } } },
       }),
     ]);
 
@@ -50,6 +70,7 @@ export async function getProjectStats() {
       // Échéances bientôt
       prisma.project.count({
         where: {
+          ...projectScope,
           dueDate: {
             gte: startOfToday,
             lte: todayPlus7,
@@ -87,8 +108,21 @@ export async function getProjectStats() {
 // Get recent projects for the dashboard
 export async function getRecentProjects(limit = 5) {
   try {
+    const access = await getAccessContext();
+
+    const projectScope = access.isAdmin
+      ? {}
+      : {
+          members: {
+            some: {
+              userId: access.userId,
+            },
+          },
+        };
+
     // Optimisation : Sélection précise des champs requis + cache
     const projects = await prisma.project.findMany({
+      where: projectScope,
       take: limit,
       orderBy: {
         updatedAt: "desc",
@@ -142,6 +176,13 @@ export async function createCustomField(data: {
   projectId: string;
 }) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, data.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     const field = await prisma.customField.create({
       data,
     });
@@ -156,6 +197,22 @@ export async function createCustomField(data: {
 // Update a custom field
 export async function updateCustomField(id: string, data: { value?: string }) {
   try {
+    const access = await getAccessContext();
+    const customField = await prisma.customField.findUnique({
+      where: { id },
+      select: { projectId: true },
+    });
+
+    if (!customField) {
+      throw new Error("Champ personnalise introuvable");
+    }
+
+    await assertProjectVisibility(access, customField.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     const field = await prisma.customField.update({
       where: { id },
       data,
@@ -171,6 +228,22 @@ export async function updateCustomField(id: string, data: { value?: string }) {
 // Delete a custom field
 export async function deleteCustomField(id: string) {
   try {
+    const access = await getAccessContext();
+    const customField = await prisma.customField.findUnique({
+      where: { id },
+      select: { projectId: true },
+    });
+
+    if (!customField) {
+      throw new Error("Champ personnalise introuvable");
+    }
+
+    await assertProjectVisibility(access, customField.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     await prisma.customField.delete({
       where: { id },
     });
@@ -184,6 +257,9 @@ export async function deleteCustomField(id: string) {
 // Get comments for a project
 export async function getProjectComments(projectId: string) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, projectId);
+
     return await prisma.projectComment.findMany({
       where: { projectId },
       orderBy: { createdAt: "desc" },
@@ -210,10 +286,11 @@ export async function createProjectComment(data: {
   projectId: string;
   content: string;
 }) {
-  const session = await getCurrentSession();
+  const access = await getAccessContext();
+  await assertProjectVisibility(access, data.projectId);
 
-  if (!session?.user?.id) {
-    throw new Error("Vous devez être connecté pour commenter un projet");
+  if (!canCommentOnProject(access.role)) {
+    throw new Error("Vous n'avez pas la permission de commenter ce projet");
   }
 
   const content = data.content.trim();
@@ -226,7 +303,7 @@ export async function createProjectComment(data: {
       data: {
         projectId: data.projectId,
         content,
-        userId: session.user.id,
+        userId: access.userId,
       },
       select: {
         id: true,
@@ -253,6 +330,9 @@ export async function createProjectComment(data: {
 // Get a specific project by ID with all details
 export async function getProjectById(id: string) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, id);
+
     const project = await prisma.project.findUnique({
       where: { id },
       include: {
@@ -311,6 +391,9 @@ export async function getProjectById(id: string) {
 
 export async function getProjectBySlug(slug: string) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibilityBySlug(access, slug);
+
     const project = await prisma.project.findUnique({
       where: { slug },
       include: {
@@ -410,11 +493,24 @@ export async function ensureProjectSlug(projectId: string): Promise<string> {
 // Get all columns with their projects
 export async function getKanbanData(): Promise<KanbanColumnWithProjects[]> {
   try {
+    const access = await getAccessContext();
+
+    const projectScope = access.isAdmin
+      ? {}
+      : {
+          members: {
+            some: {
+              userId: access.userId,
+            },
+          },
+        };
+
     // Optimisation : utiliser select pour limiter les champs retournés
     const columns = await prisma.kanbanColumn.findMany({
       orderBy: { position: "asc" },
       include: {
         projects: {
+          where: projectScope,
           include: {
             authors: true,
             members: true,
@@ -471,6 +567,7 @@ export async function getKanbanData(): Promise<KanbanColumnWithProjects[]> {
         orderBy: { position: "asc" },
         include: {
           projects: {
+            where: projectScope,
             include: {
               authors: true,
               members: true,
@@ -589,7 +686,22 @@ export async function createProject(data: {
   memberIds?: string[];
 }) {
   try {
+    const access = await getAccessContext();
+
+    if (!canCreateProject(access.role)) {
+      throw new Error("Vous n'avez pas la permission de creer un projet");
+    }
+
     const { authorIds, memberIds, ...projectData } = data;
+
+    const finalMemberIds = new Set(memberIds ?? []);
+    if (access.memberId) {
+      finalMemberIds.add(access.memberId);
+    }
+
+    if (!access.isAdmin && finalMemberIds.size === 0) {
+      throw new Error("Vous devez etre membre pour creer un projet");
+    }
 
     const columnTodo = await prisma.kanbanColumn.findFirst({
       where: { title: "À faire" },
@@ -604,9 +716,11 @@ export async function createProject(data: {
           : undefined,
         members: memberIds
           ? {
-              connect: memberIds.map((id) => ({ id })),
+              connect: [...finalMemberIds].map((id) => ({ id })),
             }
-          : undefined,
+          : {
+              connect: [...finalMemberIds].map((id) => ({ id })),
+            },
         columnId: columnTodo?.id,
         slug: `${data.title
           .toLowerCase()
@@ -716,6 +830,13 @@ export async function updateProject(
   },
 ) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, id);
+
+    if (!canUpdateProjectPayload(access.role, data)) {
+      throw new Error("Vous n'avez pas la permission de modifier ce projet");
+    }
+
     const { authorIds, statusComment, ...updateData } = data;
 
     // Récupérer le projet actuel pour comparaison
@@ -853,6 +974,13 @@ export async function updateProject(
 // Move project to different column
 export async function moveProject(projectId: string, columnId: string | null) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, projectId);
+
+    if (!canUpdateProjectPayload(access.role, { columnId })) {
+      throw new Error("Vous n'avez pas la permission de deplacer ce projet");
+    }
+
     // Récupérer le projet actuel pour comparaison
     const currentProject = await prisma.project.findUnique({
       where: { id: projectId },
@@ -916,21 +1044,9 @@ export async function moveProject(projectId: string, columnId: string | null) {
 // Delete a project (admin only)
 export async function deleteProject(projectId: string) {
   try {
-    const session = await getCurrentSession();
+    const access = await getAccessContext();
 
-    if (!session?.user?.id) {
-      return {
-        success: false,
-        error: "Vous devez être connecté pour supprimer un projet",
-      };
-    }
-
-    const currentMember = await prisma.member.findUnique({
-      where: { userId: session.user.id },
-      select: { role: true },
-    });
-
-    if (currentMember?.role !== "ADMIN") {
+    if (!access.isAdmin) {
       return {
         success: false,
         error: "Seuls les administrateurs peuvent supprimer un projet",
@@ -958,6 +1074,13 @@ export async function createProjectTask(data: {
   completed?: boolean;
 }) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, data.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     const task = await prisma.projectTask.create({
       data,
     });
@@ -979,6 +1102,22 @@ export async function updateProjectTask(
   },
 ) {
   try {
+    const access = await getAccessContext();
+    const taskToUpdate = await prisma.projectTask.findUnique({
+      where: { id },
+      select: { projectId: true },
+    });
+
+    if (!taskToUpdate) {
+      throw new Error("Tache introuvable");
+    }
+
+    await assertProjectVisibility(access, taskToUpdate.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     const task = await prisma.projectTask.update({
       where: { id },
       data,
@@ -995,6 +1134,22 @@ export async function updateProjectTask(
 // Delete a project task
 export async function deleteProjectTask(id: string) {
   try {
+    const access = await getAccessContext();
+    const taskToDelete = await prisma.projectTask.findUnique({
+      where: { id },
+      select: { projectId: true },
+    });
+
+    if (!taskToDelete) {
+      throw new Error("Tache introuvable");
+    }
+
+    await assertProjectVisibility(access, taskToDelete.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     await prisma.projectTask.delete({
       where: { id },
     });
@@ -1052,12 +1207,10 @@ export async function applyAutomationRules(
   }[],
 ) {
   try {
-    const session = await getCurrentSession();
+    const access = await getAccessContext();
 
-    if (!session?.user?.id) {
-      throw new Error(
-        "Vous devez être connecté pour appliquer les règles d'automatisation",
-      );
+    if (!access.isAdmin) {
+      throw new Error("Seuls les administrateurs peuvent appliquer les regles");
     }
 
     // Optimisation 1: Récupérer toutes les colonnes cibles en une seule requête
@@ -1119,7 +1272,7 @@ export async function applyAutomationRules(
             await tx.projectComment.create({
               data: {
                 projectId,
-                userId: session.user.id,
+                userId: access.userId,
                 content: `Changement automatique de statut vers "${targetColumn.title}" (règle d'automatisation).`,
               },
             });
