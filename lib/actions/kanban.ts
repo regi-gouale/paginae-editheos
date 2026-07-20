@@ -954,7 +954,7 @@ export async function moveProject(projectId: string, columnId: string | null) {
     const access = await getAccessContext();
     await assertProjectVisibility(access, projectId);
 
-    if (!canUpdateProjectPayload(access.role, { columnId })) {
+    if (!canUpdateProjectPayload(access.role, { columnId: columnId ?? undefined })) {
       throw new Error("Vous n'avez pas la permission de deplacer ce projet");
     }
 
