@@ -20,7 +20,7 @@ async function getRequiredUser() {
 /**
  * Créer une nouvelle notification
  */
-export async function createNotificationAction(
+async function _createNotificationAction(
   userId: string,
   type: NotificationType,
   title: string,
@@ -54,7 +54,7 @@ export async function createNotificationAction(
 /**
  * Créer une notification pour tous les membres d'un projet
  */
-export async function createProjectNotificationAction(
+async function _createProjectNotificationAction(
   projectId: string,
   type: NotificationType,
   title: string,

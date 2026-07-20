@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import {
-  type AttentionProject,
   type DashboardStatsData,
-  getActiveTaskProgress,
   getDashboardStats,
-  getProjectsNeedingAttention,
-  type TaskProgressProject,
 } from "@/lib/actions/dashboard.action";
 
-export type { AttentionProject, DashboardStatsData, TaskProgressProject };
+export type { DashboardStatsData };
 
 const defaultStats: DashboardStatsData = {
   overdue: 0,
@@ -40,48 +36,4 @@ export function useDashboardStats() {
   }, []);
 
   return { data, loading };
-}
-
-export function useProjectsAttention() {
-  const [projects, setProjects] = useState<AttentionProject[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const data = await getProjectsNeedingAttention();
-        setProjects(data);
-      } catch (error) {
-        console.error("Erreur lors du chargement des projets:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  return { projects, loading };
-}
-
-export function useActiveTaskProgress() {
-  const [projects, setProjects] = useState<TaskProgressProject[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const data = await getActiveTaskProgress();
-        setProjects(data);
-      } catch (error) {
-        console.error("Erreur lors du chargement des taches:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  return { projects, loading };
 }

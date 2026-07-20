@@ -7,7 +7,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { ProjectStatus } from "@/prisma/generated/prisma/client";
 
-export interface MonthlyData {
+interface MonthlyData {
   month: string;
   completed: number;
   created: number;

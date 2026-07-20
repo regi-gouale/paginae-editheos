@@ -27,7 +27,7 @@ export async function getTaskTemplates() {
 }
 
 // Récupérer les templates par type de projet
-export async function getTaskTemplatesByType(projectType: ProjectType) {
+async function _getTaskTemplatesByType(projectType: ProjectType) {
   try {
     await assertCanManageTaskTemplates();
     const templates = await prisma.taskTemplate.findMany({
@@ -135,7 +135,7 @@ export async function reorderTaskTemplates(
 }
 
 // Remplacer tous les templates pour un type de projet donné
-export async function replaceTaskTemplatesForType(
+async function _replaceTaskTemplatesForType(
   projectType: ProjectType,
   titles: string[],
 ) {

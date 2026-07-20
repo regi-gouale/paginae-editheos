@@ -20,12 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export type MemberRole =
-  | "ADMIN"
-  | "DESIGNER"
-  | "REVIEWER"
-  | "CONTRIBUTOR"
-  | "GUEST";
+type MemberRole = "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST";
 
 interface AddMemberDialogProps {
   isOpen: boolean;

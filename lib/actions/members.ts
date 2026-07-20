@@ -128,7 +128,7 @@ export async function addMember(data: {
   }
 }
 
-export async function getMemberById(
+async function _getMemberById(
   id: string,
 ): Promise<{ success: boolean; member?: Member; error?: string }> {
   try {

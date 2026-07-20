@@ -52,7 +52,7 @@ const addAuthorSchema = z.object({
 });
 
 // Server Actions following the pattern from instructions
-export async function addAuthorAction(formData: FormData) {
+async function _addAuthorAction(formData: FormData) {
   const session = await getCurrentSession();
   if (!session) redirect("/auth");
 
@@ -132,7 +132,7 @@ export async function updateAuthorAction(formData: FormData) {
   }
 }
 
-export async function deleteAuthorAction(formData: FormData) {
+async function _deleteAuthorAction(formData: FormData) {
   const session = await getCurrentSession();
   if (!session) redirect("/auth");
 
@@ -322,7 +322,7 @@ export async function getNationalities(): Promise<string[]> {
 }
 
 // Fonction pour récupérer un auteur par ID
-export async function getAuthorById(id: string): Promise<Author | null> {
+async function _getAuthorById(id: string): Promise<Author | null> {
   const session = await getCurrentSession();
   if (!session) redirect("/auth");
 

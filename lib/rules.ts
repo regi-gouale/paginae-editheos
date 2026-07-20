@@ -111,8 +111,6 @@ export const shouldMoveProject = (
 /**
  * Vérifie si un projet terminé doit être exempt de l'affichage "en retard"
  */
-export const isExemptFromOverdueDisplay = (
-  project: ProjectWithDetails,
-): boolean => {
+const _isExemptFromOverdueDisplay = (project: ProjectWithDetails): boolean => {
   return project.status === "DONE";
 };

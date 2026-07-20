@@ -313,7 +313,7 @@ export async function createProjectComment(data: {
 }
 
 // Get a specific project by ID with all details
-export async function getProjectById(id: string) {
+async function _getProjectById(id: string) {
   try {
     const access = await getAccessContext();
     await assertProjectVisibility(access, id);
@@ -565,7 +565,7 @@ export async function getKanbanData(): Promise<KanbanColumnWithProjects[]> {
 }
 
 // Create a new column
-export async function createKanbanColumn(data: {
+async function _createKanbanColumn(data: {
   title: string;
   color?: string;
   position: number;
@@ -596,7 +596,7 @@ export async function createKanbanColumn(data: {
 }
 
 // Update a column
-export async function updateKanbanColumn(
+async function _updateKanbanColumn(
   id: string,
   data: {
     title?: string;
@@ -630,7 +630,7 @@ export async function updateKanbanColumn(
 }
 
 // Delete a column
-export async function deleteKanbanColumn(id: string) {
+async function _deleteKanbanColumn(id: string) {
   try {
     // First, move all projects to no column
     await prisma.project.updateMany({
@@ -949,7 +949,7 @@ export async function updateProject(
 }
 
 // Move project to different column
-export async function moveProject(projectId: string, columnId: string | null) {
+async function _moveProject(projectId: string, columnId: string | null) {
   try {
     const access = await getAccessContext();
     await assertProjectVisibility(access, projectId);
@@ -1140,7 +1140,7 @@ export async function deleteProjectTask(id: string) {
 }
 
 // Get all authors for project assignment with caching
-export async function getAuthors() {
+async function _getAuthors() {
   try {
     // Utilisation d'Accelerate pour le cache
     return await prisma.author.findMany({
@@ -1160,7 +1160,7 @@ export async function getAuthors() {
 }
 
 // Get all members for project assignment with caching
-export async function getMembers() {
+async function _getMembers() {
   try {
     // Utilisation d'Accelerate pour le cache
     return await prisma.member.findMany({

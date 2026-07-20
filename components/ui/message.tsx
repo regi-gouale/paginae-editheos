@@ -2,7 +2,7 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-function MessageGroup({ className, ...props }: React.ComponentProps<"div">) {
+function _MessageGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="message-group"
@@ -82,11 +82,4 @@ function MessageFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-export {
-  Message,
-  MessageAvatar,
-  MessageContent,
-  MessageFooter,
-  MessageGroup,
-  MessageHeader,
-};
+export { Message, MessageAvatar, MessageContent, MessageFooter, MessageHeader };

@@ -7,7 +7,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { ProjectStatus } from "@/prisma/generated/prisma/client";
 
-export type ActivityType =
+type ActivityType =
   | "project_created"
   | "project_updated"
   | "project_completed"

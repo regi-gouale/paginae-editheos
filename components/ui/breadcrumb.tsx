@@ -78,7 +78,7 @@ function BreadcrumbSeparator({
   );
 }
 
-function BreadcrumbEllipsis({
+function _BreadcrumbEllipsis({
   className,
   ...props
 }: React.ComponentProps<"span">) {
@@ -98,7 +98,6 @@ function BreadcrumbEllipsis({
 
 export {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,

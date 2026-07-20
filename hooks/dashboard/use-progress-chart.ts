@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import {
   getProgressChartData,
-  type MonthlyData,
   type ProgressChartData,
 } from "@/lib/actions/progress.action";
 
-export type { MonthlyData, ProgressChartData };
+export type { ProgressChartData };
 
 export function useProgressChart() {
   const [data, setData] = useState<ProgressChartData>({

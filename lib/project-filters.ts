@@ -7,7 +7,7 @@ import type {
 /**
  * Filtre les projets selon les critères spécifiés
  */
-export function filterProjects(
+function filterProjects(
   projects: ProjectWithDetails[],
   filters: ProjectFilters,
 ): ProjectWithDetails[] {
