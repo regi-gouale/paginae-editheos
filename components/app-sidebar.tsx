@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useProjectStats } from "@/hooks/projects/use-project-stats";
 import { authClient } from "@/lib/auth/auth-client";
+import type { MemberRole } from "@/prisma/generated/prisma/client";
 
 const data = {
   user: {
@@ -79,9 +80,32 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+  role: MemberRole;
+  canAccessAuthors: boolean;
+  canAccessTeam: boolean;
+};
+
+export function AppSidebar({
+  role,
+  canAccessAuthors,
+  canAccessTeam,
+  ...props
+}: AppSidebarProps) {
   const { data: session } = authClient.useSession();
   const stats = useProjectStats();
+
+  const navMain = data.navMain.filter((item) => {
+    if (item.url === "/dashboard/team") {
+      return canAccessTeam;
+    }
+
+    if (item.url === "/dashboard/authors") {
+      return canAccessAuthors;
+    }
+
+    return true;
+  });
 
   const dynamicStats = [
     {
@@ -151,7 +175,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div> */}
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMain} />
         <NavProjects projects={dynamicStats} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>

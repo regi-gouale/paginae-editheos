@@ -1,6 +1,9 @@
 "use server";
 
-import { getAccessContext } from "@/lib/auth/permissions";
+import {
+  getAccessContext,
+  getProjectAssignmentScope,
+} from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import type {
   Priority,
@@ -83,15 +86,7 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
 
     const activeStatuses: ProjectStatus[] = ["TODO", "IN_PROGRESS", "BLOCKED"];
 
-    const projectScope = access.isAdmin
-      ? {}
-      : {
-          members: {
-            some: {
-              userId: access.userId,
-            },
-          },
-        };
+    const projectScope = getProjectAssignmentScope(access);
 
     const [
       overdueCount,
@@ -233,15 +228,7 @@ export async function getProjectsNeedingAttention(): Promise<
 
     const activeStatuses: ProjectStatus[] = ["TODO", "IN_PROGRESS", "BLOCKED"];
 
-    const projectScope = access.isAdmin
-      ? {}
-      : {
-          members: {
-            some: {
-              userId: access.userId,
-            },
-          },
-        };
+    const projectScope = getProjectAssignmentScope(access);
 
     const [overdueProjects, dueSoonProjects, blockedProjects] =
       await Promise.all([
@@ -355,15 +342,7 @@ export async function getActiveTaskProgress(): Promise<TaskProgressProject[]> {
   try {
     const access = await getAccessContext();
 
-    const projectScope = access.isAdmin
-      ? {}
-      : {
-          members: {
-            some: {
-              userId: access.userId,
-            },
-          },
-        };
+    const projectScope = getProjectAssignmentScope(access);
 
     const projects = await prisma.project.findMany({
       where: {

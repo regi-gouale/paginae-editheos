@@ -10,6 +10,7 @@ import {
   canManageProjectWork,
   canUpdateProjectPayload,
   getAccessContext,
+  getProjectAssignmentScope,
 } from "@/lib/auth/permissions";
 import {
   createProjectNotificationForMembers,
@@ -35,15 +36,7 @@ export async function getProjectStats() {
     todayPlus7.setDate(todayPlus7.getDate() + 7);
     todayPlus7.setHours(23, 59, 59, 999); // End of the day in 7 days
 
-    const projectScope = access.isAdmin
-      ? {}
-      : {
-          members: {
-            some: {
-              userId: access.userId,
-            },
-          },
-        };
+    const projectScope = getProjectAssignmentScope(access);
 
     // Optimisation 1: Exécution groupée pour les colonnes avec comptage
     const columns = await prisma.$transaction([
@@ -110,15 +103,7 @@ export async function getRecentProjects(limit = 5) {
   try {
     const access = await getAccessContext();
 
-    const projectScope = access.isAdmin
-      ? {}
-      : {
-          members: {
-            some: {
-              userId: access.userId,
-            },
-          },
-        };
+    const projectScope = getProjectAssignmentScope(access);
 
     // Optimisation : Sélection précise des champs requis + cache
     const projects = await prisma.project.findMany({
@@ -495,15 +480,7 @@ export async function getKanbanData(): Promise<KanbanColumnWithProjects[]> {
   try {
     const access = await getAccessContext();
 
-    const projectScope = access.isAdmin
-      ? {}
-      : {
-          members: {
-            some: {
-              userId: access.userId,
-            },
-          },
-        };
+    const projectScope = getProjectAssignmentScope(access);
 
     // Optimisation : utiliser select pour limiter les champs retournés
     const columns = await prisma.kanbanColumn.findMany({

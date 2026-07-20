@@ -26,6 +26,14 @@ export default async function ProjectDetailPage({
     const project = await getProjectBySlug(resolvedParams.slug);
     const access = await getAccessContext();
     const isAdmin = access.isAdmin;
+    const canEditProject =
+      access.role === "ADMIN" ||
+      access.role === "CONTRIBUTOR" ||
+      access.role === "DESIGNER";
+    const canEditStatus =
+      access.role === "ADMIN" || access.role === "CONTRIBUTOR";
+    const canComment = access.role !== "GUEST";
+    const canEditDesign = access.role === "ADMIN" || access.role === "DESIGNER";
 
     const breadcrumbs = [
       { label: "Projets", href: "/dashboard/projects" },
@@ -39,6 +47,10 @@ export default async function ProjectDetailPage({
           <ProjectDetailView
             project={project as ProjectWithDetails}
             isAdmin={isAdmin}
+            canEditProject={canEditProject}
+            canEditStatus={canEditStatus}
+            canComment={canComment}
+            canEditDesign={canEditDesign}
           />
         </main>
       </div>

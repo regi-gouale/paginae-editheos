@@ -23,6 +23,7 @@ type ProjectCommentItem = {
 
 type ProjectCommentsEditorProps = {
   projectId: string;
+  canComment?: boolean;
 };
 
 function getInitials(name: string) {
@@ -34,6 +35,7 @@ function getInitials(name: string) {
 
 export function ProjectCommentsEditor({
   projectId,
+  canComment = true,
 }: ProjectCommentsEditorProps) {
   const [comments, setComments] = useState<ProjectCommentItem[]>([]);
   const [newComment, setNewComment] = useState("");
@@ -100,26 +102,32 @@ export function ProjectCommentsEditor({
         <Label className="text-base font-semibold">Commentaires</Label>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <Textarea
-          value={newComment}
-          onChange={(event) => setNewComment(event.target.value)}
-          placeholder="Ajouter un commentaire..."
-          rows={3}
-          className="rounded-xl"
-        />
-        <div className="flex justify-end">
-          <Button
-            type="button"
-            onClick={handleAddComment}
-            disabled={isSubmitting}
+      {canComment ? (
+        <div className="flex flex-col gap-2">
+          <Textarea
+            value={newComment}
+            onChange={(event) => setNewComment(event.target.value)}
+            placeholder="Ajouter un commentaire..."
+            rows={3}
             className="rounded-xl"
-          >
-            <IconMessageCirclePlus className="size-4 mr-2" />
-            {isSubmitting ? "Ajout..." : "Ajouter un commentaire"}
-          </Button>
+          />
+          <div className="flex justify-end">
+            <Button
+              type="button"
+              onClick={handleAddComment}
+              disabled={isSubmitting}
+              className="rounded-xl"
+            >
+              <IconMessageCirclePlus className="size-4 mr-2" />
+              {isSubmitting ? "Ajout..." : "Ajouter un commentaire"}
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <p className="text-sm text-muted-foreground">
+          Vous avez un accès en lecture seule sur les commentaires.
+        </p>
+      )}
 
       <div className="flex flex-col gap-3 max-h-72 overflow-y-auto pr-1">
         {isLoading ? (

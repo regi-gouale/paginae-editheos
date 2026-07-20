@@ -24,12 +24,21 @@ interface ProjectDetailDialogProps {
   project: ProjectWithDetails | null;
   open: boolean;
   isAdmin: boolean;
+  canEditProject: boolean;
+  canEditStatus: boolean;
+  canEditDesign: boolean;
+  canComment: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 export function ProjectDetailDialog({
   project,
   open,
+  isAdmin,
+  canEditProject,
+  canEditStatus,
+  canEditDesign,
+  canComment,
   onOpenChange,
 }: ProjectDetailDialogProps) {
   const [editedProject, setEditedProject] = useState<ProjectWithDetails | null>(
@@ -55,27 +64,35 @@ export function ProjectDetailDialog({
               title={editedProject.title}
               projectId={editedProject.id}
               slug={editedProject.slug || undefined}
+              canEdit={canEditProject}
             />
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 flex flex-col">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <ProjectStatusDropdown
-              projectId={editedProject.id}
-              status={editedProject.status}
-              // onStatusUpdated={handleStatusUpdate}
-            />
-            <AuthorSelectionDropdown
-              projectId={editedProject.id}
-              selectedAuthors={editedProject.authors}
-            />
+            {canEditStatus ? (
+              <ProjectStatusDropdown
+                projectId={editedProject.id}
+                status={editedProject.status}
+                canValidate={isAdmin}
+                // onStatusUpdated={handleStatusUpdate}
+              />
+            ) : null}
+            {canEditProject ? (
+              <AuthorSelectionDropdown
+                projectId={editedProject.id}
+                selectedAuthors={editedProject.authors}
+              />
+            ) : null}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <DeadlineSelectorPopover
-              projectId={editedProject.id}
-              dueDate={editedProject.dueDate}
-            />
+            {canEditProject ? (
+              <DeadlineSelectorPopover
+                projectId={editedProject.id}
+                dueDate={editedProject.dueDate}
+              />
+            ) : null}
             <div className="space-y-2">
               <Label>Priorité</Label>
               <Input
@@ -89,29 +106,37 @@ export function ProjectDetailDialog({
             <ProjectDescriptionDialog
               projectId={editedProject.id}
               description={editedProject.description}
+              canEdit={canEditDesign || canEditProject}
             />
           </div>
 
           <Separator />
 
+          {canEditProject ? (
+            <div className="space-y-4">
+              <ProjectTasksEditor
+                projectId={editedProject.id}
+                tasks={editedProject.tasks}
+              />
+            </div>
+          ) : null}
+
+          <Separator />
+          {canEditProject ? (
+            <div className="space-y-4">
+              <ProjectCustomFieldsEditor
+                projectId={editedProject.id}
+                customFields={editedProject.customFields}
+              />
+            </div>
+          ) : null}
+
+          <Separator />
           <div className="space-y-4">
-            <ProjectTasksEditor
+            <ProjectCommentsEditor
               projectId={editedProject.id}
-              tasks={editedProject.tasks}
+              canComment={canComment}
             />
-          </div>
-
-          <Separator />
-          <div className="space-y-4">
-            <ProjectCustomFieldsEditor
-              projectId={editedProject.id}
-              customFields={editedProject.customFields}
-            />
-          </div>
-
-          <Separator />
-          <div className="space-y-4">
-            <ProjectCommentsEditor projectId={editedProject.id} />
           </div>
         </div>
       </DialogContent>

@@ -1,6 +1,9 @@
 "use server";
 
-import { getAccessContext } from "@/lib/auth/permissions";
+import {
+  getAccessContext,
+  getProjectAssignmentScope,
+} from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import { ProjectStatus } from "@/prisma/generated/prisma/client";
 
@@ -30,15 +33,7 @@ export async function getRecentActivities(limit = 10): Promise<ActivityItem[]> {
     const access = await getAccessContext();
     const activities: ActivityItem[] = [];
 
-    const projectScope = access.isAdmin
-      ? {}
-      : {
-          members: {
-            some: {
-              userId: access.userId,
-            },
-          },
-        };
+    const projectScope = getProjectAssignmentScope(access);
 
     // Récupérer les projets récemment créés (derniers 7 jours)
     const sevenDaysAgo = new Date();

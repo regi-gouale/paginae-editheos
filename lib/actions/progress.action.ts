@@ -1,6 +1,9 @@
 "use server";
 
-import { getAccessContext } from "@/lib/auth/permissions";
+import {
+  getAccessContext,
+  getProjectAssignmentScope,
+} from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import { ProjectStatus } from "@/prisma/generated/prisma/client";
 
@@ -26,15 +29,7 @@ export async function getProgressChartData(): Promise<ProgressChartData> {
   try {
     const access = await getAccessContext();
 
-    const projectScope = access.isAdmin
-      ? {}
-      : {
-          members: {
-            some: {
-              userId: access.userId,
-            },
-          },
-        };
+    const projectScope = getProjectAssignmentScope(access);
 
     // Récupérer les 12 derniers mois
     const monthsAgo = new Date();

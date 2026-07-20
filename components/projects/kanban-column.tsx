@@ -23,6 +23,8 @@ import type {
 
 interface KanbanColumnProps {
   column: KanbanColumnWithProjects;
+  canCreateProject: boolean;
+  canMoveProject: boolean;
   onProjectClick: (project: ProjectWithDetails) => void;
   // onDeleteColumn: () => void;
   // onUpdateColumn: (
@@ -33,6 +35,8 @@ interface KanbanColumnProps {
 
 export function KanbanColumn({
   column,
+  canCreateProject,
+  canMoveProject,
   onProjectClick,
 }: // onDeleteColumn,
 // onUpdateColumn,
@@ -117,6 +121,7 @@ KanbanColumnProps) {
                 key={project.id}
                 draggableId={project.id}
                 index={index}
+                isDragDisabled={!canMoveProject}
               >
                 {(provided) => {
                   const { style, ...draggableProps } = provided.draggableProps;
@@ -140,7 +145,9 @@ KanbanColumnProps) {
             {provided.placeholder}
 
             {/* Bouton d'ajout de projet */}
-            <AddProjectDialog onProjectAdded={() => {}} isInColumn={true} />
+            {canCreateProject ? (
+              <AddProjectDialog onProjectAdded={() => {}} isInColumn={true} />
+            ) : null}
           </div>
         )}
       </Droppable>

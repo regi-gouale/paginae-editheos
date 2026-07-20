@@ -19,6 +19,16 @@ export default async function ProjectPage() {
   const access = await getAccessContext();
   const isAdmin = access.isAdmin;
   const canCreate = canCreateProject(access.role);
+  const canMoveProject =
+    access.role === "ADMIN" || access.role === "CONTRIBUTOR";
+  const canEditProject =
+    access.role === "ADMIN" ||
+    access.role === "CONTRIBUTOR" ||
+    access.role === "DESIGNER";
+  const canEditStatus =
+    access.role === "ADMIN" || access.role === "CONTRIBUTOR";
+  const canComment = access.role !== "GUEST";
+  const canEditDesign = access.role === "ADMIN" || access.role === "DESIGNER";
 
   const columns = await getKanbanData();
 
@@ -41,7 +51,16 @@ export default async function ProjectPage() {
             {canCreate ? <AddProjectDialog /> : null}
           </div>
         </div>
-        <ProjectsBoard initialColumns={columns} isAdmin={isAdmin} />
+        <ProjectsBoard
+          initialColumns={columns}
+          isAdmin={isAdmin}
+          canCreateProject={canCreate}
+          canMoveProject={canMoveProject}
+          canEditProject={canEditProject}
+          canEditStatus={canEditStatus}
+          canEditDesign={canEditDesign}
+          canComment={canComment}
+        />
         {/* <KanbanBoard initialColumns={columns} /> */}
       </main>
     </div>

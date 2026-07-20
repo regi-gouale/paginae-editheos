@@ -11,12 +11,14 @@ import { Input } from "../ui/input";
 type FileUrlEditorProps = {
   projectId: string;
   fileUrl: string | null;
+  canEdit?: boolean;
   // isDetailView?: boolean;
 };
 
 export function ProjectFileUrlEditor({
   projectId,
   fileUrl,
+  canEdit = true,
 }: // isDetailView = false,
 FileUrlEditorProps) {
   const [editedFileUrl, setEditedFileUrl] = useState<string | null>(fileUrl);
@@ -59,13 +61,15 @@ FileUrlEditorProps) {
               <span className="italic">Aucun fichier lié</span>
             )}
           </div>
-          <Button
-            onClick={() => setIsEditing(true)}
-            variant={"ghost"}
-            className="rounded-full p-0"
-          >
-            <IconEdit className="size-3 p-0" />
-          </Button>
+          {canEdit ? (
+            <Button
+              onClick={() => setIsEditing(true)}
+              variant={"ghost"}
+              className="rounded-full p-0"
+            >
+              <IconEdit className="size-3 p-0" />
+            </Button>
+          ) : null}
         </div>
       )}
       {isEditing && (

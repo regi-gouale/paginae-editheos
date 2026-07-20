@@ -2,11 +2,13 @@ import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { prisma } from "@/lib/prisma";
 import type {
   MemberRole,
+  Prisma,
   ProjectStatus,
 } from "@/prisma/generated/prisma/client";
 
 export type AccessContext = {
   userId: string;
+  userEmail: string;
   role: MemberRole;
   memberId: string | null;
   isAdmin: boolean;
@@ -31,9 +33,37 @@ export async function getAccessContext(): Promise<AccessContext> {
 
   return {
     userId: session.user.id,
+    userEmail: session.user.email,
     role,
     memberId: member?.id ?? null,
     isAdmin: role === "ADMIN",
+  };
+}
+
+export function getProjectAssignmentScope(
+  context: AccessContext,
+): Prisma.ProjectWhereInput {
+  if (context.isAdmin) {
+    return {};
+  }
+
+  return {
+    OR: [
+      {
+        members: {
+          some: {
+            userId: context.userId,
+          },
+        },
+      },
+      {
+        members: {
+          some: {
+            email: context.userEmail,
+          },
+        },
+      },
+    ],
   };
 }
 
@@ -111,7 +141,7 @@ export async function assertProjectVisibility(
   const project = await prisma.project.findFirst({
     where: {
       id: projectId,
-      members: { some: { userId: context.userId } },
+      ...getProjectAssignmentScope(context),
     },
     select: { id: true },
   });
@@ -132,7 +162,7 @@ export async function assertProjectVisibilityBySlug(
   const project = await prisma.project.findFirst({
     where: {
       slug,
-      members: { some: { userId: context.userId } },
+      ...getProjectAssignmentScope(context),
     },
     select: { id: true },
   });

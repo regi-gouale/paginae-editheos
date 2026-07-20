@@ -30,9 +30,24 @@ import type {
 interface ProjectsBoardProps {
   initialColumns: KanbanColumnWithProjects[];
   isAdmin: boolean;
+  canCreateProject: boolean;
+  canMoveProject: boolean;
+  canEditProject: boolean;
+  canEditStatus: boolean;
+  canEditDesign: boolean;
+  canComment: boolean;
 }
 
-export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
+export function ProjectsBoard({
+  initialColumns,
+  isAdmin,
+  canCreateProject,
+  canMoveProject,
+  canEditProject,
+  canEditStatus,
+  canEditDesign,
+  canComment,
+}: ProjectsBoardProps) {
   const [columns, setColumns] =
     useState<KanbanColumnWithProjects[]>(initialColumns);
   const [selectedProject, setSelectedProject] =
@@ -198,6 +213,11 @@ export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
   // };
 
   const handleDragEnd = async (result: DropResult) => {
+    if (!canMoveProject) {
+      toast.error("Vous n'avez pas la permission de déplacer ce projet");
+      return;
+    }
+
     const { destination, source, draggableId } = result;
     // Si pas de destination ou déplacement au même endroit
     if (
@@ -266,6 +286,11 @@ export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
     }
 
     const newStatus = getProjectStatusFromColumnName(destColumn.title);
+
+    if (!canEditStatus) {
+      toast.error("Vous n'avez pas la permission de changer le statut");
+      return;
+    }
 
     setIsMoveSaving(true);
     try {
@@ -405,6 +430,8 @@ export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
             <KanbanColumn
               key={column.id}
               column={column}
+              canCreateProject={canCreateProject}
+              canMoveProject={canMoveProject}
               // onAddProject={addProject}
               onProjectClick={setSelectedProject}
               // onDeleteColumn={() => {}}
@@ -418,6 +445,10 @@ export function ProjectsBoard({ initialColumns, isAdmin }: ProjectsBoardProps) {
         project={selectedProject}
         open={!!selectedProject}
         isAdmin={isAdmin}
+        canEditProject={canEditProject}
+        canEditStatus={canEditStatus}
+        canEditDesign={canEditDesign}
+        canComment={canComment}
         onOpenChange={(open) => {
           if (!open) setSelectedProject(null);
         }}

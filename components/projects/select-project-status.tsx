@@ -26,12 +26,14 @@ import type { ProjectStatus } from "@/prisma/generated/prisma/client";
 interface ProjectStatusDropdownProps {
   projectId: string;
   status: ProjectStatus;
+  canValidate?: boolean;
   // onStatusUpdated?: (newStatus: ProjectStatus) => void;
 }
 
 export function ProjectStatusDropdown({
   projectId,
   status,
+  canValidate = false,
 }: // onStatusUpdated,
 ProjectStatusDropdownProps) {
   const [selectedStatus, setSelectedStatus] = useState<ProjectStatus>(status);
@@ -98,8 +100,10 @@ ProjectStatusDropdownProps) {
           <SelectItem value="TODO">À faire</SelectItem>
           <SelectItem value="IN_PROGRESS">En cours</SelectItem>
           <SelectItem value="BLOCKED">Bloqué</SelectItem>
-          <SelectItem value="DONE">Terminé</SelectItem>
-          <SelectItem value="REJECTED">Rejeté</SelectItem>
+          {canValidate ? <SelectItem value="DONE">Terminé</SelectItem> : null}
+          {canValidate ? (
+            <SelectItem value="REJECTED">Rejeté</SelectItem>
+          ) : null}
         </SelectContent>
       </Select>
 
