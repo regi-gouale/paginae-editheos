@@ -41,7 +41,7 @@ const FAQ_ITEMS = [
 
 export function SupportFaq() {
   return (
-    <Accordion type="single" collapsible>
+    <Accordion>
       {FAQ_ITEMS.map((item, index) => (
         <AccordionItem key={item.question} value={`item-${index}`}>
           <AccordionTrigger>{item.question}</AccordionTrigger>
