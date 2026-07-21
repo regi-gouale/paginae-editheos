@@ -801,6 +801,7 @@ export async function updateProject(
     dueDate?: Date;
     columnId?: string;
     authorIds?: string[];
+    memberIds?: string[];
     slug?: string;
     fileUrl?: string;
     statusComment?: string;
@@ -814,7 +815,7 @@ export async function updateProject(
       throw new Error("Vous n'avez pas la permission de modifier ce projet");
     }
 
-    const { authorIds, statusComment, ...updateData } = data;
+    const { authorIds, memberIds, statusComment, ...updateData } = data;
 
     // Récupérer le projet actuel pour comparaison
     const currentProject = await prisma.project.findUnique({
@@ -895,6 +896,11 @@ export async function updateProject(
           ...(authorIds && {
             authors: {
               set: authorIds.map((authorId) => ({ id: authorId })),
+            },
+          }),
+          ...(memberIds && {
+            members: {
+              set: memberIds.map((memberId) => ({ id: memberId })),
             },
           }),
         },

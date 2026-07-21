@@ -55,7 +55,7 @@ export const AddMemberDialog: React.FC<AddMemberDialogProps> = ({
           <span className="hidden md:block md:ml-1">Membre</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Ajouter un nouveau membre</DialogTitle>
           <DialogDescription>

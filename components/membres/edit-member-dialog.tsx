@@ -91,7 +91,7 @@ export const EditMemberDialog: React.FC<EditMemberDialogProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Modifier le membre</DialogTitle>
           <DialogDescription>
