@@ -4,6 +4,7 @@ import { AuthorsTable } from "@/components/authors/authors-table";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { getAuthors } from "@/lib/actions/authors";
 import { auth } from "@/lib/auth/auth";
+import { canManageAuthors, getAccessContext } from "@/lib/auth/permissions";
 
 export default async function AuthorsPage() {
   const session = await auth.api.getSession({
@@ -12,6 +13,11 @@ export default async function AuthorsPage() {
 
   if (!session) {
     redirect("/auth");
+  }
+
+  const access = await getAccessContext();
+  if (!canManageAuthors(access.role)) {
+    redirect("/dashboard/projects");
   }
 
   const initialData = await getAuthors({ page: 1, limit: 10 });

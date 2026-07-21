@@ -106,7 +106,7 @@ export const getColumnNameFromProjectStatus = (
   }
 };
 
-export const priorityLevels = {
+const _priorityLevels = {
   LOW: "Basse",
   MEDIUM: "Moyenne",
   HIGH: "Haute",

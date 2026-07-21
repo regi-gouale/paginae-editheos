@@ -1,9 +1,13 @@
 "use server";
 
+import {
+  getAccessContext,
+  getProjectAssignmentScope,
+} from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import { ProjectStatus } from "@/prisma/generated/prisma/client";
 
-export type ActivityType =
+type ActivityType =
   | "project_created"
   | "project_updated"
   | "project_completed"
@@ -26,7 +30,10 @@ export interface ActivityItem {
 
 export async function getRecentActivities(limit = 10): Promise<ActivityItem[]> {
   try {
+    const access = await getAccessContext();
     const activities: ActivityItem[] = [];
+
+    const projectScope = getProjectAssignmentScope(access);
 
     // Récupérer les projets récemment créés (derniers 7 jours)
     const sevenDaysAgo = new Date();
@@ -34,6 +41,7 @@ export async function getRecentActivities(limit = 10): Promise<ActivityItem[]> {
 
     const recentlyCreatedProjects = await prisma.project.findMany({
       where: {
+        ...projectScope,
         createdAt: {
           gte: sevenDaysAgo,
         },
@@ -79,6 +87,7 @@ export async function getRecentActivities(limit = 10): Promise<ActivityItem[]> {
 
     const recentlyUpdatedProjects = await prisma.project.findMany({
       where: {
+        ...projectScope,
         updatedAt: {
           gte: threeDaysAgo,
         },
@@ -133,6 +142,7 @@ export async function getRecentActivities(limit = 10): Promise<ActivityItem[]> {
     // Récupérer les projets récemment terminés (derniers 7 jours)
     const recentlyCompletedProjects = await prisma.project.findMany({
       where: {
+        ...projectScope,
         status: ProjectStatus.DONE,
         updatedAt: {
           gte: sevenDaysAgo,
@@ -180,6 +190,7 @@ export async function getRecentActivities(limit = 10): Promise<ActivityItem[]> {
 
     const upcomingDeadlines = await prisma.project.findMany({
       where: {
+        ...projectScope,
         dueDate: {
           gte: now,
           lte: threeDaysFromNow,
@@ -217,36 +228,38 @@ export async function getRecentActivities(limit = 10): Promise<ActivityItem[]> {
     }
 
     // Récupérer les membres récemment ajoutés (derniers 7 jours)
-    const recentMembers = await prisma.member.findMany({
-      where: {
-        createdAt: {
-          gte: sevenDaysAgo,
+    if (access.isAdmin) {
+      const recentMembers = await prisma.member.findMany({
+        where: {
+          createdAt: {
+            gte: sevenDaysAgo,
+          },
         },
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 3,
-    });
-
-    for (const member of recentMembers) {
-      activities.push({
-        id: `member-${member.id}`,
-        type: "member_added",
-        title: "Nouveau membre",
-        description: `${member.name} a rejoint l'équipe`,
-        user: {
-          name: "Admin",
-          email: "admin@example.com",
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
         },
-        timestamp: member.createdAt,
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 3,
       });
+
+      for (const member of recentMembers) {
+        activities.push({
+          id: `member-${member.id}`,
+          type: "member_added",
+          title: "Nouveau membre",
+          description: `${member.name} a rejoint l'équipe`,
+          user: {
+            name: "Admin",
+            email: "admin@example.com",
+          },
+          timestamp: member.createdAt,
+        });
+      }
     }
 
     // Trier par timestamp décroissant et limiter

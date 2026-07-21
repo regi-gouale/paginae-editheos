@@ -8,12 +8,14 @@ interface ProjectDescriptionDialogProps {
   projectId: string;
   description: string | null;
   isDetailView?: boolean;
+  canEdit?: boolean;
 }
 
 export function ProjectDescriptionDialog({
   projectId,
   description,
   isDetailView = false,
+  canEdit = true,
 }: ProjectDescriptionDialogProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedDescription, setEditedDescription] = useState(description);
@@ -79,12 +81,18 @@ export function ProjectDescriptionDialog({
               isDetailView
                 ? "text-muted-foreground text-lg mx-auto p-4 rounded-xl"
                 : "min-h-15 p-3 border rounded-xl hover:bg-muted/50 text-sm"
-            } w-full text-left cursor-pointer hover:bg-muted/50 max-h-96 overflow-y-auto`}
-            onClick={() => setIsEditing(true)}
+            } w-full text-left max-h-96 overflow-y-auto ${canEdit ? "cursor-pointer hover:bg-muted/50" : "cursor-default"}`}
+            onClick={() => {
+              if (canEdit) {
+                setIsEditing(true);
+              }
+            }}
           >
             {editedDescription || (
               <span className="text-muted-foreground italic">
-                Cliquez pour ajouter une description ...
+                {canEdit
+                  ? "Cliquez pour ajouter une description ..."
+                  : "Aucune description"}
               </span>
             )}
           </button>

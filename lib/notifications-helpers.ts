@@ -97,7 +97,7 @@ export async function createUserNotification(
 /**
  * Fonction utilitaire pour créer des notifications d'échéance
  */
-export async function createDueDateNotifications() {
+async function _createDueDateNotifications() {
   try {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);

@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { getMemberBySlug } from "@/lib/actions/members";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
+import { canManageTeam, getAccessContext } from "@/lib/auth/permissions";
 import { formatDateLong } from "@/lib/utils";
 
 const roleLabels = {
@@ -42,6 +43,11 @@ export default async function MemberDetailPage({
 
   if (!session) {
     redirect("/auth");
+  }
+
+  const access = await getAccessContext();
+  if (!canManageTeam(access.role)) {
+    redirect("/dashboard/projects");
   }
 
   const resolvedParams = await params;
@@ -189,35 +195,40 @@ export default async function MemberDetailPage({
                 )}
                 {member.role === "DESIGNER" && (
                   <div className="space-y-2">
-                    <p className="font-medium">Designer - Création et design</p>
+                    <p className="font-medium">
+                      Designer - Contribution design
+                    </p>
                     <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Créer et modifier des projets</li>
-                      <li>• Gérer les ressources visuelles</li>
-                      <li>• Collaborer sur les designs</li>
+                      <li>• Voir les projets où il est assigné</li>
+                      <li>
+                        • Mettre à jour la partie design (mise en page,
+                        impression, liens de fichiers)
+                      </li>
+                      <li>• Commenter les projets</li>
                     </ul>
                   </div>
                 )}
                 {member.role === "REVIEWER" && (
                   <div className="space-y-2">
-                    <p className="font-medium">
-                      Relecteur - Révision et validation
-                    </p>
+                    <p className="font-medium">Relecteur - Révision</p>
                     <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Réviser les projets</li>
-                      <li>• Approuver ou rejeter</li>
-                      <li>• Ajouter des commentaires</li>
+                      <li>• Voir les projets qui lui sont assignés</li>
+                      <li>• Laisser des commentaires de relecture</li>
+                      <li>• Ne peut pas modifier le projet ni valider</li>
                     </ul>
                   </div>
                 )}
                 {member.role === "CONTRIBUTOR" && (
                   <div className="space-y-2">
                     <p className="font-medium">
-                      Contributeur - Participation aux projets
+                      Contributeur - Gestion opérationnelle
                     </p>
                     <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Contribuer aux projets assignés</li>
-                      <li>• Modifier le contenu</li>
-                      <li>• Collaboration limitée</li>
+                      <li>• Créer et gérer les projets où il est assigné</li>
+                      <li>• Gérer les fiches auteurs</li>
+                      <li>
+                        • Commenter, sans valider ni supprimer les projets
+                      </li>
                     </ul>
                   </div>
                 )}
@@ -225,9 +236,9 @@ export default async function MemberDetailPage({
                   <div className="space-y-2">
                     <p className="font-medium">Invité - Accès en lecture</p>
                     <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Consulter les projets partagés</li>
-                      <li>• Accès en lecture seule</li>
-                      <li>• Pas de modification</li>
+                      <li>• Voir uniquement les projets assignés</li>
+                      <li>• Accès strictement en lecture seule</li>
+                      <li>• Pas de commentaire ni modification</li>
                     </ul>
                   </div>
                 )}

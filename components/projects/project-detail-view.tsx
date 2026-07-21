@@ -39,6 +39,7 @@ import {
   projectTypes,
 } from "@/lib/utils";
 import type { ProjectWithDetails } from "@/types/kanban";
+import { ProjectCommentsEditor } from "./comments-editor";
 import { ProjectCustomFieldsEditor } from "./custom-fields-editor";
 import { ProjectFileUrlEditor } from "./file-url-editor";
 import { DeadlineSelectorPopover } from "./popover-due-date";
@@ -47,11 +48,19 @@ import { ProjectStatusDropdown } from "./select-project-status";
 interface ProjectDetailViewProps {
   project: ProjectWithDetails;
   isAdmin: boolean;
+  canEditProject: boolean;
+  canEditStatus: boolean;
+  canComment: boolean;
+  canEditDesign: boolean;
 }
 
 export function ProjectDetailView({
   project,
   isAdmin,
+  canEditProject,
+  canEditStatus,
+  canComment,
+  canEditDesign,
 }: ProjectDetailViewProps) {
   const router = useRouter();
   const { showError, showSuccess } = useAlerts();
@@ -121,11 +130,17 @@ export function ProjectDetailView({
             >
               {getColumnNameFromProjectStatus(project.status)}
             </Badge>
+            {!canEditProject ? (
+              <Badge variant="outline" className="rounded-full">
+                Lecture seule
+              </Badge>
+            ) : null}
             <ProjectTitleEditor
               title={project.title}
               projectId={project.id}
               slug={project.slug || undefined}
               isDetailView
+              canEdit={canEditProject}
             />
 
             {isAdmin && (
@@ -182,6 +197,7 @@ export function ProjectDetailView({
               projectId={project.id}
               description={project.description}
               isDetailView
+              canEdit={canEditDesign || canEditProject}
             />
           )}
         </div>
@@ -219,19 +235,40 @@ export function ProjectDetailView({
                   <p>{getPriorityLabel(project.priority)}</p>
                 </div>
 
-                <DeadlineSelectorPopover
-                  projectId={project.id}
-                  dueDate={project.dueDate}
-                  isDetailView
-                  // onDueDateChange={handleDueDateUpdate}
-                />
+                {canEditProject ? (
+                  <DeadlineSelectorPopover
+                    projectId={project.id}
+                    dueDate={project.dueDate}
+                    isDetailView
+                    // onDueDateChange={handleDueDateUpdate}
+                  />
+                ) : (
+                  <div>
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Date d&apos;échéance
+                    </Label>
+                    <p>
+                      {project.dueDate
+                        ? formatDateLong(project.dueDate)
+                        : "Non définie"}
+                    </p>
+                  </div>
+                )}
 
                 <div>
-                  {project.status && (
+                  {project.status && canEditStatus ? (
                     <ProjectStatusDropdown
                       projectId={project.id}
                       status={project.status}
+                      canValidate={isAdmin}
                     />
+                  ) : (
+                    <>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Statut
+                      </Label>
+                      <p>{getColumnNameFromProjectStatus(project.status)}</p>
+                    </>
                   )}
                 </div>
               </div>
@@ -250,11 +287,25 @@ export function ProjectDetailView({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ProjectTasksEditor
-                  tasks={project.tasks}
-                  projectId={project.id}
-                  isDetailView
-                />
+                {canEditProject ? (
+                  <ProjectTasksEditor
+                    tasks={project.tasks}
+                    projectId={project.id}
+                    isDetailView
+                  />
+                ) : (
+                  <div className="space-y-2">
+                    {project.tasks.map((task) => (
+                      <div
+                        key={task.id}
+                        className="flex items-center gap-2 text-sm"
+                      >
+                        <span>{task.completed ? "✓" : "○"}</span>
+                        <span>{task.title}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
@@ -266,14 +317,43 @@ export function ProjectDetailView({
                 <CardTitle>Champs personnalisés</CardTitle>
               </CardHeader>
               <CardContent>
-                <ProjectCustomFieldsEditor
-                  projectId={project.id}
-                  customFields={project.customFields}
-                  isDetailView
-                />
+                {canEditProject ? (
+                  <ProjectCustomFieldsEditor
+                    projectId={project.id}
+                    customFields={project.customFields}
+                    isDetailView
+                  />
+                ) : (
+                  <div className="space-y-2">
+                    {project.customFields.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">
+                        Aucun champ personnalisé
+                      </p>
+                    ) : (
+                      project.customFields.map((field) => (
+                        <div key={field.id} className="text-sm">
+                          <span className="font-medium">{field.name}: </span>
+                          <span>{field.value}</span>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Historique des commentaires</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ProjectCommentsEditor
+                projectId={project.id}
+                canComment={canComment}
+              />
+            </CardContent>
+          </Card>
         </div>
 
         {/* Colonne latérale */}
@@ -368,6 +448,7 @@ export function ProjectDetailView({
               <ProjectFileUrlEditor
                 projectId={project.id}
                 fileUrl={project.fileUrl || ""}
+                canEdit={canEditDesign || canEditProject}
                 // isDetailView
               />
               <div>

@@ -6,7 +6,7 @@ if (!apiKey) {
   throw new Error("USESEND_API_KEY environment variable is not set");
 }
 
-export const usesend = new UseSend(apiKey);
+const usesend = new UseSend(apiKey);
 
 type EmailOptions = {
   to: string;

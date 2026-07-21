@@ -5,7 +5,7 @@ import { AddProjectDialog } from "@/components/projects/add-project-dialog";
 import { ProjectsBoard } from "@/components/projects/board";
 import { getKanbanData } from "@/lib/actions/kanban";
 import { auth } from "@/lib/auth/auth";
-import { prisma } from "@/lib/prisma";
+import { canCreateProject, getAccessContext } from "@/lib/auth/permissions";
 
 export default async function ProjectPage() {
   const session = await auth.api.getSession({
@@ -16,12 +16,19 @@ export default async function ProjectPage() {
     redirect("/auth");
   }
 
-  const currentMember = await prisma.member.findUnique({
-    where: { userId: session.user.id },
-    select: { role: true },
-  });
-
-  const isAdmin = currentMember?.role === "ADMIN";
+  const access = await getAccessContext();
+  const isAdmin = access.isAdmin;
+  const canCreate = canCreateProject(access.role);
+  const canMoveProject =
+    access.role === "ADMIN" || access.role === "CONTRIBUTOR";
+  const canEditProject =
+    access.role === "ADMIN" ||
+    access.role === "CONTRIBUTOR" ||
+    access.role === "DESIGNER";
+  const canEditStatus =
+    access.role === "ADMIN" || access.role === "CONTRIBUTOR";
+  const canComment = access.role !== "GUEST";
+  const canEditDesign = access.role === "ADMIN" || access.role === "DESIGNER";
 
   const columns = await getKanbanData();
 
@@ -41,10 +48,19 @@ export default async function ProjectPage() {
             >
               Gestion des projets
             </h1>
-            <AddProjectDialog />
+            {canCreate ? <AddProjectDialog /> : null}
           </div>
         </div>
-        <ProjectsBoard initialColumns={columns} isAdmin={isAdmin} />
+        <ProjectsBoard
+          initialColumns={columns}
+          isAdmin={isAdmin}
+          canCreateProject={canCreate}
+          canMoveProject={canMoveProject}
+          canEditProject={canEditProject}
+          canEditStatus={canEditStatus}
+          canEditDesign={canEditDesign}
+          canComment={canComment}
+        />
         {/* <KanbanBoard initialColumns={columns} /> */}
       </main>
     </div>

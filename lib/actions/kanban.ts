@@ -3,6 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
 import {
+  assertProjectVisibility,
+  assertProjectVisibilityBySlug,
+  canCommentOnProject,
+  canCreateProject,
+  canManageProjectWork,
+  canUpdateProjectPayload,
+  getAccessContext,
+  getProjectAssignmentScope,
+} from "@/lib/auth/permissions";
+import {
   createProjectNotificationForMembers,
   createUserNotification,
 } from "@/lib/notifications-helpers";
@@ -17,6 +27,7 @@ import type { KanbanColumnWithProjects } from "@/types/kanban";
 // Get project statistics for the sidebar
 export async function getProjectStats() {
   try {
+    const access = await getAccessContext();
     const today = new Date();
     today.setHours(23, 59, 59, 999); // End of today
     const startOfToday = new Date();
@@ -25,23 +36,25 @@ export async function getProjectStats() {
     todayPlus7.setDate(todayPlus7.getDate() + 7);
     todayPlus7.setHours(23, 59, 59, 999); // End of the day in 7 days
 
+    const projectScope = getProjectAssignmentScope(access);
+
     // Optimisation 1: Exécution groupée pour les colonnes avec comptage
     const columns = await prisma.$transaction([
       prisma.kanbanColumn.findFirst({
         where: { title: "À faire" },
-        include: { _count: { select: { projects: true } } },
+        include: { _count: { select: { projects: { where: projectScope } } } },
       }),
       prisma.kanbanColumn.findFirst({
         where: { title: "En cours" },
-        include: { _count: { select: { projects: true } } },
+        include: { _count: { select: { projects: { where: projectScope } } } },
       }),
       prisma.kanbanColumn.findFirst({
         where: { title: "Bloqué" },
-        include: { _count: { select: { projects: true } } },
+        include: { _count: { select: { projects: { where: projectScope } } } },
       }),
       prisma.kanbanColumn.findFirst({
         where: { title: "Terminé" },
-        include: { _count: { select: { projects: true } } },
+        include: { _count: { select: { projects: { where: projectScope } } } },
       }),
     ]);
 
@@ -50,6 +63,7 @@ export async function getProjectStats() {
       // Échéances bientôt
       prisma.project.count({
         where: {
+          ...projectScope,
           dueDate: {
             gte: startOfToday,
             lte: todayPlus7,
@@ -87,8 +101,13 @@ export async function getProjectStats() {
 // Get recent projects for the dashboard
 export async function getRecentProjects(limit = 5) {
   try {
+    const access = await getAccessContext();
+
+    const projectScope = getProjectAssignmentScope(access);
+
     // Optimisation : Sélection précise des champs requis + cache
     const projects = await prisma.project.findMany({
+      where: projectScope,
       take: limit,
       orderBy: {
         updatedAt: "desc",
@@ -142,6 +161,13 @@ export async function createCustomField(data: {
   projectId: string;
 }) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, data.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     const field = await prisma.customField.create({
       data,
     });
@@ -156,6 +182,22 @@ export async function createCustomField(data: {
 // Update a custom field
 export async function updateCustomField(id: string, data: { value?: string }) {
   try {
+    const access = await getAccessContext();
+    const customField = await prisma.customField.findUnique({
+      where: { id },
+      select: { projectId: true },
+    });
+
+    if (!customField) {
+      throw new Error("Champ personnalise introuvable");
+    }
+
+    await assertProjectVisibility(access, customField.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     const field = await prisma.customField.update({
       where: { id },
       data,
@@ -171,6 +213,22 @@ export async function updateCustomField(id: string, data: { value?: string }) {
 // Delete a custom field
 export async function deleteCustomField(id: string) {
   try {
+    const access = await getAccessContext();
+    const customField = await prisma.customField.findUnique({
+      where: { id },
+      select: { projectId: true },
+    });
+
+    if (!customField) {
+      throw new Error("Champ personnalise introuvable");
+    }
+
+    await assertProjectVisibility(access, customField.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     await prisma.customField.delete({
       where: { id },
     });
@@ -181,9 +239,85 @@ export async function deleteCustomField(id: string) {
   }
 }
 
-// Get a specific project by ID with all details
-export async function getProjectById(id: string) {
+// Get comments for a project
+export async function getProjectComments(projectId: string) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, projectId);
+
+    return await prisma.projectComment.findMany({
+      where: { projectId },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching project comments:", error);
+    throw new Error("Failed to fetch project comments");
+  }
+}
+
+// Create a comment for a project
+export async function createProjectComment(data: {
+  projectId: string;
+  content: string;
+}) {
+  const access = await getAccessContext();
+  await assertProjectVisibility(access, data.projectId);
+
+  if (!canCommentOnProject(access.role)) {
+    throw new Error("Vous n'avez pas la permission de commenter ce projet");
+  }
+
+  const content = data.content.trim();
+  if (!content) {
+    throw new Error("Le commentaire ne peut pas être vide");
+  }
+
+  try {
+    const comment = await prisma.projectComment.create({
+      data: {
+        projectId: data.projectId,
+        content,
+        userId: access.userId,
+      },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    revalidatePath("/dashboard/projects");
+    revalidatePath("/dashboard/projects/[slug]", "page");
+    return comment;
+  } catch (error) {
+    console.error("Error creating project comment:", error);
+    throw new Error("Failed to create project comment");
+  }
+}
+
+// Get a specific project by ID with all details
+async function _getProjectById(id: string) {
+  try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, id);
+
     const project = await prisma.project.findUnique({
       where: { id },
       include: {
@@ -213,6 +347,9 @@ export async function getProjectById(id: string) {
         tasks: {
           orderBy: { createdAt: "asc" },
         },
+        comments: {
+          orderBy: { createdAt: "desc" },
+        },
         customFields: {
           orderBy: { name: "asc" },
         },
@@ -239,6 +376,9 @@ export async function getProjectById(id: string) {
 
 export async function getProjectBySlug(slug: string) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibilityBySlug(access, slug);
+
     const project = await prisma.project.findUnique({
       where: { slug },
       include: {
@@ -246,6 +386,9 @@ export async function getProjectBySlug(slug: string) {
         members: true,
         tasks: {
           orderBy: { createdAt: "asc" },
+        },
+        comments: {
+          orderBy: { createdAt: "desc" },
         },
         customFields: {
           orderBy: { name: "asc" },
@@ -335,15 +478,21 @@ export async function ensureProjectSlug(projectId: string): Promise<string> {
 // Get all columns with their projects
 export async function getKanbanData(): Promise<KanbanColumnWithProjects[]> {
   try {
+    const access = await getAccessContext();
+
+    const projectScope = getProjectAssignmentScope(access);
+
     // Optimisation : utiliser select pour limiter les champs retournés
     const columns = await prisma.kanbanColumn.findMany({
       orderBy: { position: "asc" },
       include: {
         projects: {
+          where: projectScope,
           include: {
             authors: true,
             members: true,
             tasks: true,
+            comments: true,
             customFields: true,
           },
         },
@@ -395,10 +544,12 @@ export async function getKanbanData(): Promise<KanbanColumnWithProjects[]> {
         orderBy: { position: "asc" },
         include: {
           projects: {
+            where: projectScope,
             include: {
               authors: true,
               members: true,
               tasks: true,
+              comments: true,
               customFields: true,
             },
           },
@@ -414,7 +565,7 @@ export async function getKanbanData(): Promise<KanbanColumnWithProjects[]> {
 }
 
 // Create a new column
-export async function createKanbanColumn(data: {
+async function _createKanbanColumn(data: {
   title: string;
   color?: string;
   position: number;
@@ -428,6 +579,7 @@ export async function createKanbanColumn(data: {
             authors: true,
             members: true,
             tasks: true,
+            comments: true,
             customFields: true,
             kanbanColumn: true,
           },
@@ -444,7 +596,7 @@ export async function createKanbanColumn(data: {
 }
 
 // Update a column
-export async function updateKanbanColumn(
+async function _updateKanbanColumn(
   id: string,
   data: {
     title?: string;
@@ -478,7 +630,7 @@ export async function updateKanbanColumn(
 }
 
 // Delete a column
-export async function deleteKanbanColumn(id: string) {
+async function _deleteKanbanColumn(id: string) {
   try {
     // First, move all projects to no column
     await prisma.project.updateMany({
@@ -511,7 +663,22 @@ export async function createProject(data: {
   memberIds?: string[];
 }) {
   try {
+    const access = await getAccessContext();
+
+    if (!canCreateProject(access.role)) {
+      throw new Error("Vous n'avez pas la permission de creer un projet");
+    }
+
     const { authorIds, memberIds, ...projectData } = data;
+
+    const finalMemberIds = new Set(memberIds ?? []);
+    if (access.memberId) {
+      finalMemberIds.add(access.memberId);
+    }
+
+    if (!access.isAdmin && finalMemberIds.size === 0) {
+      throw new Error("Vous devez etre membre pour creer un projet");
+    }
 
     const columnTodo = await prisma.kanbanColumn.findFirst({
       where: { title: "À faire" },
@@ -526,9 +693,11 @@ export async function createProject(data: {
           : undefined,
         members: memberIds
           ? {
-              connect: memberIds.map((id) => ({ id })),
+              connect: [...finalMemberIds].map((id) => ({ id })),
             }
-          : undefined,
+          : {
+              connect: [...finalMemberIds].map((id) => ({ id })),
+            },
         columnId: columnTodo?.id,
         slug: `${data.title
           .toLowerCase()
@@ -540,6 +709,7 @@ export async function createProject(data: {
         authors: true,
         members: true,
         tasks: true,
+        comments: true,
         customFields: true,
         kanbanColumn: true,
       },
@@ -633,16 +803,45 @@ export async function updateProject(
     authorIds?: string[];
     slug?: string;
     fileUrl?: string;
+    statusComment?: string;
   },
 ) {
   try {
-    const { authorIds, ...updateData } = data;
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, id);
+
+    if (!canUpdateProjectPayload(access.role, data)) {
+      throw new Error("Vous n'avez pas la permission de modifier ce projet");
+    }
+
+    const { authorIds, statusComment, ...updateData } = data;
 
     // Récupérer le projet actuel pour comparaison
     const currentProject = await prisma.project.findUnique({
       where: { id },
       include: { members: true },
     });
+
+    const isStatusChange = Boolean(
+      updateData.status &&
+        currentProject &&
+        currentProject.status !== updateData.status,
+    );
+
+    const session = await getCurrentSession();
+    const trimmedStatusComment = statusComment?.trim();
+
+    if (isStatusChange && !trimmedStatusComment) {
+      throw new Error(
+        "Un commentaire est obligatoire pour changer le statut du projet",
+      );
+    }
+
+    if (isStatusChange && !session?.user?.id) {
+      throw new Error(
+        "Vous devez être connecté pour changer le statut d'un projet",
+      );
+    }
 
     // Préparer les données de mise à jour
     let finalUpdateData = { ...updateData };
@@ -688,23 +887,37 @@ export async function updateProject(
       }
     }
 
-    const project = await prisma.project.update({
-      where: { id },
-      data: {
-        ...finalUpdateData,
-        ...(authorIds && {
-          authors: {
-            set: authorIds.map((authorId) => ({ id: authorId })),
+    const project = await prisma.$transaction(async (tx) => {
+      const updatedProject = await tx.project.update({
+        where: { id },
+        data: {
+          ...finalUpdateData,
+          ...(authorIds && {
+            authors: {
+              set: authorIds.map((authorId) => ({ id: authorId })),
+            },
+          }),
+        },
+        include: {
+          authors: true,
+          members: true,
+          tasks: true,
+          customFields: true,
+          kanbanColumn: true,
+        },
+      });
+
+      if (isStatusChange && session?.user?.id && trimmedStatusComment) {
+        await tx.projectComment.create({
+          data: {
+            projectId: id,
+            content: trimmedStatusComment,
+            userId: session.user.id,
           },
-        }),
-      },
-      include: {
-        authors: true,
-        members: true,
-        tasks: true,
-        customFields: true,
-        kanbanColumn: true,
-      },
+        });
+      }
+
+      return updatedProject;
     });
 
     // Créer une notification si des changements significatifs ont été apportés
@@ -715,7 +928,6 @@ export async function updateProject(
         updateData.dueDate ||
         updateData.status)
     ) {
-      const session = await getCurrentSession();
       await createProjectNotificationForMembers(
         project.id,
         "PROJECT_UPDATED",
@@ -729,13 +941,25 @@ export async function updateProject(
     return project;
   } catch (error) {
     console.error("Error updating project:", error);
+    if (error instanceof Error) {
+      throw error;
+    }
     throw new Error("Failed to update project");
   }
 }
 
 // Move project to different column
-export async function moveProject(projectId: string, columnId: string | null) {
+async function _moveProject(projectId: string, columnId: string | null) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, projectId);
+
+    if (
+      !canUpdateProjectPayload(access.role, { columnId: columnId ?? undefined })
+    ) {
+      throw new Error("Vous n'avez pas la permission de deplacer ce projet");
+    }
+
     // Récupérer le projet actuel pour comparaison
     const currentProject = await prisma.project.findUnique({
       where: { id: projectId },
@@ -766,6 +990,7 @@ export async function moveProject(projectId: string, columnId: string | null) {
         authors: true,
         members: true,
         tasks: true,
+        comments: true,
         customFields: true,
         kanbanColumn: true,
       },
@@ -798,21 +1023,9 @@ export async function moveProject(projectId: string, columnId: string | null) {
 // Delete a project (admin only)
 export async function deleteProject(projectId: string) {
   try {
-    const session = await getCurrentSession();
+    const access = await getAccessContext();
 
-    if (!session?.user?.id) {
-      return {
-        success: false,
-        error: "Vous devez être connecté pour supprimer un projet",
-      };
-    }
-
-    const currentMember = await prisma.member.findUnique({
-      where: { userId: session.user.id },
-      select: { role: true },
-    });
-
-    if (currentMember?.role !== "ADMIN") {
+    if (!access.isAdmin) {
       return {
         success: false,
         error: "Seuls les administrateurs peuvent supprimer un projet",
@@ -840,6 +1053,13 @@ export async function createProjectTask(data: {
   completed?: boolean;
 }) {
   try {
+    const access = await getAccessContext();
+    await assertProjectVisibility(access, data.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     const task = await prisma.projectTask.create({
       data,
     });
@@ -861,6 +1081,22 @@ export async function updateProjectTask(
   },
 ) {
   try {
+    const access = await getAccessContext();
+    const taskToUpdate = await prisma.projectTask.findUnique({
+      where: { id },
+      select: { projectId: true },
+    });
+
+    if (!taskToUpdate) {
+      throw new Error("Tache introuvable");
+    }
+
+    await assertProjectVisibility(access, taskToUpdate.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     const task = await prisma.projectTask.update({
       where: { id },
       data,
@@ -877,6 +1113,22 @@ export async function updateProjectTask(
 // Delete a project task
 export async function deleteProjectTask(id: string) {
   try {
+    const access = await getAccessContext();
+    const taskToDelete = await prisma.projectTask.findUnique({
+      where: { id },
+      select: { projectId: true },
+    });
+
+    if (!taskToDelete) {
+      throw new Error("Tache introuvable");
+    }
+
+    await assertProjectVisibility(access, taskToDelete.projectId);
+
+    if (!canManageProjectWork(access.role)) {
+      throw new Error("Acces refuse pour modifier ce projet");
+    }
+
     await prisma.projectTask.delete({
       where: { id },
     });
@@ -888,7 +1140,7 @@ export async function deleteProjectTask(id: string) {
 }
 
 // Get all authors for project assignment with caching
-export async function getAuthors() {
+async function _getAuthors() {
   try {
     // Utilisation d'Accelerate pour le cache
     return await prisma.author.findMany({
@@ -908,7 +1160,7 @@ export async function getAuthors() {
 }
 
 // Get all members for project assignment with caching
-export async function getMembers() {
+async function _getMembers() {
   try {
     // Utilisation d'Accelerate pour le cache
     return await prisma.member.findMany({
@@ -934,6 +1186,12 @@ export async function applyAutomationRules(
   }[],
 ) {
   try {
+    const access = await getAccessContext();
+
+    if (!access.isAdmin) {
+      throw new Error("Seuls les administrateurs peuvent appliquer les regles");
+    }
+
     // Optimisation 1: Récupérer toutes les colonnes cibles en une seule requête
     const targetColumnIds = [
       ...new Set(projectsToMove.map((p) => p.targetColumnId)),
@@ -967,32 +1225,43 @@ export async function applyAutomationRules(
 
         const newStatus = getProjectStatusFromColumnName(targetColumn.title);
 
-        return prisma.project
-          .update({
-            where: { id: projectId },
-            data: {
-              columnId: targetColumnId,
-              status: newStatus,
-            },
-            select: {
-              id: true,
-              title: true,
-              status: true,
-              // Sélection plus limitée pour améliorer les performances
-              authors: {
-                select: {
-                  id: true,
-                  firstName: true,
-                  lastName: true,
+        return prisma
+          .$transaction(async (tx) => {
+            const project = await tx.project.update({
+              where: { id: projectId },
+              data: {
+                columnId: targetColumnId,
+                status: newStatus,
+              },
+              select: {
+                id: true,
+                title: true,
+                status: true,
+                // Sélection plus limitée pour améliorer les performances
+                authors: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                  },
                 },
               },
-            },
+            });
+
+            await tx.projectComment.create({
+              data: {
+                projectId,
+                userId: access.userId,
+                content: `Changement automatique de statut vers "${targetColumn.title}" (règle d'automatisation).`,
+              },
+            });
+
+            return {
+              success: true,
+              project,
+              targetColumnTitle: targetColumn.title,
+            };
           })
-          .then((project) => ({
-            success: true,
-            project,
-            targetColumnTitle: targetColumn.title,
-          }))
           .catch((error) => ({
             success: false,
             projectId,

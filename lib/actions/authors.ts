@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
+import { canManageAuthors, getAccessContext } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import { generateAuthorSlug } from "@/lib/utils";
 import { Prisma } from "@/prisma/generated/prisma/client";
@@ -51,9 +52,14 @@ const addAuthorSchema = z.object({
 });
 
 // Server Actions following the pattern from instructions
-export async function addAuthorAction(formData: FormData) {
+async function _addAuthorAction(formData: FormData) {
   const session = await getCurrentSession();
   if (!session) redirect("/auth");
+
+  const access = await getAccessContext();
+  if (!canManageAuthors(access.role)) {
+    throw new Error("Vous n'avez pas la permission d'ajouter un auteur");
+  }
 
   try {
     const data = {
@@ -89,6 +95,11 @@ export async function updateAuthorAction(formData: FormData) {
   const session = await getCurrentSession();
   if (!session) redirect("/auth");
 
+  const access = await getAccessContext();
+  if (!canManageAuthors(access.role)) {
+    throw new Error("Vous n'avez pas la permission de modifier un auteur");
+  }
+
   try {
     const id = formData.get("id") as string;
     const data = {
@@ -121,9 +132,14 @@ export async function updateAuthorAction(formData: FormData) {
   }
 }
 
-export async function deleteAuthorAction(formData: FormData) {
+async function _deleteAuthorAction(formData: FormData) {
   const session = await getCurrentSession();
   if (!session) redirect("/auth");
+
+  const access = await getAccessContext();
+  if (!canManageAuthors(access.role)) {
+    throw new Error("Vous n'avez pas la permission de supprimer un auteur");
+  }
 
   try {
     const id = formData.get("id") as string;
@@ -232,6 +248,11 @@ export async function addAuthor(data: {
   birthDate?: Date;
 }): Promise<{ success: boolean; author?: Author; error?: string }> {
   try {
+    const access = await getAccessContext();
+    if (!canManageAuthors(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     const author = await prisma.author.create({
       data: {
         ...data,
@@ -258,6 +279,11 @@ export async function deleteAuthor(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const access = await getAccessContext();
+    if (!canManageAuthors(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     await prisma.author.delete({
       where: { id },
     });
@@ -296,9 +322,14 @@ export async function getNationalities(): Promise<string[]> {
 }
 
 // Fonction pour récupérer un auteur par ID
-export async function getAuthorById(id: string): Promise<Author | null> {
+async function _getAuthorById(id: string): Promise<Author | null> {
   const session = await getCurrentSession();
   if (!session) redirect("/auth");
+
+  const access = await getAccessContext();
+  if (!canManageAuthors(access.role)) {
+    throw new Error("Acces refuse");
+  }
 
   try {
     const author = await prisma.author.findUnique({
@@ -316,6 +347,11 @@ export async function getAuthorById(id: string): Promise<Author | null> {
 export async function getAuthorBySlug(slug: string): Promise<Author | null> {
   const session = await getCurrentSession();
   if (!session) redirect("/auth");
+
+  const access = await getAccessContext();
+  if (!canManageAuthors(access.role)) {
+    throw new Error("Acces refuse");
+  }
 
   try {
     const author = await prisma.author.findUnique({

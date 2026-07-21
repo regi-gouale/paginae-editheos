@@ -25,12 +25,7 @@ import {
 import { useAlerts } from "@/hooks/use-alerts";
 import { type Member, updateMember } from "@/lib/actions/members";
 
-export type MemberRole =
-  | "ADMIN"
-  | "DESIGNER"
-  | "REVIEWER"
-  | "CONTRIBUTOR"
-  | "GUEST";
+type MemberRole = "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST";
 
 interface EditMemberDialogProps {
   member: Member;

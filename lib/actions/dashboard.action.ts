@@ -1,11 +1,11 @@
 "use server";
 
+import {
+  getAccessContext,
+  getProjectAssignmentScope,
+} from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
-import type {
-  Priority,
-  ProjectStatus,
-  ProjectType,
-} from "@/prisma/generated/prisma/client";
+import type { ProjectStatus } from "@/prisma/generated/prisma/client";
 
 // --- Types ---
 
@@ -27,28 +27,6 @@ export type DashboardStatsData = {
   }[];
 };
 
-export type AttentionProject = {
-  id: string;
-  title: string;
-  slug: string | null;
-  status: ProjectStatus;
-  priority: Priority;
-  type: ProjectType;
-  dueDate: Date | null;
-  reason: "overdue" | "due_soon" | "blocked";
-  taskProgress: { total: number; completed: number };
-};
-
-export type TaskProgressProject = {
-  id: string;
-  title: string;
-  slug: string | null;
-  status: ProjectStatus;
-  totalTasks: number;
-  completedTasks: number;
-  percentage: number;
-};
-
 // --- Actions ---
 
 const STATUS_LABELS: Record<string, { label: string; fill: string }> = {
@@ -61,6 +39,7 @@ const STATUS_LABELS: Record<string, { label: string; fill: string }> = {
 
 export async function getDashboardStats(): Promise<DashboardStatsData> {
   try {
+    const access = await getAccessContext();
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
     const todayPlus7 = new Date();
@@ -81,6 +60,8 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
 
     const activeStatuses: ProjectStatus[] = ["TODO", "IN_PROGRESS", "BLOCKED"];
 
+    const projectScope = getProjectAssignmentScope(access);
+
     const [
       overdueCount,
       dueSoonCount,
@@ -97,6 +78,7 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
       // Projets en retard : date depassee, pas termines ni rejetes
       prisma.project.count({
         where: {
+          ...projectScope,
           dueDate: { lt: startOfToday },
           status: { in: activeStatuses },
         },
@@ -104,46 +86,52 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
       // Echeances dans les 7 prochains jours (non en retard)
       prisma.project.count({
         where: {
+          ...projectScope,
           dueDate: { gte: startOfToday, lte: todayPlus7 },
           status: { in: activeStatuses },
         },
       }),
       prisma.project.count({
-        where: { status: "BLOCKED" },
+        where: { ...projectScope, status: "BLOCKED" },
       }),
       prisma.project.count({
-        where: { status: "IN_PROGRESS" },
+        where: { ...projectScope, status: "IN_PROGRESS" },
       }),
       prisma.project.count({
-        where: {},
+        where: projectScope,
       }),
       prisma.project.count({
-        where: { status: "DONE" },
+        where: { ...projectScope, status: "DONE" },
       }),
       prisma.project.count({
         where: {
+          ...projectScope,
           status: "DONE",
           updatedAt: { gte: startOfThisMonth },
         },
       }),
       prisma.project.count({
         where: {
+          ...projectScope,
           status: "DONE",
           updatedAt: { gte: startOfLastMonth, lte: endOfLastMonth },
         },
       }),
       prisma.project.count({
         where: {
+          ...projectScope,
           createdAt: { gte: startOfThisMonth },
         },
       }),
       prisma.project.count({
         where: {
+          ...projectScope,
           createdAt: { gte: startOfLastMonth, lte: endOfLastMonth },
         },
       }),
       // Distribution par statut
       prisma.project.groupBy({
+        where: projectScope,
         by: ["status"],
         _count: { status: true },
       }),
@@ -198,161 +186,5 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
       completionTrend: { value: "+0%", direction: "increase" },
       statusDistribution: [],
     };
-  }
-}
-
-export async function getProjectsNeedingAttention(): Promise<
-  AttentionProject[]
-> {
-  try {
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
-    const todayPlus7 = new Date();
-    todayPlus7.setDate(todayPlus7.getDate() + 7);
-    todayPlus7.setHours(23, 59, 59, 999);
-
-    const activeStatuses: ProjectStatus[] = ["TODO", "IN_PROGRESS", "BLOCKED"];
-
-    const [overdueProjects, dueSoonProjects, blockedProjects] =
-      await Promise.all([
-        prisma.project.findMany({
-          where: {
-            dueDate: { lt: startOfToday },
-            status: { in: activeStatuses },
-          },
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            status: true,
-            priority: true,
-            type: true,
-            dueDate: true,
-            tasks: { select: { completed: true } },
-          },
-          orderBy: { dueDate: "asc" },
-          take: 5,
-        }),
-        prisma.project.findMany({
-          where: {
-            dueDate: { gte: startOfToday, lte: todayPlus7 },
-            status: { in: activeStatuses },
-          },
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            status: true,
-            priority: true,
-            type: true,
-            dueDate: true,
-            tasks: { select: { completed: true } },
-          },
-          orderBy: { dueDate: "asc" },
-          take: 5,
-        }),
-        prisma.project.findMany({
-          where: {
-            status: "BLOCKED",
-          },
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            status: true,
-            priority: true,
-            type: true,
-            dueDate: true,
-            tasks: { select: { completed: true } },
-          },
-          orderBy: { updatedAt: "desc" },
-          take: 5,
-        }),
-      ]);
-
-    const mapProject = (
-      p: (typeof overdueProjects)[number],
-      reason: AttentionProject["reason"],
-    ): AttentionProject => ({
-      id: p.id,
-      title: p.title,
-      slug: p.slug,
-      status: p.status,
-      priority: p.priority,
-      type: p.type,
-      dueDate: p.dueDate,
-      reason,
-      taskProgress: {
-        total: p.tasks.length,
-        completed: p.tasks.filter((t) => t.completed).length,
-      },
-    });
-
-    const seen = new Set<string>();
-    const results: AttentionProject[] = [];
-
-    // Priorite : en retard > echeance proche > bloque
-    for (const p of overdueProjects) {
-      if (!seen.has(p.id)) {
-        seen.add(p.id);
-        results.push(mapProject(p, "overdue"));
-      }
-    }
-    for (const p of dueSoonProjects) {
-      if (!seen.has(p.id)) {
-        seen.add(p.id);
-        results.push(mapProject(p, "due_soon"));
-      }
-    }
-    for (const p of blockedProjects) {
-      if (!seen.has(p.id)) {
-        seen.add(p.id);
-        results.push(mapProject(p, "blocked"));
-      }
-    }
-
-    return results.slice(0, 8);
-  } catch (error) {
-    console.error("Error getting projects needing attention:", error);
-    return [];
-  }
-}
-
-export async function getActiveTaskProgress(): Promise<TaskProgressProject[]> {
-  try {
-    const projects = await prisma.project.findMany({
-      where: {
-        status: { in: ["TODO", "IN_PROGRESS"] },
-      },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        status: true,
-        tasks: { select: { completed: true } },
-      },
-      orderBy: { updatedAt: "desc" },
-      take: 8,
-    });
-
-    return projects
-      .filter((p) => p.tasks.length > 0)
-      .map((p) => {
-        const total = p.tasks.length;
-        const completed = p.tasks.filter((t) => t.completed).length;
-        return {
-          id: p.id,
-          title: p.title,
-          slug: p.slug,
-          status: p.status,
-          totalTasks: total,
-          completedTasks: completed,
-          percentage: total > 0 ? Math.round((completed / total) * 100) : 0,
-        };
-      })
-      .sort((a, b) => b.percentage - a.percentage);
-  } catch (error) {
-    console.error("Error getting active task progress:", error);
-    return [];
   }
 }

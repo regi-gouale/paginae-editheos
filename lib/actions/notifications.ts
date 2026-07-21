@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
+import { canManageTeam, getAccessContext } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import type { NotificationType } from "@/prisma/generated/prisma/client";
 
@@ -19,7 +20,7 @@ async function getRequiredUser() {
 /**
  * Créer une nouvelle notification
  */
-export async function createNotificationAction(
+async function _createNotificationAction(
   userId: string,
   type: NotificationType,
   title: string,
@@ -27,6 +28,11 @@ export async function createNotificationAction(
   projectId?: string,
 ) {
   try {
+    const access = await getAccessContext();
+    if (!canManageTeam(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     const notification = await prisma.notification.create({
       data: {
         userId,
@@ -48,7 +54,7 @@ export async function createNotificationAction(
 /**
  * Créer une notification pour tous les membres d'un projet
  */
-export async function createProjectNotificationAction(
+async function _createProjectNotificationAction(
   projectId: string,
   type: NotificationType,
   title: string,
@@ -56,6 +62,11 @@ export async function createProjectNotificationAction(
   excludeUserId?: string,
 ) {
   try {
+    const access = await getAccessContext();
+    if (!canManageTeam(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     // Récupérer tous les utilisateurs ayant un email correspondant aux membres du projet
     const project = await prisma.project.findUnique({
       where: { id: projectId },

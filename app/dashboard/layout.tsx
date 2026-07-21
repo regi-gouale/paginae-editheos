@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import {
+  canManageAuthors,
+  canManageTeam,
+  getAccessContext,
+} from "@/lib/auth/permissions";
+import type { MemberRole } from "@/prisma/generated/prisma/client";
 
 export const metadata: Metadata = {
   title: "Paginae - Espace de travail",
@@ -22,14 +29,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const access = await getAccessContext().catch(() => null);
+
+  if (!access) {
+    redirect("/auth");
+  }
+
   return (
     <SidebarProvider className="min-h-screen w-screen bg-transparent">
-      <AppSidebar />
+      <AppSidebar
+        role={access.role as MemberRole}
+        canAccessAuthors={canManageAuthors(access.role)}
+        canAccessTeam={canManageTeam(access.role)}
+      />
       <SidebarInset className="relative overflow-hidden bg-transparent">
         <div
           className="pointer-events-none absolute inset-0 -z-10"

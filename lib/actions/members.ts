@@ -1,5 +1,7 @@
 "use server";
 
+import { getCurrentSession } from "@/lib/auth/auth-lib";
+import { canManageTeam, getAccessContext } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import { generateMemberSlug } from "@/lib/utils";
 import type { Prisma } from "@/prisma/generated/prisma/client";
@@ -34,6 +36,16 @@ export async function getMembers(
   filters: MembersFilters = {},
 ): Promise<MembersResponse> {
   try {
+    const session = await getCurrentSession();
+    if (!session?.user) {
+      throw new Error("Non authentifie");
+    }
+
+    const access = await getAccessContext();
+    if (!canManageTeam(access.role)) {
+      throw new Error("Acces refuse");
+    }
+
     const { search = "", role = "ALL", page = 1, limit = 10 } = filters;
 
     const skip = (page - 1) * limit;
@@ -98,6 +110,11 @@ export async function addMember(data: {
   role: "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST";
 }): Promise<{ success: boolean; member?: Member; error?: string }> {
   try {
+    const access = await getAccessContext();
+    if (!canManageTeam(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     const member = await prisma.member.create({
       data: {
         ...data,
@@ -111,10 +128,15 @@ export async function addMember(data: {
   }
 }
 
-export async function getMemberById(
+async function _getMemberById(
   id: string,
 ): Promise<{ success: boolean; member?: Member; error?: string }> {
   try {
+    const access = await getAccessContext();
+    if (!canManageTeam(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     const member = await prisma.member.findUnique({
       where: { id },
     });
@@ -137,6 +159,11 @@ export async function getMemberBySlug(
   slug: string,
 ): Promise<{ success: boolean; member?: Member; error?: string }> {
   try {
+    const access = await getAccessContext();
+    if (!canManageTeam(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     const member = await prisma.member.findUnique({
       where: { slug },
     });
@@ -164,6 +191,11 @@ export async function updateMember(
   },
 ): Promise<{ success: boolean; member?: Member; error?: string }> {
   try {
+    const access = await getAccessContext();
+    if (!canManageTeam(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     const member = await prisma.member.update({
       where: { id },
       data,
@@ -182,6 +214,11 @@ export async function deleteMember(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const access = await getAccessContext();
+    if (!canManageTeam(access.role)) {
+      return { success: false, error: "Acces refuse" };
+    }
+
     await prisma.member.delete({
       where: { id },
     });

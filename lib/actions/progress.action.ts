@@ -1,9 +1,13 @@
 "use server";
 
+import {
+  getAccessContext,
+  getProjectAssignmentScope,
+} from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 import { ProjectStatus } from "@/prisma/generated/prisma/client";
 
-export interface MonthlyData {
+interface MonthlyData {
   month: string;
   completed: number;
   created: number;
@@ -23,12 +27,17 @@ export interface ProgressChartData {
 
 export async function getProgressChartData(): Promise<ProgressChartData> {
   try {
+    const access = await getAccessContext();
+
+    const projectScope = getProjectAssignmentScope(access);
+
     // Récupérer les 12 derniers mois
     const monthsAgo = new Date();
     monthsAgo.setMonth(monthsAgo.getMonth() - 12);
 
     const allProjects = await prisma.project.findMany({
       where: {
+        ...projectScope,
         createdAt: {
           gte: monthsAgo,
         },
@@ -110,11 +119,12 @@ export async function getProgressChartData(): Promise<ProgressChartData> {
     // Calculer le total de projets terminés et créés
     const totalCompleted = await prisma.project.count({
       where: {
+        ...projectScope,
         status: ProjectStatus.DONE,
       },
     });
 
-    const totalCreated = await prisma.project.count();
+    const totalCreated = await prisma.project.count({ where: projectScope });
 
     // Calculer la tendance (comparaison du mois actuel avec le précédent)
     const currentMonth = monthlyData[monthlyData.length - 1];

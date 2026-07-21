@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  MessageScroller as MessageScrollerPrimitive,
-  useMessageScroller,
-  useMessageScrollerScrollable,
-  useMessageScrollerVisibility,
-} from "@shadcn/react/message-scroller";
+import { MessageScroller as MessageScrollerPrimitive } from "@shadcn/react/message-scroller";
 import { IconArrowDown } from "@tabler/icons-react";
 import type * as React from "react";
 import { Button } from "@/components/ui/button";
@@ -123,7 +118,4 @@ export {
   MessageScrollerItem,
   MessageScrollerProvider,
   MessageScrollerViewport,
-  useMessageScroller,
-  useMessageScrollerScrollable,
-  useMessageScrollerVisibility,
 };

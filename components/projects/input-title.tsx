@@ -12,6 +12,7 @@ interface ProjectTitleEditorProps {
   title: string;
   slug?: string; // Passé depuis le parent au lieu d'être récupéré côté client
   isDetailView?: boolean;
+  canEdit?: boolean;
 }
 
 export default function ProjectTitleEditor({
@@ -19,6 +20,7 @@ export default function ProjectTitleEditor({
   projectId,
   slug: initialSlug,
   isDetailView = false,
+  canEdit = true,
 }: ProjectTitleEditorProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState<string>("");
@@ -77,14 +79,16 @@ export default function ProjectTitleEditor({
           >
             <div className="flex items-center gap-2 flex-1">
               <div className="flex items-center gap-1">
-                <Button
-                  variant={`${!isDetailView ? "secondary" : "ghost"}`}
-                  size={"icon"}
-                  onClick={() => setIsEditing(true)}
-                  className="rounded-full cursor-pointer"
-                >
-                  <IconEdit className="size-4" />
-                </Button>
+                {canEdit ? (
+                  <Button
+                    variant={`${!isDetailView ? "secondary" : "ghost"}`}
+                    size={"icon"}
+                    onClick={() => setIsEditing(true)}
+                    className="rounded-full cursor-pointer"
+                  >
+                    <IconEdit className="size-4" />
+                  </Button>
+                ) : null}
               </div>
               <span
                 className={`flex-1 ${
