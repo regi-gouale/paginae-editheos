@@ -218,7 +218,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
         </div>
       </div>
 
-      <div className="border rounded-xl overflow-hidden">
+      <div className="border rounded-2xl overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -259,19 +259,20 @@ export function MembersTable({ initialData }: MembersTableProps) {
                       <DropdownMenuTrigger
                         asChild
                         onClick={(e) => e.stopPropagation()}
+                        className="rounded-full"
                       >
                         <Button variant="ghost" size="sm">
                           <IconDots className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align="end" className="space-y-2">
                         <EditMemberDialog
                           member={member}
                           onSuccess={refreshData}
                         >
                           <DropdownMenuItem
                             onSelect={(e) => e.preventDefault()}
-                            className="cursor-pointer"
+                            className="cursor-pointer rounded-full mt-2"
                           >
                             <IconEdit className="size-4 mr-2" />
                             Modifier
@@ -282,10 +283,12 @@ export function MembersTable({ initialData }: MembersTableProps) {
                             e.stopPropagation();
                             handleDelete(member.id);
                           }}
-                          className="text-red-600 hover:text-red-800 cursor-pointer"
+                          className="text-red-600 hover:text-red-800 cursor-pointer rounded-full mb-2"
                         >
-                          <IconTrash className="size-4 mr-2" />
-                          Supprimer
+                          <IconTrash className="size-4 mr-2 text-red-600 hover:text-red-800" />
+                          <span className="text-red-600 hover:text-red-800">
+                            Supprimer
+                          </span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

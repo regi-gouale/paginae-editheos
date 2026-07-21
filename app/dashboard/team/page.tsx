@@ -26,7 +26,7 @@ export default async function TeamPage() {
   return (
     <div>
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="flex flex-1 flex-col mx-auto p-6 space-y-6 max-w-4xl pt-24">
+      <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-6">
         <div className="space-y-2">
           <h1
             className="text-3xl font-extrabold tracking-tight"
