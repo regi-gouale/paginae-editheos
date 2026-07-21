@@ -12,7 +12,7 @@ export function SignOutButton() {
         authClient.signOut();
         window.location.href = "/auth";
       }}
-      className="text-sm p-0 text-destructive hover:bg-destructive/10 focus:bg-destructive/10 w-full justify-start"
+      className="text-sm p-0 text-destructive hover:bg-destructive/10 focus:bg-destructive/10 w-full justify-start rounded-full"
     >
       <IconLogout className="ml-0 text-destructive" />
       Se déconnecter
