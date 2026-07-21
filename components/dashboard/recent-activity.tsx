@@ -90,21 +90,21 @@ export default function RecentActivity() {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="surface-card rounded-2xl">
         <CardHeader>
           <CardTitle>Activité récente</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {["s1", "s2", "s3", "s4", "s5"].map((skeletonId) => (
               <div
                 key={skeletonId}
-                className="flex items-start space-x-4 animate-pulse"
+                className="flex items-start gap-4 animate-pulse"
               >
-                <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div className="size-8 rounded-full bg-muted"></div>
+                <div className="flex flex-1 flex-col gap-2">
+                  <div className="h-4 w-3/4 rounded bg-muted"></div>
+                  <div className="h-3 w-1/2 rounded bg-muted"></div>
                 </div>
               </div>
             ))}
@@ -114,16 +114,31 @@ export default function RecentActivity() {
     );
   }
 
+  if (activities.length === 0) {
+    return (
+      <Card className="surface-card rounded-2xl">
+        <CardHeader>
+          <CardTitle>Activité récente</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Aucune activité récente à afficher.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card>
+    <Card className="surface-card glow-subtle rounded-4xl">
       <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
+        <CardTitle className="flex items-center gap-2">
           <IconClock className="size-5" />
           <span>Activité récente</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="flex flex-col gap-2">
           {activities.map((activity, index) => {
             const config = activityConfig[activity.type];
             const Icon = config.icon;
@@ -131,9 +146,9 @@ export default function RecentActivity() {
             return (
               <div
                 key={activity.id}
-                className={`flex items-start space-x-4 pb-4 ${
+                className={`flex items-start gap-2 pb-2 ${
                   index < activities.length - 1
-                    ? "border-b border-gray-100"
+                    ? "border-b border-border/70"
                     : ""
                 }`}
               >
@@ -141,7 +156,7 @@ export default function RecentActivity() {
                   <Icon className={`size-4 ${config.color}`} />
                 </div>
 
-                <div className="flex-1 space-y-1">
+                <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium">{activity.title}</p>
                     <time className="text-xs text-muted-foreground">
@@ -149,12 +164,12 @@ export default function RecentActivity() {
                     </time>
                   </div>
 
-                  <p className="text-sm text-muted-foreground">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     {activity.description}
                   </p>
 
                   {activity.user && (
-                    <div className="flex items-center space-x-2 mt-2">
+                    <div className="mt-2 flex items-center gap-4">
                       <Avatar className="size-5">
                         <AvatarImage src={activity.user.image} />
                         <AvatarFallback className="text-xs">

@@ -45,7 +45,7 @@ export default function ProgressChart() {
   const chartData = data.monthlyData.slice(-6);
 
   return (
-    <Card>
+    <Card className="rounded-4xl">
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex flex-col gap-1.5">
           <CardTitle>Progression mensuelle</CardTitle>
