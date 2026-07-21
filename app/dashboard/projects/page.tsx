@@ -37,7 +37,7 @@ export default async function ProjectPage() {
   return (
     <div className="flex flex-col">
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 pt-24">
+      <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-6">
         <div>
           <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1

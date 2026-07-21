@@ -93,7 +93,7 @@ ProjectStatusDropdownProps) {
         value={selectedStatus}
         onValueChange={(value) => onValueChange(value as ProjectStatus)}
       >
-        <SelectTrigger className="w-full rounded-xl">
+        <SelectTrigger className="w-full rounded-full">
           <SelectValue placeholder="Sélectionner un statut" />
         </SelectTrigger>
         <SelectContent>

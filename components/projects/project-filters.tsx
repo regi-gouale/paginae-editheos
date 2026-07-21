@@ -145,7 +145,7 @@ export function ProjectFilters({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-center">
+    <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between w-full">
       {/* IconSearch Input */}
       <div className="relative flex-1 max-w-md">
         <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-muted-foreground" />
@@ -154,7 +154,7 @@ export function ProjectFilters({
           placeholder="Rechercher un projet..."
           value={filters.search}
           onChange={(e) => updateSearch(e.target.value)}
-          className="pl-10 rounded-xl"
+          className="pl-10 rounded-full"
         />
       </div>
 
@@ -162,7 +162,7 @@ export function ProjectFilters({
         {/* Status IconFilter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="rounded-xl">
+            <Button variant="outline" size="default" className="rounded-full">
               <IconFilter className="size-4 mr-2" />
               Statut
               {filters.statuses.length > 0 && (
@@ -182,6 +182,7 @@ export function ProjectFilters({
                 onCheckedChange={(checked) =>
                   updateStatuses(status as ProjectStatus, checked)
                 }
+                className="rounded-full"
               >
                 {label}
               </DropdownMenuCheckboxItem>
@@ -192,7 +193,7 @@ export function ProjectFilters({
         {/* Type IconFilter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="rounded-xl">
+            <Button variant="outline" size="default" className="rounded-full">
               <IconFilter className="size-4 mr-2" />
               Type
               {filters.types.length > 0 && (
@@ -212,6 +213,7 @@ export function ProjectFilters({
                 onCheckedChange={(checked) =>
                   updateTypes(type as ProjectType, checked)
                 }
+                className="rounded-full"
               >
                 {label}
               </DropdownMenuCheckboxItem>
@@ -222,7 +224,7 @@ export function ProjectFilters({
         {/* Priority IconFilter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="rounded-xl">
+            <Button variant="outline" size="default" className="rounded-full">
               <IconFilter className="size-4 mr-2" />
               Priorité
               {filters.priorities.length > 0 && (
@@ -242,6 +244,7 @@ export function ProjectFilters({
                 onCheckedChange={(checked) =>
                   updatePriorities(priority as Priority, checked)
                 }
+                className="rounded-full"
               >
                 {label}
               </DropdownMenuCheckboxItem>
@@ -252,7 +255,7 @@ export function ProjectFilters({
         {/* Due Date IconFilter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="rounded-xl">
+            <Button variant="outline" size="default" className="rounded-full">
               <IconFilter className="size-4 mr-2" />
               Échéance
               {filters.dueDays.length > 0 && (
@@ -272,41 +275,42 @@ export function ProjectFilters({
                 onCheckedChange={(checked) =>
                   updateDueDays(Number(days), checked)
                 }
+                className="rounded-full"
               >
                 {label}
               </DropdownMenuCheckboxItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
 
-      {/* Actions */}
-      <div className="flex gap-2">
-        {/* Share URL */}
-        {hasActiveFilters && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleShareUrl}
-            className="shrink-0"
-          >
-            <IconShare className="size-4 mr-2" />
-            Partager
-          </Button>
-        )}
+        {/* Actions */}
+        <div className="flex gap-2">
+          {/* Share URL */}
+          {hasActiveFilters && (
+            <Button
+              variant="outline"
+              size="default"
+              onClick={handleShareUrl}
+              className="shrink-0 rounded-full"
+            >
+              <IconShare className="size-4 mr-2" />
+              Partager
+            </Button>
+          )}
 
-        {/* Clear all filters */}
-        {hasActiveFilters && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={clearAllFilters}
-            className="shrink-0"
-          >
-            <IconX className="size-4 mr-2" />
-            Effacer ({getFilterCount()})
-          </Button>
-        )}
+          {/* Clear all filters */}
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="default"
+              onClick={clearAllFilters}
+              className="shrink-0 rounded-full"
+            >
+              <IconX className="size-4 mr-2" />
+              Effacer ({getFilterCount()})
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
