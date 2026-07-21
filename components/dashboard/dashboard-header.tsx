@@ -17,11 +17,11 @@ type DashboardHeaderProps = {
 export function DashboardHeader({ breadcrumbs }: DashboardHeaderProps) {
   return (
     <header
-      className="inset-x-0 flex h-16 shrink-0 items-center gap-2 border-b border-border/70 bg-background/75 px-4 shadow-[0_10px_24px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md md:px-6 lg:px-8"
+      className="sticky top-0 z-30 inset-x-0 flex h-16 shrink-0 items-center gap-2 border-b border-border/70 bg-background/85 px-4 shadow-[0_10px_24px_-20px_rgba(0,0,0,0.45)] backdrop-blur-md md:px-6 lg:px-8"
       style={{ fontFamily: "var(--font-ui-sans)" }}
     >
       <div className="flex min-w-0 flex-1 items-center gap-2 px-2 md:px-4">
-        <SidebarTrigger className="-ml-1" />
+        <SidebarTrigger className="-ml-1 bg-card/70" />
         <Separator
           orientation="vertical"
           className="mr-2 data-[orientation=vertical]:h-4"
