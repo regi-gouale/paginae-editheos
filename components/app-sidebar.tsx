@@ -8,7 +8,6 @@ import {
   IconHome,
   IconLayoutKanban,
   IconLifebuoy,
-  IconSend,
   IconSettings,
   IconUser,
   IconUsers,
@@ -70,13 +69,8 @@ const data = {
   navSecondary: [
     {
       title: "Support",
-      url: "#",
+      url: "/dashboard/support",
       icon: IconLifebuoy,
-    },
-    {
-      title: "Contactez-nous",
-      url: "#",
-      icon: IconSend,
     },
   ],
 };

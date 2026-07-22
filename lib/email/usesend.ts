@@ -13,9 +13,16 @@ type EmailOptions = {
   subject: string;
   html: string;
   text?: string;
+  replyTo?: string;
 };
 
-export async function sendEmail({ to, subject, html, text }: EmailOptions) {
+export async function sendEmail({
+  to,
+  subject,
+  html,
+  text,
+  replyTo,
+}: EmailOptions) {
   try {
     const fromEmail = process.env.EMAIL_FROM || "noreply@paginae-editheos.com";
 
@@ -25,6 +32,7 @@ export async function sendEmail({ to, subject, html, text }: EmailOptions) {
       subject,
       html,
       text: text || html.replace(/<[^>]*>/g, ""),
+      ...(replyTo && { replyTo }),
     });
 
     return result;
