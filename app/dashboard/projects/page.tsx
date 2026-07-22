@@ -35,33 +35,36 @@ export default async function ProjectPage() {
   const breadcrumbs = [{ label: "Projets", href: "/dashboard/projects" }];
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-6 pb-8">
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="flex-1 mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-6">
-        <div>
-          <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1
-              className="text-3xl font-extrabold tracking-tight line-clamp-1"
-              style={{
-                fontFamily: "var(--font-lato)",
-              }}
-            >
-              Gestion des projets
-            </h1>
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 pt-4 md:p-6 md:pt-8">
+        <section className="grid-pattern relative overflow-hidden rounded-2xl p-6 md:p-8">
+          <div className="relative flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div className="flex flex-col gap-2">
+              <h1 className="line-clamp-1 text-2xl font-black tracking-tight sm:text-3xl">
+                Gestion des projets
+              </h1>
+              <p className="text-sm text-muted-foreground sm:text-base">
+                Pilotez vos projets éditoriaux, les priorités et les statuts en
+                temps réel.
+              </p>
+            </div>
             {canCreate ? <AddProjectDialog /> : null}
           </div>
-        </div>
-        <ProjectsBoard
-          initialColumns={columns}
-          isAdmin={isAdmin}
-          canCreateProject={canCreate}
-          canMoveProject={canMoveProject}
-          canEditProject={canEditProject}
-          canEditStatus={canEditStatus}
-          canEditDesign={canEditDesign}
-          canComment={canComment}
-        />
-        {/* <KanbanBoard initialColumns={columns} /> */}
+        </section>
+
+        <section className="surface-card-elevated rounded-2xl p-3 md:p-4">
+          <ProjectsBoard
+            initialColumns={columns}
+            isAdmin={isAdmin}
+            canCreateProject={canCreate}
+            canMoveProject={canMoveProject}
+            canEditProject={canEditProject}
+            canEditStatus={canEditStatus}
+            canEditDesign={canEditDesign}
+            canComment={canComment}
+          />
+        </section>
       </main>
     </div>
   );
