@@ -81,9 +81,15 @@ export default function RootLayout({
       <body className={`${uiSans.variable} ${uiDisplay.variable} antialiased`}>
         <Script
           defer
+          src="https://analytics.gouale.com/script.js"
+          data-website-id="dafac991-7f83-4055-b4d4-ecd1ef6ea873"
+          data-domains="paginae.cotizoo.com"
+          strategy="afterInteractive"
+        />
+        <Script
+          defer
           src="https://analytics.gouale.com/recorder.js"
-          data-website-id={process.env.DATA_WEBSITE_ID}
-          data-domains={process.env.NEXT_PUBLIC_SITE_URL}
+          data-website-id="dafac991-7f83-4055-b4d4-ecd1ef6ea873"
           strategy="afterInteractive"
         />
         <ThemeProvider
