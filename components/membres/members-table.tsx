@@ -195,7 +195,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mx-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Membres de l&apos;équipe</h2>
         <AddMemberDialog

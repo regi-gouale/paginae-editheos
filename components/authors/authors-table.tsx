@@ -302,7 +302,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mx-4">
       {/* En-tête avec bouton d'ajout */}
       <div className="flex justify-between items-center">
         <div>

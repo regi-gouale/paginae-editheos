@@ -26,7 +26,7 @@ export default async function TeamPage() {
   return (
     <div className="flex flex-col gap-6 pb-8">
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 pt-4 md:p-6 md:pt-8">
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-2">
         <MembersTable initialData={initialData} />
       </main>
     </div>
