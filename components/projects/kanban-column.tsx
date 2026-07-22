@@ -2,6 +2,7 @@
 
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import type { CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import { ProjectCard } from "@/components/project-card";
 import { AddProjectDialog } from "@/components/projects/add-project-dialog";
 import type {
@@ -62,10 +63,9 @@ KanbanColumnProps) {
                 index={index}
                 isDragDisabled={!canMoveProject}
               >
-                {(provided) => {
+                {(provided, snapshot) => {
                   const { style, ...draggableProps } = provided.draggableProps;
-
-                  return (
+                  const draggableElement = (
                     <div
                       ref={provided.innerRef}
                       {...draggableProps}
@@ -78,6 +78,12 @@ KanbanColumnProps) {
                       />
                     </div>
                   );
+
+                  if (snapshot.isDragging) {
+                    return createPortal(draggableElement, document.body);
+                  }
+
+                  return draggableElement;
                 }}
               </Draggable>
             ))}
