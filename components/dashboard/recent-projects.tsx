@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRecentProjects } from "@/hooks/projects/use-recent-projects";
 import { isProjectOverdueForDisplay } from "@/lib/utils";
 import type { ProjectStatus } from "@/prisma/generated/prisma/client";
+import { Separator } from "../ui/separator";
 
 const statusConfig = {
   TODO: { label: "À faire", color: "bg-blue-100 text-blue-800" },
@@ -60,16 +61,16 @@ export default function RecentProjects() {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="surface-card rounded-4xl">
         <CardHeader>
           <CardTitle>Projets récents</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {["s1", "s2", "s3"].map((skeletonId) => (
               <div key={skeletonId} className="animate-pulse">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div className="mb-2 h-4 w-3/4 rounded-full bg-muted"></div>
+                <div className="h-3 w-1/2 rounded-full bg-muted"></div>
               </div>
             ))}
           </div>
@@ -78,11 +79,26 @@ export default function RecentProjects() {
     );
   }
 
+  if (projects.length === 0) {
+    return (
+      <Card className="surface-card rounded-4xl">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Projets récents</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Aucun projet récent pour le moment.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card>
+    <Card className="surface-card glow-subtle rounded-4xl">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Projets récents</CardTitle>
-        <Button variant="outline" size="sm" asChild>
+        <Button variant="outline" size="sm" asChild className="rounded-full">
           <Link href="/dashboard/projects">
             <IconExternalLink className="size-4 mr-2" />
             Voir tous
@@ -90,85 +106,96 @@ export default function RecentProjects() {
         </Button>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="flex items-start space-x-4 p-4 border rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              <div className="flex-1 space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium leading-none">{project.title}</h4>
-                  {project.dueDate &&
-                    isOverdue(project.dueDate, project.status) && (
-                      <IconAlertCircle className="size-4 text-red-500" />
+        <div className="flex flex-col gap-4">
+          {projects.map((project, index) => (
+            <div key={project.id}>
+              <div className="flex items-start gap-4 rounded-4xl border-border/60 p-2 transition-colors hover:bg-muted/40">
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium leading-none">
+                      {project.title}
+                    </h4>
+                    {project.dueDate &&
+                      isOverdue(project.dueDate, project.status) && (
+                        <IconAlertCircle className="size-4 text-red-500" />
+                      )}
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <Badge
+                      className={
+                        statusConfig[
+                          project.status as keyof typeof statusConfig
+                        ].color
+                      }
+                    >
+                      {
+                        statusConfig[
+                          project.status as keyof typeof statusConfig
+                        ].label
+                      }
+                    </Badge>
+                    <Badge className={priorityConfig[project.priority].color}>
+                      {
+                        priorityConfig[
+                          project.priority as keyof typeof priorityConfig
+                        ].label
+                      }
+                    </Badge>
+                    <Badge className={typeConfig[project.type].color}>
+                      {
+                        typeConfig[project.type as keyof typeof typeConfig]
+                          .label
+                      }
+                    </Badge>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                    {project.author && (
+                      <div className="flex items-center gap-2">
+                        <Avatar className="size-5">
+                          <AvatarImage src={project.author.image} />
+                          <AvatarFallback className="text-xs">
+                            {project.author.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span>{project.author.name}</span>
+                      </div>
                     )}
-                </div>
 
-                <div className="flex items-center space-x-2">
-                  <Badge
-                    className={
-                      statusConfig[project.status as keyof typeof statusConfig]
-                        .color
-                    }
-                  >
-                    {
-                      statusConfig[project.status as keyof typeof statusConfig]
-                        .label
-                    }
-                  </Badge>
-                  <Badge className={priorityConfig[project.priority].color}>
-                    {
-                      priorityConfig[
-                        project.priority as keyof typeof priorityConfig
-                      ].label
-                    }
-                  </Badge>
-                  <Badge className={typeConfig[project.type].color}>
-                    {typeConfig[project.type as keyof typeof typeConfig].label}
-                  </Badge>
-                </div>
+                    {project.dueDate && (
+                      <div className="flex items-center gap-1">
+                        <IconCalendar className="size-4" />
+                        <span
+                          className={
+                            isOverdue(
+                              project.dueDate,
+                              project.status as ProjectStatus,
+                            )
+                              ? "text-red-600 font-medium"
+                              : ""
+                          }
+                        >
+                          Échéance: {formatDueDate(project.dueDate)}
+                        </span>
+                      </div>
+                    )}
 
-                <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                  {project.author && (
-                    <div className="flex items-center space-x-2">
-                      <Avatar className="size-5">
-                        <AvatarImage src={project.author.image} />
-                        <AvatarFallback className="text-xs">
-                          {project.author.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span>{project.author.name}</span>
+                    <div className="flex items-center gap-1">
+                      <IconClock className="size-4" />
+                      <span>Modifié {formatDate(project.updatedAt)}</span>
                     </div>
-                  )}
-
-                  {project.dueDate && (
-                    <div className="flex items-center space-x-1">
-                      <IconCalendar className="size-4" />
-                      <span
-                        className={
-                          isOverdue(
-                            project.dueDate,
-                            project.status as ProjectStatus,
-                          )
-                            ? "text-red-600 font-medium"
-                            : ""
-                        }
-                      >
-                        Échéance: {formatDueDate(project.dueDate)}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="flex items-center space-x-1">
-                    <IconClock className="size-4" />
-                    <span>Modifié {formatDate(project.updatedAt)}</span>
                   </div>
                 </div>
               </div>
+              {index < projects.length - 1 && (
+                <Separator
+                  orientation="horizontal"
+                  className="border-border/60 my-2"
+                />
+              )}
             </div>
           ))}
         </div>

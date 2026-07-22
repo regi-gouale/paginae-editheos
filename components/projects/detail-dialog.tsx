@@ -57,7 +57,7 @@ export function ProjectDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ProjectTitleEditor
@@ -96,7 +96,7 @@ export function ProjectDetailDialog({
             <div className="space-y-2">
               <Label>Priorité</Label>
               <Input
-                className="border mx-auto p-2 rounded-xl"
+                className="border mx-auto p-2 rounded-full"
                 value={getPriorityLabel(editedProject.priority)}
                 disabled
               />

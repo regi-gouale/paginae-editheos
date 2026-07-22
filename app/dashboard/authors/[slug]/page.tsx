@@ -8,7 +8,6 @@ import {
 } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import type { Route } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { EditAuthorDialog } from "@/components/authors/edit-author-dialog";
@@ -57,51 +56,45 @@ export default async function AuthorDetailPage({
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-6 pb-8">
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="flex flex-1 flex-col mx-auto p-6 space-y-6 max-w-4xl pt-24">
-        {/* En-tête avec avatar et informations principales */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard/authors">
-              <Button variant="ghost" size="icon">
-                <IconArrowLeft className="size-4" />
-              </Button>
-            </Link>
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 pt-4 md:p-6 md:pt-8">
+        <section className="grid-pattern relative overflow-hidden rounded-2xl p-6 md:p-8">
+          <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-4">
-              <Avatar className="size-16">
+              <Link href="/dashboard/authors">
+                <Button variant="ghost" size="icon" className="bg-card/70">
+                  <IconArrowLeft className="size-4" />
+                </Button>
+              </Link>
+              <Avatar className="size-16 ring-2 ring-primary/15">
                 <AvatarFallback className="text-lg font-semibold">
                   {getInitials(author.firstName, author.lastName)}
                 </AvatarFallback>
               </Avatar>
-              <div>
-                <h1
-                  className="text-3xl font-extrabold tracking-tight"
-                  style={{
-                    fontFamily: "var(--font-lato)",
-                  }}
-                >
+              <div className="flex flex-col gap-1">
+                <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
                   {author.firstName} {author.lastName}
                 </h1>
-                <p className="text-muted-foreground">{author.email}</p>
+                <p className="text-sm text-muted-foreground sm:text-base">
+                  {author.email}
+                </p>
               </div>
             </div>
+            <EditAuthorDialog author={author} />
           </div>
-          <EditAuthorDialog author={author} />
-        </div>
+        </section>
 
-        {/* Informations détaillées */}
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Informations personnelles */}
-          <Card>
+        <section className="grid gap-6 md:grid-cols-2">
+          <Card className="surface-card-elevated rounded-2xl border-border/70">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <IconUser className="size-5" />
                 Informations personnelles
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-x-2 flex items-center">
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2">
                   <IconMail className="size-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Email :</span>
@@ -110,7 +103,7 @@ export default async function AuthorDetailPage({
               </div>
 
               {author.nationality && (
-                <div className="space-x-2 flex items-center">
+                <div className="flex items-center gap-2">
                   <div className="flex items-center gap-2">
                     <IconFlag className="size-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
@@ -122,7 +115,7 @@ export default async function AuthorDetailPage({
               )}
 
               {author.birthDate && (
-                <div className="space-x-2 flex items-center">
+                <div className="flex items-center gap-2">
                   <div className="flex items-center gap-2">
                     <IconCalendar className="size-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
@@ -138,44 +131,43 @@ export default async function AuthorDetailPage({
               )}
 
               {author.website && (
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <IconWorld className="size-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">
                       Site web
                     </span>
                   </div>
-                  <Link
-                    href={author.website as Route}
+                  <a
+                    href={author.website}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-medium text-primary hover:underline"
                   >
                     {author.website}
-                  </Link>
+                  </a>
                 </div>
               )}
             </CardContent>
           </Card>
 
-          {/* Biographie */}
-          <Card>
+          <Card className="surface-card-elevated rounded-2xl border-border/70">
             <CardHeader>
               <CardTitle>Biographie</CardTitle>
             </CardHeader>
             <CardContent>
               {author.biography ? (
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed">
                   {author.biography}
                 </p>
               ) : (
-                <p className="text-muted-foreground italic">
+                <p className="italic text-muted-foreground">
                   Aucune biographie renseignée
                 </p>
               )}
             </CardContent>
           </Card>
-        </div>
+        </section>
 
         {/* Métadonnées */}
         {/* <Card>

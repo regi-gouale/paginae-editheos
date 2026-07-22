@@ -39,7 +39,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="uppercase">
+      <SidebarGroupLabel className="px-2 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
         Espace de travail
       </SidebarGroupLabel>
       <SidebarMenu>
@@ -55,10 +55,19 @@ export function NavMain({
                   asChild
                   tooltip={item.title}
                   isActive={isActive}
+                  className="rounded-full"
                 >
-                  <Link href={item.url as Route}>
+                  <Link
+                    href={item.url as Route}
+                    aria-current={isActive ? "page" : undefined}
+                  >
                     <item.icon />
                     <span>{item.title}</span>
+                    <span
+                      className={`ml-auto h-1.5 w-1.5 rounded-full transition-opacity ${
+                        isActive ? "bg-primary opacity-100" : "opacity-0"
+                      }`}
+                    />
                   </Link>
                 </SidebarMenuButton>
                 {item.items?.length ? (

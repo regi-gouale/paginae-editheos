@@ -31,14 +31,14 @@ export const TableSearchFilter: React.FC<TableSearchFilterProps> = ({
             placeholder="Rechercher par nom ou email..."
             value={searchValue}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10"
+            className="pl-10 rounded-full"
           />
         </div>
       </div>
       <div className="flex gap-2 items-center">
-        <IconFilter className="size-4 text-gray-400" />
         <Select value={selectedRole} onValueChange={onRoleChange}>
-          <SelectTrigger className="w-45">
+          <SelectTrigger className="w-45 rounded-full">
+            <IconFilter className="size-4 text-gray-400" />
             <SelectValue placeholder="Filtrer par rôle" />
           </SelectTrigger>
           <SelectContent>

@@ -50,12 +50,12 @@ export const AddMemberDialog: React.FC<AddMemberDialogProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="font-semibold rounded-full md:rounded-xl">
+        <Button className="font-semibold rounded-full" size="default">
           <IconPlus className="size-4" />
           <span className="hidden md:block md:ml-1">Membre</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Ajouter un nouveau membre</DialogTitle>
           <DialogDescription>

@@ -313,12 +313,12 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="font-semibold rounded-full md:rounded-xl">
+            <Button className="font-semibold rounded-full">
               <IconPlus className="size-4" />
               <span className="hidden md:block md:ml-1">Auteur</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-125">
+          <DialogContent className="sm:max-w-4xl rounded-4xl space-y-4">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <IconUser className="size-5" />
@@ -340,6 +340,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                     }
                     placeholder="Prénom"
                     required
+                    className="rounded-full"
                   />
                 </div>
                 <div className="space-y-2">
@@ -352,6 +353,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                     }
                     placeholder="Nom"
                     required
+                    className="rounded-full"
                   />
                 </div>
               </div>
@@ -366,6 +368,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                   }
                   placeholder="email@exemple.com"
                   required
+                  className="rounded-full"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -378,6 +381,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                       setFormData({ ...formData, nationality: e.target.value })
                     }
                     placeholder="ex: Française"
+                    className="rounded-full"
                   />
                 </div>
                 <div className="space-y-2">
@@ -386,14 +390,17 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-start text-left font-normal"
+                        className="w-full justify-start text-left font-normal rounded-full"
                       >
                         {formData.birthDate
                           ? formatDateLong(new Date(formData.birthDate))
                           : "Sélectionner une date"}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent
+                      className="w-auto p-0 rounded-4xl"
+                      align="start"
+                    >
                       <Calendar
                         mode="single"
                         selected={
@@ -428,6 +435,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                     setFormData({ ...formData, website: e.target.value })
                   }
                   placeholder="https://www.exemple.com"
+                  className="rounded-full"
                 />
               </div>
               <div className="space-y-2">
@@ -439,7 +447,8 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                     setFormData({ ...formData, biography: e.target.value })
                   }
                   placeholder="Biographie de l'auteur..."
-                  rows={3}
+                  rows={7}
+                  className="rounded-2xl"
                 />
               </div>
               <DialogFooter>
@@ -447,10 +456,15 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                   type="button"
                   variant="outline"
                   onClick={() => setIsDialogOpen(false)}
+                  className="rounded-full"
                 >
                   Annuler
                 </Button>
-                <Button type="submit" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="rounded-full"
+                >
                   {isLoading ? "Ajout..." : "Ajouter"}
                 </Button>
               </DialogFooter>
@@ -468,17 +482,17 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
               placeholder="Rechercher par nom, prénom ou email..."
               value={searchTerm}
               onChange={(e) => handleSearchChange(e.target.value)}
-              className="pl-10"
+              className="pl-10 rounded-full"
             />
           </div>
         </div>
         <div className="flex gap-2 items-center">
-          <IconFilter className="size-4 text-gray-400" />
           <Select
             value={selectedNationality}
             onValueChange={handleNationalityChange}
           >
-            <SelectTrigger className="w-45">
+            <SelectTrigger className="w-45 rounded-full">
+              <IconFilter className="size-4 text-gray-400" />
               <SelectValue placeholder="Filtrer par nationalité" />
             </SelectTrigger>
             <SelectContent>
@@ -503,7 +517,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         </div>
       </div>
 
-      <div className="border rounded-xl overflow-hidden">
+      <div className="border rounded-2xl overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>

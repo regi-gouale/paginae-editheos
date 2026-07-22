@@ -32,6 +32,7 @@ import {
 import { useProjectStats } from "@/hooks/projects/use-project-stats";
 import { authClient } from "@/lib/auth/auth-client";
 import type { MemberRole } from "@/prisma/generated/prisma/client";
+import { Separator } from "./ui/separator";
 
 const data = {
   user: {
@@ -84,6 +85,14 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   role: MemberRole;
   canAccessAuthors: boolean;
   canAccessTeam: boolean;
+};
+
+const roleLabels: Record<MemberRole, string> = {
+  ADMIN: "Administrateur",
+  DESIGNER: "Designer",
+  REVIEWER: "Relecteur",
+  CONTRIBUTOR: "Contributeur",
+  GUEST: "Invité",
 };
 
 export function AppSidebar({
@@ -140,46 +149,52 @@ export function AppSidebar({
 
   return (
     <Sidebar
-      variant="floating"
+      variant="inset"
       {...props}
-      className="border-sidebar-border/60 bg-sidebar/85 backdrop-blur-md"
+      className="border-sidebar-border/70 bg-sidebar/85 shadow-2xl shadow-black/5 backdrop-blur-xl"
       style={{ fontFamily: "var(--font-ui-sans)" }}
     >
-      <SidebarHeader>
+      <SidebarHeader className="gap-3 p-3 pb-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton
+              size="lg"
+              asChild
+              className="h-auto rounded-4xl bg-sidebar/60 p-2"
+            >
               <Link href="/dashboard">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-xl ring-1 ring-sidebar-primary/30 shadow-sm">
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex size-9 items-center justify-center rounded-full shadow-sm">
                   <Image
                     src="/logo-editheos.webp"
                     alt="Paginae"
-                    width={32}
-                    height={32}
+                    className="rounded-full"
+                    width={48}
+                    height={48}
                   />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold uppercase tracking-wide">
+                <div className="grid flex-1 text-left leading-tight">
+                  <span className="truncate font-semibold uppercase tracking-wide text-lg ml-2">
                     Paginae
                   </span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    Editheos
+                  <span className="mt-1 inline-flex w-fit rounded-full border border-sidebar-border/70 bg-sidebar-accent/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-sidebar-foreground/80">
+                    {roleLabels[role]}
                   </span>
                 </div>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        {/* <div className="flex justify-end px-2 py-1">
-          <SidebarActions />
-        </div> */}
       </SidebarHeader>
-      <SidebarContent>
+      <Separator
+        orientation="horizontal"
+        className="border-sidebar-border/60"
+      />
+      <SidebarContent className="px-2">
         <NavMain items={navMain} />
         <NavProjects projects={dynamicStats} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border/60 p-2">
         <NavUser
           user={session.user as { name: string; email: string; image?: string }}
         />

@@ -5,6 +5,7 @@ import type * as React from "react";
 import {
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -22,11 +23,14 @@ export function NavSecondary({
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
     <SidebarGroup {...props}>
+      <SidebarGroupLabel className="px-2 text-[11px] uppercase tracking-[0.12em] text-muted-foreground rounded-full">
+        Ressources
+      </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild size="sm">
+              <SidebarMenuButton asChild size="sm" className="rounded-full">
                 <Link href={item.url as Route}>
                   <item.icon />
                   <span>{item.title}</span>

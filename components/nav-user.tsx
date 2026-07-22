@@ -46,7 +46,7 @@ export function NavUser({
             >
               <Avatar className="size-8 rounded-full">
                 <AvatarImage src={user.image} alt={user.name} />
-                <AvatarFallback className="rounded-lg">
+                <AvatarFallback className="rounded-full">
                   {user.name
                     .split(" ")
                     .map((n) => n[0])
@@ -63,7 +63,7 @@ export function NavUser({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-2xl"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
@@ -94,7 +94,7 @@ export function NavUser({
 
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem className="rounded-full">
                 <Link
                   href="/dashboard/profile"
                   className="w-full justify-start p-0 m-0 flex gap-2 items-center"
@@ -103,13 +103,13 @@ export function NavUser({
                   Profil
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem className="rounded-full">
                 <IconBell />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem className="rounded-full">
               <SignOutButton />
             </DropdownMenuItem>
           </DropdownMenuContent>

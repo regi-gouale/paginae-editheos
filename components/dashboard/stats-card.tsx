@@ -3,7 +3,7 @@ import type { ForwardRefExoticComponent, RefAttributes } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface MainStatsCardProps {
+type MainStatsCardProps = {
   title: string;
   value: string | number;
   icon: ForwardRefExoticComponent<
@@ -14,7 +14,7 @@ interface MainStatsCardProps {
   description?: string; // Optional description text
   change?: number | string; // Optional progress percentage (0-100)
   changeType?: "increase" | "decrease"; // Optional type of change
-}
+};
 
 export function StatsCard({
   title,
@@ -30,21 +30,21 @@ export function StatsCard({
   return (
     <Card
       key={title.trim().toLocaleLowerCase()}
-      className="hover:shadow-md transition-shadow"
+      className="surface-card glow-subtle overflow-hidden rounded-4xl border-border/70 transition-all hover:-translate-y-0.5"
     >
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <div className={`${bgColor} p-2 rounded-xl`}>
+        <div className={`${bgColor} rounded-full p-2`}>
           <Icon className={`size-4 ${color}`} />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-1">
         <div className="text-2xl font-bold">{value}</div>
         {description && (
           <p className="text-xs text-muted-foreground">{description}</p>
         )}
         {change !== undefined && changeType && (
-          <div className="flex items-center space-x-2 text-xs text-muted-foreground mt-1">
+          <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
             <span
               className={
                 changeType === "increase" ? "text-green-500" : "text-red-500"

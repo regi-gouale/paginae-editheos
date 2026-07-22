@@ -30,7 +30,7 @@ function AddCustomFieldButton({
           variant="outline"
           size="sm"
           onClick={onAddClick}
-          className="rounded-xl"
+          className="rounded-full"
         >
           <IconPlus className="size-4 mr-1" />
           Ajouter
@@ -46,7 +46,7 @@ function AddCustomFieldButton({
         variant="outline"
         size="sm"
         onClick={onAddClick}
-        className="rounded-xl"
+        className="rounded-full"
       >
         <IconPlus className="size-4 mr-1" />
         Ajouter
@@ -82,7 +82,7 @@ function CustomFieldAdder({
   };
 
   return (
-    <div className="space-y-2 p-3 border rounded-xl mb-4">
+    <div className="space-y-2 p-3 border rounded-2xl mb-4">
       <div className="grid grid-cols-2 gap-2 mb-2">
         <Input
           value={newFieldName}
@@ -90,25 +90,25 @@ function CustomFieldAdder({
           placeholder="Nouveau champ"
           autoFocus
           onKeyDown={handleKeyDown}
-          className="rounded-xl"
+          className="rounded-full"
         />
         <Input
           value={newFieldValue}
           onChange={(e) => setNewFieldValue(e.target.value)}
           placeholder="Nouvelle valeur"
           onKeyDown={handleKeyDown}
-          className="rounded-xl flex-1"
+          className="rounded-full flex-1"
         />
       </div>
       <div className="flex gap-2 justify-end">
-        <Button size="sm" onClick={onAddField} className="rounded-xl">
+        <Button size="sm" onClick={onAddField} className="rounded-full">
           Ajouter
         </Button>
         <Button
           size="sm"
           variant="outline"
           onClick={onCancel}
-          className="rounded-xl"
+          className="rounded-full"
         >
           Annuler
         </Button>
@@ -244,7 +244,7 @@ export function ProjectCustomFieldsEditor({
         {editedFields?.map((field) => (
           <div
             key={field.id}
-            className="flex items-center gap-2 px-2 border rounded-xl group"
+            className="flex items-center gap-2 px-2 border rounded-2xl group"
           >
             <div className="flex-1 space-y-1 flex flex-row items-center justify-baseline gap-x-4">
               <div className="font-medium text-sm">{field.name}</div>
@@ -278,7 +278,7 @@ export function ProjectCustomFieldsEditor({
               ) : (
                 <Badge
                   variant={"outline"}
-                  className="px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
+                  className="px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
                   onClick={() => setEditingFieldId(field.id)}
                 >
                   {field.value}

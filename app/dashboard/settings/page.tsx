@@ -17,29 +17,39 @@ export default async function SettingsPage() {
   const breadcrumbs = [{ label: "Paramètres", href: "/dashboard/settings" }];
 
   return (
-    <div>
+    <div className="flex flex-col gap-6 pb-8">
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="flex flex-1 flex-col mx-auto p-6 space-y-6 max-w-6xl pt-24">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold">Paramètres</h1>
-          <p className="text-muted-foreground">
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 pt-4 md:p-6 md:pt-8">
+        <section className="grid-pattern relative overflow-hidden rounded-2xl p-6 md:p-8">
+          <div className="relative flex flex-col gap-2">
+            <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
+              Paramètres
+            </h1>
+            <p className="text-sm text-muted-foreground sm:text-base">
+              Définissez les configurations globales de votre espace de travail.
+            </p>
+          </div>
+        </section>
+
+        <section className="surface-card-elevated rounded-2xl p-4 md:p-6">
+          <p className="mb-4 text-sm text-muted-foreground">
             Configurez les tâches par défaut pour chaque type de projet
           </p>
-        </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <TaskTemplatesEditor
-            projectType="EDITION"
-            title="Projets d'édition"
-            description="Définissez les tâches par défaut pour les nouveaux projets d'édition"
-          />
+          <div className="grid gap-6 md:grid-cols-2">
+            <TaskTemplatesEditor
+              projectType="EDITION"
+              title="Projets d'édition"
+              description="Définissez les tâches par défaut pour les nouveaux projets d'édition"
+            />
 
-          <TaskTemplatesEditor
-            projectType="PRINTING"
-            title="Projets d'impression"
-            description="Définissez les tâches par défaut pour les nouveaux projets d'impression"
-          />
-        </div>
+            <TaskTemplatesEditor
+              projectType="PRINTING"
+              title="Projets d'impression"
+              description="Définissez les tâches par défaut pour les nouveaux projets d'impression"
+            />
+          </div>
+        </section>
       </main>
     </div>
   );

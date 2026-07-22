@@ -90,7 +90,7 @@ function NotificationItem({
   return (
     <div
       className={cn(
-        "flex items-start gap-3 p-3 rounded-lg transition-colors relative group",
+        "flex items-start gap-3 p-3 rounded-full transition-colors relative group",
         !notification.read && "bg-blue-50 dark:bg-blue-950/20",
         "hover:bg-gray-50 dark:hover:bg-gray-800/50",
       )}

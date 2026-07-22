@@ -118,7 +118,7 @@ export function EditAuthorDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       {externalOpen === undefined && (
         <DialogTrigger asChild>
-          <Button variant="outline" className="rounded-full md:rounded-xl">
+          <Button variant="outline" className="rounded-full">
             <IconEdit className="size-4" />
             <span className="hidden md:block md:ml-2">Modifier</span>
           </Button>

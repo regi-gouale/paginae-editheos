@@ -134,7 +134,7 @@ export function ResetPasswordForm({ initialToken }: ResetPasswordFormProps) {
                 </div>
 
                 {error && (
-                  <div className="bg-red-50 border border-red-200 rounded-md p-3 text-sm text-red-800">
+                  <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-sm text-red-800">
                     {error}
                   </div>
                 )}
@@ -183,7 +183,7 @@ export function ResetPasswordForm({ initialToken }: ResetPasswordFormProps) {
                   />
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-md p-3 text-xs text-blue-800">
+                <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3 text-xs text-blue-800">
                   <strong>Critères de sécurité :</strong>
                   <ul className="mt-2 space-y-1">
                     <li>

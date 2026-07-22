@@ -65,52 +65,52 @@ export default async function MemberDetailPage({
   ];
 
   return (
-    <div>
+    <div className="flex flex-col gap-6 pb-8">
       <DashboardHeader breadcrumbs={breadcrumbs} />
-      <main className="flex flex-1 flex-col mx-auto p-6 space-y-6 max-w-4xl pt-24">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard/team">
-              <Button variant="ghost" size="icon">
-                <IconArrowLeft className="size-4" />
-              </Button>
-            </Link>
-            <div>
-              <h1
-                className="text-3xl font-extrabold tracking-tight"
-                style={{
-                  fontFamily: "var(--font-lato)",
-                }}
-              >
-                {member.name}
-              </h1>
+      <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 pt-4 md:p-6 md:pt-8">
+        <section className="grid-pattern relative overflow-hidden rounded-2xl p-6 md:p-8">
+          <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/dashboard/team">
+                <Button variant="ghost" size="icon" className="bg-card/70">
+                  <IconArrowLeft className="size-4" />
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
+                  {member.name}
+                </h1>
+                <p className="text-sm text-muted-foreground sm:text-base">
+                  Détail du membre et de ses permissions.
+                </p>
+              </div>
             </div>
+            <EditMemberDialog member={member}>
+              <Button variant="outline" className="rounded-full md:rounded-xl">
+                <IconEdit className="size-4" />
+                <span className="hidden md:ml-2 md:block">Modifier</span>
+              </Button>
+            </EditMemberDialog>
           </div>
-          <EditMemberDialog member={member}>
-            <Button variant={"outline"} className="rounded-full md:rounded-xl">
-              <IconEdit className="size-4" />
-              <span className="hidden md:ml-2 md:block">Modifier</span>
-            </Button>
-          </EditMemberDialog>
-        </div>
+        </section>
 
         <div className="grid gap-6">
-          <Card>
+          <Card className="surface-card-elevated rounded-2xl border-border/70">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <IconUser className="size-5" />
                 Informations générales
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
+            <CardContent className="flex flex-col gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="flex flex-col gap-2">
                   <Label className="text-sm font-medium text-muted-foreground">
                     Nom complet
                   </Label>
                   <p className="text-base font-medium">{member.name}</p>
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label className="text-sm font-medium text-muted-foreground">
                     Adresse email
                   </Label>
@@ -119,7 +119,7 @@ export default async function MemberDetailPage({
                     <p className="text-base">{member.email}</p>
                   </div>
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label className="text-sm font-medium text-muted-foreground">
                     Rôle
                   </Label>
@@ -129,13 +129,13 @@ export default async function MemberDetailPage({
                     </Badge>
                   </div>
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label className="text-sm font-medium text-muted-foreground">
                     Statut
                   </Label>
                   <Badge
                     variant="outline"
-                    className="bg-green-50 text-green-700 rounded-xl"
+                    className="rounded-xl bg-green-50 text-green-700"
                   >
                     Actif
                   </Badge>
@@ -144,16 +144,16 @@ export default async function MemberDetailPage({
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="surface-card-elevated rounded-2xl border-border/70">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <IconCalendar className="size-5" />
                 Informations temporelles
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
+            <CardContent className="flex flex-col gap-4">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="flex flex-col gap-2">
                   <Label className="text-sm font-medium text-muted-foreground">
                     Membre depuis
                   </Label>
@@ -161,7 +161,7 @@ export default async function MemberDetailPage({
                     {formatDateLong(member.createdAt)}
                   </p>
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label className="text-sm font-medium text-muted-foreground">
                     Dernière modification
                   </Label>
@@ -173,19 +173,18 @@ export default async function MemberDetailPage({
             </CardContent>
           </Card>
 
-          {/* Ici on pourrait ajouter d'autres cartes avec des statistiques ou informations supplémentaires */}
-          <Card>
+          <Card className="surface-card-elevated rounded-2xl border-border/70">
             <CardHeader>
               <CardTitle>Permissions selon le rôle</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="flex flex-col gap-3">
                 {member.role === "ADMIN" && (
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <p className="font-medium">
                       Administrateur - Accès complet
                     </p>
-                    <ul className="text-sm text-muted-foreground space-y-1">
+                    <ul className="flex flex-col gap-1 text-sm text-muted-foreground">
                       <li>• Gérer tous les projets</li>
                       <li>• Administrer l&apos;équipe</li>
                       <li>• Configurer les paramètres</li>
@@ -194,11 +193,11 @@ export default async function MemberDetailPage({
                   </div>
                 )}
                 {member.role === "DESIGNER" && (
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <p className="font-medium">
                       Designer - Contribution design
                     </p>
-                    <ul className="text-sm text-muted-foreground space-y-1">
+                    <ul className="flex flex-col gap-1 text-sm text-muted-foreground">
                       <li>• Voir les projets où il est assigné</li>
                       <li>
                         • Mettre à jour la partie design (mise en page,
@@ -209,9 +208,9 @@ export default async function MemberDetailPage({
                   </div>
                 )}
                 {member.role === "REVIEWER" && (
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <p className="font-medium">Relecteur - Révision</p>
-                    <ul className="text-sm text-muted-foreground space-y-1">
+                    <ul className="flex flex-col gap-1 text-sm text-muted-foreground">
                       <li>• Voir les projets qui lui sont assignés</li>
                       <li>• Laisser des commentaires de relecture</li>
                       <li>• Ne peut pas modifier le projet ni valider</li>
@@ -219,11 +218,11 @@ export default async function MemberDetailPage({
                   </div>
                 )}
                 {member.role === "CONTRIBUTOR" && (
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <p className="font-medium">
                       Contributeur - Gestion opérationnelle
                     </p>
-                    <ul className="text-sm text-muted-foreground space-y-1">
+                    <ul className="flex flex-col gap-1 text-sm text-muted-foreground">
                       <li>• Créer et gérer les projets où il est assigné</li>
                       <li>• Gérer les fiches auteurs</li>
                       <li>
@@ -233,9 +232,9 @@ export default async function MemberDetailPage({
                   </div>
                 )}
                 {member.role === "GUEST" && (
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <p className="font-medium">Invité - Accès en lecture</p>
-                    <ul className="text-sm text-muted-foreground space-y-1">
+                    <ul className="flex flex-col gap-1 text-sm text-muted-foreground">
                       <li>• Voir uniquement les projets assignés</li>
                       <li>• Accès strictement en lecture seule</li>
                       <li>• Pas de commentaire ni modification</li>

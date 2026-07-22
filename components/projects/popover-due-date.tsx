@@ -52,7 +52,7 @@ DeadlineSelectorPopoverProps) {
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
-            className="w-full justify-start rounded-xl"
+            className="w-full justify-start rounded-full"
           >
             <IconCalendar className="mr-2 size-4" />
             {PopoverDueDateLabel()}

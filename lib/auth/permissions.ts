@@ -96,6 +96,7 @@ export function canUpdateProjectPayload(
     dueDate?: Date;
     columnId?: string;
     authorIds?: string[];
+    memberIds?: string[];
     slug?: string;
     fileUrl?: string;
     statusComment?: string;
@@ -106,6 +107,10 @@ export function canUpdateProjectPayload(
   }
 
   if (role === "REVIEWER" || role === "GUEST") {
+    return false;
+  }
+
+  if (payload.memberIds !== undefined) {
     return false;
   }
 

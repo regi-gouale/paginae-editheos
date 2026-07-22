@@ -15,6 +15,7 @@ import {
   deleteProjectTask,
   updateProjectTask,
 } from "@/lib/actions/kanban";
+import { cn } from "@/lib/utils";
 import type { ProjectTask } from "@/prisma/generated/prisma/client";
 
 // Composant réutilisable pour le bouton d'ajout
@@ -38,7 +39,7 @@ function AddTaskButton({
           variant="outline"
           size="sm"
           onClick={onAddClick}
-          className="rounded-xl"
+          className="rounded-full"
         >
           <IconPlus className="size-4 mr-1" />
           Ajouter
@@ -56,7 +57,7 @@ function AddTaskButton({
         variant="outline"
         size="sm"
         onClick={onAddClick}
-        className="rounded-xl"
+        className="rounded-full"
       >
         <IconPlus className="size-4 mr-1" />
         Ajouter
@@ -95,16 +96,16 @@ function TaskAdder({
         placeholder="Nouvelle tâche"
         autoFocus
         onKeyDown={handleKeyDown}
-        className={`rounded-xl ${isDetailView ? "" : "flex-1"}`}
+        className={`rounded-full ${isDetailView ? "" : "flex-1"}`}
       />
-      <Button size="sm" onClick={onAddTask} className="rounded-xl">
+      <Button size="sm" onClick={onAddTask} className="rounded-full">
         Ajouter
       </Button>
       <Button
         size="sm"
         variant="outline"
         onClick={onCancel}
-        className="rounded-xl"
+        className="rounded-full"
       >
         Annuler
       </Button>
@@ -212,18 +213,41 @@ export function ProjectTasksEditor({
         />
       )}
 
+      {editedTasks.length > 0 ? (
+        <div className="rounded-full bg-muted/40 px-3 py-1 text-xs text-muted-foreground">
+          {editedTasks.filter((task) => task.completed).length} terminee
+          {editedTasks.filter((task) => task.completed).length > 1 ? "s" : ""}{" "}
+          sur {editedTasks.length}
+        </div>
+      ) : null}
+
       {/* Liste des tâches */}
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 space-y-2 rounded-4xl border border-border/60 bg-background/70 p-2">
+        {editedTasks.length === 0 ? (
+          <p className="rounded-2xl px-3 py-5 text-center text-sm text-muted-foreground">
+            Aucune tâche pour le moment. Ajoutez-en une pour commencer.
+          </p>
+        ) : null}
+
         {editedTasks?.map((task) => (
           <div
             key={task.id}
-            className="flex items-center gap-2 p-2 border rounded-xl group"
+            className={cn(
+              "group flex items-center gap-2 rounded-full border px-2 py-2 transition-colors",
+              task.completed
+                ? "border-emerald-200 bg-emerald-50/60"
+                : "border-border bg-background hover:bg-muted/50",
+            )}
           >
             <Button
               variant="ghost"
               size="sm"
               onClick={() => onToggleTask(task.id)}
-              className="p-1 size-6"
+              className={cn(
+                "size-7 rounded-full p-1",
+                task.completed && "text-emerald-700 hover:text-emerald-800",
+              )}
+              aria-pressed={task.completed}
             >
               {task.completed ? (
                 <IconSquareCheck className="size-4 text-green-600" />
@@ -232,7 +256,7 @@ export function ProjectTasksEditor({
               )}
             </Button>
             <span
-              className={`flex-1 ${
+              className={`flex-1 text-sm ${
                 task.completed ? "line-through text-muted-foreground" : ""
               }`}
             >
@@ -242,7 +266,7 @@ export function ProjectTasksEditor({
               variant="ghost"
               size="sm"
               onClick={() => onDeleteTask(task.id)}
-              className="p-1 size-6 opacity-0 group-hover:opacity-100"
+              className="size-7 rounded-full p-1 opacity-100 md:opacity-0 md:group-hover:opacity-100"
             >
               <IconTrash className="size-4 text-destructive" />
             </Button>

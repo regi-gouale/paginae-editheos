@@ -43,6 +43,7 @@ import { ProjectCommentsEditor } from "./comments-editor";
 import { ProjectCustomFieldsEditor } from "./custom-fields-editor";
 import { ProjectFileUrlEditor } from "./file-url-editor";
 import { DeadlineSelectorPopover } from "./popover-due-date";
+import { ProjectMembersSelector } from "./select-members";
 import { ProjectStatusDropdown } from "./select-project-status";
 
 interface ProjectDetailViewProps {
@@ -66,6 +67,7 @@ export function ProjectDetailView({
   const { showError, showSuccess } = useAlerts();
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [members, setMembers] = useState(project.members ?? []);
 
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
@@ -153,13 +155,13 @@ export function ProjectDetailView({
                     variant="destructive"
                     size="sm"
                     disabled={isDeleting}
-                    className="ml-auto rounded-xl"
+                    className="ml-auto rounded-full"
                   >
                     <IconTrash className="size-4" />
                     Supprimer
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="rounded-2xl">
+                <AlertDialogContent className="rounded-4xl">
                   <AlertDialogHeader>
                     <AlertDialogTitle>Supprimer ce projet ?</AlertDialogTitle>
                     <AlertDialogDescription>
@@ -170,13 +172,13 @@ export function ProjectDetailView({
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel
-                      className="rounded-xl"
+                      className="rounded-full"
                       disabled={isDeleting}
                     >
                       Annuler
                     </AlertDialogCancel>
                     <AlertDialogAction
-                      className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      className="rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       disabled={isDeleting}
                       onClick={(event) => {
                         event.preventDefault();
@@ -192,7 +194,7 @@ export function ProjectDetailView({
               </AlertDialog>
             )}
           </div>
-          {project.description && (
+          {(project.description || canEditDesign || canEditProject) && (
             <ProjectDescriptionDialog
               projectId={project.id}
               description={project.description}
@@ -408,33 +410,46 @@ export function ProjectDetailView({
           )}
 
           {/* Membres de l'équipe */}
-          {project.members && project.members.length > 0 && (
+          {(members.length > 0 || isAdmin) && (
             <Card>
-              <CardHeader>
-                <CardTitle>Équipe ({project.members.length})</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between gap-4">
+                <CardTitle>Membres ({members.length})</CardTitle>
+                {isAdmin ? (
+                  <ProjectMembersSelector
+                    projectId={project.id}
+                    selectedMembers={members}
+                    onMembersUpdated={setMembers}
+                  />
+                ) : null}
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {project.members.map((member) => (
-                    <div key={member.id} className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarFallback>
-                          {getMemberInitials(member.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <p className="font-medium">{member.name}</p>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <IconMail className="h-3 w-3" />
-                          <span>{member.email}</span>
+                {members.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    Aucun collaborateur assigné à ce projet.
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {members.map((member) => (
+                      <div key={member.id} className="flex items-center gap-3">
+                        <Avatar>
+                          <AvatarFallback>
+                            {getMemberInitials(member.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <p className="font-medium">{member.name}</p>
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <IconMail className="h-3 w-3" />
+                            <span>{member.email}</span>
+                          </div>
+                          <Badge variant="outline" className="text-xs mt-1">
+                            {member.role}
+                          </Badge>
                         </div>
-                        <Badge variant="outline" className="text-xs mt-1">
-                          {member.role}
-                        </Badge>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}

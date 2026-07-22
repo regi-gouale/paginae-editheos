@@ -79,7 +79,7 @@ export function AddProjectDialog({
           className={
             isInColumn
               ? "w-full mt-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 justify-start flex flex-1"
-              : "flex items-center justify-center rounded-full md:rounded-xl"
+              : "flex items-center justify-center rounded-full"
           }
         >
           <IconPlus className="size-4" />
@@ -106,7 +106,7 @@ export function AddProjectDialog({
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="mt-1 block w-full border rounded px-2 py-1"
+              className="mt-1 block w-full border rounded-full px-2 py-1"
             />
           </div>
           <div>
@@ -162,7 +162,7 @@ export function AddProjectDialog({
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="mt-1 block w-full border rounded px-2 py-1"
+              className="mt-1 block w-full border rounded-2xl px-2 py-1"
             />
           </div>
           {error && <div className="text-red-500 text-sm mb-2">{error}</div>}

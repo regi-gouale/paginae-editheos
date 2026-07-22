@@ -124,14 +124,14 @@ export function ProjectCommentsEditor({
             onChange={(event) => setNewComment(event.target.value)}
             placeholder="Ajouter un commentaire..."
             rows={3}
-            className="rounded-xl"
+            className="rounded-2xl"
           />
           <div className="flex justify-end">
             <Button
               type="button"
               onClick={handleAddComment}
               disabled={isSubmitting}
-              className="rounded-xl"
+              className="rounded-full"
             >
               <IconMessageCirclePlus className="size-4 mr-2" />
               {isSubmitting ? "Ajout..." : "Ajouter un commentaire"}
@@ -170,7 +170,7 @@ export function ProjectCommentsEditor({
                           <MessageHeader className="px-0 text-sm font-medium text-foreground">
                             {comment.user.name}
                           </MessageHeader>
-                          <div className="border rounded-xl px-3 py-2">
+                          <div className="border rounded-2xl px-3 py-2">
                             <p className="text-sm whitespace-pre-wrap">
                               {comment.content}
                             </p>

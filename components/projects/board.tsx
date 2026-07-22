@@ -156,62 +156,6 @@ export function ProjectsBoard({
     }
   }, [columns]);
 
-  // const handleProjectUpdate = (updatedProject: ProjectWithDetails) => {
-  //   const newColumns = [...columns];
-
-  //   // Trouver l'ancienne colonne du projet
-  //   let sourceColumnIndex = -1;
-  //   let projectIndex = -1;
-
-  //   for (let i = 0; i < newColumns.length; i++) {
-  //     projectIndex = newColumns[i].projects.findIndex(
-  //       (p) => p.id === updatedProject.id
-  //     );
-  //     if (projectIndex !== -1) {
-  //       sourceColumnIndex = i;
-  //       break;
-  //     }
-  //   }
-
-  //   if (sourceColumnIndex === -1) return;
-
-  //   // Trouver la nouvelle colonne basée sur le statut
-  //   const targetColumnTitle = getColumnNameFromProjectStatus(
-  //     updatedProject.status
-  //   );
-  //   const targetColumnIndex = newColumns.findIndex(
-  //     (col) => col.title === targetColumnTitle
-  //   );
-
-  //   if (targetColumnIndex === -1) return;
-
-  //   // Si le projet est déjà dans la bonne colonne, juste mettre à jour ses données
-  //   if (sourceColumnIndex === targetColumnIndex) {
-  //     newColumns[sourceColumnIndex].projects[projectIndex] = updatedProject;
-  //   } else {
-  //     // Retirer le projet de l'ancienne colonne
-  //     newColumns[sourceColumnIndex] = {
-  //       ...newColumns[sourceColumnIndex],
-  //       projects: newColumns[sourceColumnIndex].projects.filter(
-  //         (p) => p.id !== updatedProject.id
-  //       ),
-  //     };
-
-  //     // Ajouter le projet à la nouvelle colonne
-  //     newColumns[targetColumnIndex] = {
-  //       ...newColumns[targetColumnIndex],
-  //       projects: [...newColumns[targetColumnIndex].projects, updatedProject],
-  //     };
-  //   }
-
-  //   setColumns(newColumns);
-
-  //   // Mettre à jour le projet sélectionné
-  //   if (selectedProject && selectedProject.id === updatedProject.id) {
-  //     setSelectedProject(updatedProject);
-  //   }
-  // };
-
   const handleDragEnd = async (result: DropResult) => {
     if (!canMoveProject) {
       toast.error("Vous n'avez pas la permission de déplacer ce projet");
@@ -344,7 +288,7 @@ export function ProjectsBoard({
   };
 
   return (
-    <div className="flex flex-col items-center mx-auto">
+    <div className="flex flex-col items-center mx-auto w-full">
       <div className="w-full mb-6">
         <ProjectFilters
           filters={filters}
@@ -394,7 +338,7 @@ export function ProjectsBoard({
               onChange={(event) => setMoveComment(event.target.value)}
               placeholder="Expliquez la raison du changement..."
               rows={4}
-              className="rounded-xl"
+              className="rounded-2xl"
             />
           </div>
 
@@ -408,7 +352,7 @@ export function ProjectsBoard({
                 setMoveComment("");
               }}
               disabled={isMoveSaving}
-              className="rounded-xl"
+              className="rounded-full"
             >
               Annuler
             </Button>
@@ -416,7 +360,7 @@ export function ProjectsBoard({
               type="button"
               onClick={applyPendingMove}
               disabled={isMoveSaving}
-              className="rounded-xl"
+              className="rounded-full"
             >
               {isMoveSaving ? "Enregistrement..." : "Confirmer le déplacement"}
             </Button>
