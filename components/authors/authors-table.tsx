@@ -103,7 +103,7 @@ function AuthorActionsDropdown({
             e.stopPropagation();
             onEdit(author);
           }}
-          className="cursor-pointer"
+          className="cursor-pointer rounded-full"
         >
           <IconEdit className="mr-2 size-4" />
           Modifier
