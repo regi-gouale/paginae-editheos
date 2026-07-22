@@ -1,6 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IconAt, IconMailCheck } from "@tabler/icons-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -73,7 +75,9 @@ export function ForgotPasswordForm() {
           <CardContent className="grid p-0 md:grid-cols-2">
             <div className="space-y-4 md:space-y-6 p-8">
               <div className="flex flex-col items-center text-center">
-                <div className="text-4xl mb-4">✉️</div>
+                <div className="mb-4 rounded-full bg-blue-100 p-3 text-blue-700">
+                  <IconMailCheck className="size-6" />
+                </div>
                 <h1 className="text-2xl font-bold pb-2">
                   Vérifiez votre email
                 </h1>
@@ -145,13 +149,17 @@ export function ForgotPasswordForm() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="email@editheos.com"
-                            type="email"
-                            {...field}
-                            autoComplete="email"
-                            disabled={loading}
-                          />
+                          <div className="relative">
+                            <IconAt className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                              placeholder="email@editheos.com"
+                              type="email"
+                              {...field}
+                              autoComplete="email"
+                              disabled={loading}
+                              className="pl-10"
+                            />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -181,6 +189,14 @@ export function ForgotPasswordForm() {
               </div>
             </form>
           </Form>
+          <div className="hidden relative md:block">
+            <Image
+              fill
+              src="/logo-editheos.webp"
+              alt="Image"
+              className="relative my-auto max-w-96 max-h-72 object-cover "
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

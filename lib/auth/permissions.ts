@@ -24,18 +24,66 @@ export async function getAccessContext(): Promise<AccessContext> {
     throw new Error("Non authentifie");
   }
 
-  const member = await prisma.member.findUnique({
+  let member = await prisma.member.findUnique({
     where: { userId: session.user.id },
     select: { id: true, role: true },
   });
 
-  const role: MemberRole = member?.role ?? "GUEST";
+  if (!member) {
+    const memberByEmail = await prisma.member.findFirst({
+      where: {
+        email: {
+          equals: session.user.email,
+          mode: "insensitive",
+        },
+      },
+      select: { id: true, role: true, userId: true },
+    });
+
+    if (memberByEmail) {
+      if (!memberByEmail.userId) {
+        try {
+          await prisma.member.update({
+            where: { id: memberByEmail.id },
+            data: { userId: session.user.id },
+          });
+        } catch (error) {
+          console.error("Error auto-linking member to user:", error);
+        }
+      }
+
+      member = {
+        id: memberByEmail.id,
+        role: memberByEmail.role,
+      };
+
+      await prisma.memberInvitation.updateMany({
+        where: {
+          email: {
+            equals: session.user.email,
+            mode: "insensitive",
+          },
+          status: "PENDING",
+        },
+        data: {
+          status: "ACCEPTED",
+          acceptedAt: new Date(),
+        },
+      });
+    }
+  }
+
+  if (!member) {
+    throw new Error("Acces revoque");
+  }
+
+  const role: MemberRole = member.role;
 
   return {
     userId: session.user.id,
     userEmail: session.user.email,
     role,
-    memberId: member?.id ?? null,
+    memberId: member.id,
     isAdmin: role === "ADMIN",
   };
 }

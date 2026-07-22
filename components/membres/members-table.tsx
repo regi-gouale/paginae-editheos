@@ -56,7 +56,7 @@ const roleColors = {
 };
 
 export function MembersTable({ initialData }: MembersTableProps) {
-  const { showSuccess, showError, confirm } = useAlerts();
+  const { showSuccess, showError, showWarning, confirm } = useAlerts();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<MembersResponse>(initialData);
@@ -106,7 +106,14 @@ export function MembersTable({ initialData }: MembersTableProps) {
         });
         // window.location.reload();
         setData(refreshedData);
-        showSuccess("Membre ajouté avec succès");
+        if (result.invitationSent) {
+          showSuccess(
+            "Membre ajouté avec succès",
+            "Un email d'invitation a été envoyé.",
+          );
+        } else {
+          showWarning("Membre ajouté", result.error);
+        }
       } else {
         showError("Erreur lors de l'ajout du membre", result.error);
       }

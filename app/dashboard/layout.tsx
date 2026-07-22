@@ -48,14 +48,6 @@ export default async function DashboardLayout({
         canAccessTeam={canManageTeam(access.role)}
       />
       <SidebarInset className="relative overflow-hidden bg-transparent">
-        {/* <div
-          className="pointer-events-none absolute inset-0 -z-10"
-          aria-hidden="true"
-        >
-          <div className="absolute -left-20 top-20 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-accent/25 blur-3xl" />
-          <div className="absolute bottom-0 left-1/3 h-56 w-56 rounded-full bg-chart-2/10 blur-3xl" />
-        </div> */}
         {children}
       </SidebarInset>
     </SidebarProvider>

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IconAlertTriangle, IconLockPassword } from "@tabler/icons-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -94,7 +95,9 @@ export function ResetPasswordForm({ initialToken }: ResetPasswordFormProps) {
           <CardContent className="grid p-0 md:grid-cols-2">
             <div className="space-y-4 md:space-y-6 p-8">
               <div className="flex flex-col items-center text-center">
-                <div className="text-4xl mb-4">⚠️</div>
+                <div className="mb-4 rounded-full bg-amber-100 p-3 text-amber-700">
+                  <IconAlertTriangle className="size-6" />
+                </div>
                 <h1 className="text-2xl font-bold pb-2">Lien invalide</h1>
                 <p className="text-muted-foreground text-balance mb-6">
                   Le lien de réinitialisation est invalide ou a expiré.
@@ -147,13 +150,17 @@ export function ResetPasswordForm({ initialToken }: ResetPasswordFormProps) {
                       <FormItem>
                         <FormLabel>Nouveau mot de passe</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="●●●●●●●●"
-                            type="password"
-                            {...field}
-                            autoComplete="new-password"
-                            disabled={loading}
-                          />
+                          <div className="relative">
+                            <IconLockPassword className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                              placeholder="●●●●●●●●"
+                              type="password"
+                              {...field}
+                              autoComplete="new-password"
+                              disabled={loading}
+                              className="pl-10"
+                            />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -169,13 +176,17 @@ export function ResetPasswordForm({ initialToken }: ResetPasswordFormProps) {
                       <FormItem>
                         <FormLabel>Confirmez le mot de passe</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="●●●●●●●●"
-                            type="password"
-                            {...field}
-                            autoComplete="new-password"
-                            disabled={loading}
-                          />
+                          <div className="relative">
+                            <IconLockPassword className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                              placeholder="●●●●●●●●"
+                              type="password"
+                              {...field}
+                              autoComplete="new-password"
+                              disabled={loading}
+                              className="pl-10"
+                            />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
