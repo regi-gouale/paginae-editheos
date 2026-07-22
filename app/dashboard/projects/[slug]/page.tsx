@@ -44,18 +44,7 @@ export default async function ProjectDetailPage({
       <div className="flex flex-col gap-6 pb-8">
         <DashboardHeader breadcrumbs={breadcrumbs} />
         <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 pt-4 md:p-6 md:pt-8">
-          <section className="grid-pattern relative overflow-hidden rounded-2xl p-6 md:p-8">
-            <div className="relative flex flex-col gap-2">
-              <h1 className="line-clamp-1 text-2xl font-black tracking-tight sm:text-3xl">
-                {project.title}
-              </h1>
-              <p className="text-sm text-muted-foreground sm:text-base">
-                Consultez et mettez a jour tous les details du projet.
-              </p>
-            </div>
-          </section>
-
-          <section className="surface-card-elevated rounded-2xl p-3 md:p-4">
+          <section className="rounded-4xl p-3 md:p-4">
             <ProjectDetailView
               project={project as ProjectWithDetails}
               isAdmin={isAdmin}

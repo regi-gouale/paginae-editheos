@@ -517,7 +517,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         </div>
       </div>
 
-      <div className="border rounded-2xl overflow-hidden">
+      <div className="border rounded-4xl overflow-hidden surface-card-elevated px-4 py-2">
         <Table>
           <TableHeader>
             <TableRow>

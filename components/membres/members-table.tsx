@@ -225,7 +225,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
         </div>
       </div>
 
-      <div className="border rounded-2xl overflow-hidden">
+      <div className="border rounded-4xl overflow-hidden surface-card-elevated py-2 px-4">
         <Table>
           <TableHeader>
             <TableRow>
