@@ -42,7 +42,7 @@ export function ProjectDescriptionDialog({
         description:
           normalizedCurrentDescription.length > 0
             ? normalizedCurrentDescription
-            : null,
+            : undefined,
       });
       setIsEditing(false);
     } finally {
