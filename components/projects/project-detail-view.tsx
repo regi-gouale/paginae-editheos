@@ -155,13 +155,13 @@ export function ProjectDetailView({
                     variant="destructive"
                     size="sm"
                     disabled={isDeleting}
-                    className="ml-auto rounded-xl"
+                    className="ml-auto rounded-full"
                   >
                     <IconTrash className="size-4" />
                     Supprimer
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="rounded-2xl">
+                <AlertDialogContent className="rounded-4xl">
                   <AlertDialogHeader>
                     <AlertDialogTitle>Supprimer ce projet ?</AlertDialogTitle>
                     <AlertDialogDescription>
@@ -172,13 +172,13 @@ export function ProjectDetailView({
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel
-                      className="rounded-xl"
+                      className="rounded-full"
                       disabled={isDeleting}
                     >
                       Annuler
                     </AlertDialogCancel>
                     <AlertDialogAction
-                      className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      className="rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       disabled={isDeleting}
                       onClick={(event) => {
                         event.preventDefault();

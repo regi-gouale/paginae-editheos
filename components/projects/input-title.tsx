@@ -59,7 +59,7 @@ export default function ProjectTitleEditor({
           <Input
             value={editedTitle}
             onChange={(e) => setEditedTitle(e.target.value)}
-            className="flex-1 rounded-xl w-96 text-xl"
+            className="flex-1 rounded-full w-96 text-xl"
             onBlur={onSave}
             onKeyDown={(e) => {
               if (e.key === "Enter") {

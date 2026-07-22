@@ -79,17 +79,17 @@ FileUrlEditorProps) {
             value={editedFileUrl || ""}
             onChange={(e) => setEditedFileUrl(e.target.value)}
             placeholder="Coller le lien du fichier..."
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
           />
           <div className="flex gap-2">
-            <Button size={"sm"} onClick={onSave} className="rounded-xl">
+            <Button size={"sm"} onClick={onSave} className="rounded-full">
               Enregistrer
             </Button>
             <Button
               size={"sm"}
               variant={"outline"}
               onClick={onCancel}
-              className="rounded-xl"
+              className="rounded-full"
             >
               Annuler
             </Button>

@@ -80,7 +80,7 @@ function SortableTaskItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-2 p-3 border rounded-lg bg-background group"
+      className="flex items-center gap-2 p-3 border rounded-2xl bg-background group"
     >
       <div
         {...attributes}

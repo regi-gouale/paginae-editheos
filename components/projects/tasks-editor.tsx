@@ -38,7 +38,7 @@ function AddTaskButton({
           variant="outline"
           size="sm"
           onClick={onAddClick}
-          className="rounded-xl"
+          className="rounded-full"
         >
           <IconPlus className="size-4 mr-1" />
           Ajouter
@@ -56,7 +56,7 @@ function AddTaskButton({
         variant="outline"
         size="sm"
         onClick={onAddClick}
-        className="rounded-xl"
+        className="rounded-full"
       >
         <IconPlus className="size-4 mr-1" />
         Ajouter
@@ -95,16 +95,16 @@ function TaskAdder({
         placeholder="Nouvelle tâche"
         autoFocus
         onKeyDown={handleKeyDown}
-        className={`rounded-xl ${isDetailView ? "" : "flex-1"}`}
+        className={`rounded-full ${isDetailView ? "" : "flex-1"}`}
       />
-      <Button size="sm" onClick={onAddTask} className="rounded-xl">
+      <Button size="sm" onClick={onAddTask} className="rounded-full">
         Ajouter
       </Button>
       <Button
         size="sm"
         variant="outline"
         onClick={onCancel}
-        className="rounded-xl"
+        className="rounded-full"
       >
         Annuler
       </Button>
@@ -217,7 +217,7 @@ export function ProjectTasksEditor({
         {editedTasks?.map((task) => (
           <div
             key={task.id}
-            className="flex items-center gap-2 p-2 border rounded-xl group"
+            className="flex items-center gap-2 p-2 border rounded-2xl group"
           >
             <Button
               variant="ghost"

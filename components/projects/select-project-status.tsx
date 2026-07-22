@@ -134,7 +134,7 @@ ProjectStatusDropdownProps) {
               onChange={(event) => setStatusComment(event.target.value)}
               placeholder="Décrivez la raison du changement de statut..."
               rows={4}
-              className="rounded-xl"
+              className="rounded-2xl"
             />
           </div>
 
@@ -148,7 +148,7 @@ ProjectStatusDropdownProps) {
                 setStatusComment("");
               }}
               disabled={isSaving}
-              className="rounded-xl"
+              className="rounded-full"
             >
               Annuler
             </Button>
@@ -156,7 +156,7 @@ ProjectStatusDropdownProps) {
               type="button"
               onClick={handleConfirmStatusChange}
               disabled={isSaving}
-              className="rounded-xl"
+              className="rounded-full"
             >
               {isSaving ? "Enregistrement..." : "Confirmer"}
             </Button>

@@ -100,7 +100,7 @@ export function AuthorSelectionDropdown({
           value={selectedAuthor?.id || ""}
           onValueChange={handleAuthorChange}
         >
-          <SelectTrigger className="w-full rounded-xl">
+          <SelectTrigger className="w-full rounded-full">
             <SelectValue placeholder="Sélectionner un auteur">
               {selectedAuthor && (
                 <div className="flex items-center gap-2">

@@ -85,7 +85,7 @@ export function ProjectDescriptionDialog({
                 void onSave();
               }
             }}
-            className="min-h-36 max-h-96 resize-y rounded-xl leading-6"
+            className="min-h-36 max-h-96 resize-y rounded-2xl leading-6"
           />
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs text-muted-foreground">
@@ -99,7 +99,7 @@ export function ProjectDescriptionDialog({
                   size={"sm"}
                   variant={"ghost"}
                   onClick={onClear}
-                  className="rounded-xl"
+                  className="rounded-full"
                   disabled={isSaving}
                 >
                   Vider
@@ -109,7 +109,7 @@ export function ProjectDescriptionDialog({
                 size={"sm"}
                 variant={"outline"}
                 onClick={onCancel}
-                className="rounded-xl"
+                className="rounded-full"
                 disabled={isSaving}
               >
                 Annuler
@@ -117,7 +117,7 @@ export function ProjectDescriptionDialog({
               <Button
                 size={"sm"}
                 onClick={onSave}
-                className="rounded-xl"
+                className="rounded-full"
                 disabled={isSaving || !hasChanged}
               >
                 {isSaving ? "Enregistrement..." : "Enregistrer"}

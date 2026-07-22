@@ -16,6 +16,7 @@ import {
   isProjectOverdueForDisplay,
 } from "@/lib/utils";
 import type { ProjectWithDetails } from "@/types/kanban";
+import { Card } from "@/components/ui/card";
 
 interface ProjectCardProps {
   project: ProjectWithDetails;
@@ -32,10 +33,9 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
   const isCompleted = project.status === "DONE";
 
   return (
-    <button
-      type="button"
+    <Card
       className={cn(
-        "mb-2 w-full p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer group text-left",
+        "mb-2 w-full p-3 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer group text-left",
         getPriorityBorderStyle(project.priority),
       )}
       onClick={onClick}
@@ -51,7 +51,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
           {project.authors.map((author) => (
             <div
               key={author.id}
-              className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl"
+              className="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-full"
             >
               {author.firstName} {author.lastName}
             </div>
@@ -88,7 +88,7 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
               isOverdue
                 ? "text-red-600 dark:text-red-400"
                 : "text-gray-500 dark:text-gray-400",
-              "bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl",
+              "bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-full",
             )}
           >
             <IconCalendar className="size-3 mr-1" />
@@ -97,19 +97,19 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
         )}
 
         {totalTasks > 0 && !isCompleted && (
-          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl">
+          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-full">
             <IconSquareCheck className="size-3 mr-1" />
             {completedTasks}/{totalTasks}
           </div>
         )}
 
         {project.customFields.length > 0 && !isCompleted && (
-          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-xl gap-2">
+          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-full gap-2">
             <IconSquareAsterisk className="size-3 text-gray-500 dark:text-gray-400" />
             <span>{project.customFields.length} champs</span>
           </div>
         )}
       </div>
-    </button>
+    </Card>
   );
 }

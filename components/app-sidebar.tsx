@@ -160,7 +160,7 @@ export function AppSidebar({
             <SidebarMenuButton
               size="lg"
               asChild
-              className="h-auto rounded-xl bg-sidebar/60 p-2"
+              className="h-auto rounded-4xl bg-sidebar/60 p-2"
             >
               <Link href="/dashboard">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex size-9 items-center justify-center rounded-full shadow-sm">

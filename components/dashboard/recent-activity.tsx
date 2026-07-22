@@ -90,7 +90,7 @@ export default function RecentActivity() {
 
   if (loading) {
     return (
-      <Card className="surface-card rounded-2xl">
+      <Card className="surface-card rounded-4xl">
         <CardHeader>
           <CardTitle>Activité récente</CardTitle>
         </CardHeader>
@@ -103,8 +103,8 @@ export default function RecentActivity() {
               >
                 <div className="size-8 rounded-full bg-muted"></div>
                 <div className="flex flex-1 flex-col gap-2">
-                  <div className="h-4 w-3/4 rounded bg-muted"></div>
-                  <div className="h-3 w-1/2 rounded bg-muted"></div>
+                  <div className="h-4 w-3/4 rounded-full bg-muted"></div>
+                  <div className="h-3 w-1/2 rounded-full bg-muted"></div>
                 </div>
               </div>
             ))}
@@ -116,7 +116,7 @@ export default function RecentActivity() {
 
   if (activities.length === 0) {
     return (
-      <Card className="surface-card rounded-2xl">
+      <Card className="surface-card rounded-4xl">
         <CardHeader>
           <CardTitle>Activité récente</CardTitle>
         </CardHeader>

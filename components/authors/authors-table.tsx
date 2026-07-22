@@ -398,7 +398,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent
-                      className="w-auto p-0 rounded-3xl"
+                      className="w-auto p-0 rounded-4xl"
                       align="start"
                     >
                       <Calendar
@@ -448,7 +448,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
                   }
                   placeholder="Biographie de l'auteur..."
                   rows={7}
-                  className="rounded-3xl"
+                  className="rounded-2xl"
                 />
               </div>
               <DialogFooter>

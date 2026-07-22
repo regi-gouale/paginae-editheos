@@ -161,7 +161,7 @@ export function ProjectMembersSelector({
               Aucun collaborateur disponible.
             </p>
           ) : (
-            <div className="max-h-80 overflow-y-auto rounded-xl border">
+            <div className="max-h-80 overflow-y-auto rounded-2xl border">
               <div className="flex flex-col gap-1 p-2">
                 {members.map((member) => {
                   const isSelected = selectedMemberIds.includes(member.id);
@@ -169,7 +169,7 @@ export function ProjectMembersSelector({
                   return (
                     <label
                       key={member.id}
-                      className="flex cursor-pointer items-start gap-3 rounded-lg px-3 py-2 hover:bg-muted/50"
+                      className="flex cursor-pointer items-start gap-3 rounded-full px-3 py-2 hover:bg-muted/50"
                     >
                       <input
                         type="checkbox"

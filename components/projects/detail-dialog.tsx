@@ -96,7 +96,7 @@ export function ProjectDetailDialog({
             <div className="space-y-2">
               <Label>Priorité</Label>
               <Input
-                className="border mx-auto p-2 rounded-xl"
+                className="border mx-auto p-2 rounded-full"
                 value={getPriorityLabel(editedProject.priority)}
                 disabled
               />

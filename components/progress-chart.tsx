@@ -35,7 +35,7 @@ export default function ProgressChart() {
         </CardHeader>
         <CardContent>
           <div className="animate-pulse">
-            <div className="h-60 rounded bg-muted"></div>
+            <div className="h-60 rounded-2xl bg-muted"></div>
           </div>
         </CardContent>
       </Card>

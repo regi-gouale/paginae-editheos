@@ -69,8 +69,8 @@ export default function RecentProjects() {
           <div className="flex flex-col gap-4">
             {["s1", "s2", "s3"].map((skeletonId) => (
               <div key={skeletonId} className="animate-pulse">
-                <div className="mb-2 h-4 w-3/4 rounded bg-muted"></div>
-                <div className="h-3 w-1/2 rounded bg-muted"></div>
+                <div className="mb-2 h-4 w-3/4 rounded-full bg-muted"></div>
+                <div className="h-3 w-1/2 rounded-full bg-muted"></div>
               </div>
             ))}
           </div>

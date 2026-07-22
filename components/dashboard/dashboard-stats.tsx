@@ -57,15 +57,15 @@ export default function DashboardStats() {
         {["s1", "s2", "s3", "s4"].map((skeletonId) => (
           <Card
             key={skeletonId}
-            className="surface-card animate-pulse rounded-xl"
+            className="surface-card animate-pulse rounded-4xl"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div className="h-4 w-24 rounded bg-muted"></div>
-              <div className="size-4 rounded bg-muted"></div>
+              <div className="h-4 w-24 rounded-full bg-muted"></div>
+              <div className="size-4 rounded-full bg-muted"></div>
             </CardHeader>
             <CardContent>
-              <div className="mb-2 h-8 w-16 rounded bg-muted"></div>
-              <div className="h-3 w-32 rounded bg-muted"></div>
+              <div className="mb-2 h-8 w-16 rounded-full bg-muted"></div>
+              <div className="h-3 w-32 rounded-full bg-muted"></div>
             </CardContent>
           </Card>
         ))}

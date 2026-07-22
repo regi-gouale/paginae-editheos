@@ -338,7 +338,7 @@ export function ProjectsBoard({
               onChange={(event) => setMoveComment(event.target.value)}
               placeholder="Expliquez la raison du changement..."
               rows={4}
-              className="rounded-xl"
+              className="rounded-2xl"
             />
           </div>
 
@@ -352,7 +352,7 @@ export function ProjectsBoard({
                 setMoveComment("");
               }}
               disabled={isMoveSaving}
-              className="rounded-xl"
+              className="rounded-full"
             >
               Annuler
             </Button>
@@ -360,7 +360,7 @@ export function ProjectsBoard({
               type="button"
               onClick={applyPendingMove}
               disabled={isMoveSaving}
-              className="rounded-xl"
+              className="rounded-full"
             >
               {isMoveSaving ? "Enregistrement..." : "Confirmer le déplacement"}
             </Button>
