@@ -1,10 +1,37 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { getCurrentSession } from "@/lib/auth/auth-lib";
 import { canManageTeam, getAccessContext } from "@/lib/auth/permissions";
+import {
+  memberInvitationEmailHTML,
+  memberInvitationEmailText,
+} from "@/lib/email/member-invitation-template";
+import { sendEmail } from "@/lib/email/usesend";
+import {
+  buildInvitationLink,
+  generateInvitationToken,
+  getInvitationExpiresAt,
+  hashInvitationToken,
+} from "@/lib/invitations";
 import { prisma } from "@/lib/prisma";
 import { generateMemberSlug } from "@/lib/utils";
 import type { Prisma } from "@/prisma/generated/prisma/client";
+
+const addMemberSchema = z.object({
+  name: z.string().min(2).max(100),
+  email: z.email(),
+  role: z.enum(["ADMIN", "DESIGNER", "REVIEWER", "CONTRIBUTOR", "GUEST"]),
+});
+
+const memberRoleLabels = {
+  ADMIN: "Administrateur",
+  DESIGNER: "Designer",
+  REVIEWER: "Relecteur",
+  CONTRIBUTOR: "Contributeur",
+  GUEST: "Invite",
+} as const;
 
 export interface Member {
   id: string;
@@ -108,20 +135,107 @@ export async function addMember(data: {
   name: string;
   email: string;
   role: "ADMIN" | "DESIGNER" | "REVIEWER" | "CONTRIBUTOR" | "GUEST";
-}): Promise<{ success: boolean; member?: Member; error?: string }> {
+}): Promise<{
+  success: boolean;
+  member?: Member;
+  invitationSent?: boolean;
+  error?: string;
+}> {
   try {
     const access = await getAccessContext();
     if (!canManageTeam(access.role)) {
       return { success: false, error: "Acces refuse" };
     }
 
-    const member = await prisma.member.create({
-      data: {
-        ...data,
-        slug: generateMemberSlug(data.name),
+    const parsed = addMemberSchema.safeParse({
+      name: data.name.trim(),
+      email: data.email.trim().toLowerCase(),
+      role: data.role,
+    });
+
+    if (!parsed.success) {
+      return { success: false, error: "Donnees membre invalides" };
+    }
+
+    const payload = parsed.data;
+
+    const member = await prisma.member.upsert({
+      where: { email: payload.email },
+      create: {
+        ...payload,
+        slug: generateMemberSlug(payload.name),
+      },
+      update: {
+        name: payload.name,
+        role: payload.role,
       },
     });
-    return { success: true, member };
+
+    const rawToken = generateInvitationToken();
+    const tokenHash = hashInvitationToken(rawToken);
+    const expiresAt = getInvitationExpiresAt();
+
+    await prisma.memberInvitation.updateMany({
+      where: {
+        email: payload.email,
+        status: "PENDING",
+      },
+      data: {
+        status: "REVOKED",
+      },
+    });
+
+    await prisma.memberInvitation.create({
+      data: {
+        email: payload.email,
+        name: payload.name,
+        role: payload.role,
+        tokenHash,
+        expiresAt,
+        invitedById: access.userId,
+        memberId: member.id,
+      },
+    });
+
+    const invitationLink = buildInvitationLink(
+      rawToken,
+      payload.email,
+      payload.name,
+    );
+
+    let invitationSent = true;
+    let invitationWarning: string | undefined;
+
+    try {
+      await sendEmail({
+        to: payload.email,
+        subject: "Invitation a rejoindre Paginae",
+        html: memberInvitationEmailHTML(
+          payload.name,
+          invitationLink,
+          memberRoleLabels[payload.role],
+        ),
+        text: memberInvitationEmailText(
+          payload.name,
+          invitationLink,
+          memberRoleLabels[payload.role],
+        ),
+      });
+    } catch (emailError) {
+      console.error("Error sending member invitation:", emailError);
+      invitationSent = false;
+      invitationWarning =
+        "Membre cree, mais l'email d'invitation n'a pas pu etre envoye";
+    }
+
+    revalidatePath("/dashboard/team");
+
+    return {
+      success: true,
+      member,
+      invitationSent,
+      error: invitationWarning,
+    };
   } catch (error) {
     console.error("Error adding member:", error);
     return { success: false, error: "Erreur lors de l'ajout du membre" };
@@ -200,6 +314,10 @@ export async function updateMember(
       where: { id },
       data,
     });
+    revalidatePath("/dashboard/team");
+    if (member.slug) {
+      revalidatePath(`/dashboard/team/${member.slug}`);
+    }
     return { success: true, member };
   } catch (error) {
     console.error("Error updating member:", error);
@@ -219,9 +337,41 @@ export async function deleteMember(
       return { success: false, error: "Acces refuse" };
     }
 
-    await prisma.member.delete({
+    const member = await prisma.member.findUnique({
       where: { id },
+      select: { userId: true, email: true },
     });
+
+    if (!member) {
+      return { success: false, error: "Membre non trouvé" };
+    }
+
+    await prisma.$transaction(async (tx) => {
+      if (member.userId) {
+        await tx.session.deleteMany({
+          where: { userId: member.userId },
+        });
+      }
+
+      await tx.memberInvitation.updateMany({
+        where: {
+          email: {
+            equals: member.email,
+            mode: "insensitive",
+          },
+          status: "PENDING",
+        },
+        data: {
+          status: "REVOKED",
+        },
+      });
+
+      await tx.member.delete({
+        where: { id },
+      });
+    });
+
+    revalidatePath("/dashboard/team");
     return { success: true };
   } catch (error) {
     console.error("Error deleting member:", error);

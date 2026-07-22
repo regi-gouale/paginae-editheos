@@ -380,13 +380,13 @@ export function ProjectDetailView({
                           {getInitials(author.firstName, author.lastName)}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="flex-1">
+                      <div className="min-w-0 flex-1">
                         <p className="font-medium">
                           {author.firstName} {author.lastName}
                         </p>
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
                           <IconMail className="h-3 w-3" />
-                          <span>{author.email}</span>
+                          <span className="truncate">{author.email}</span>
                         </div>
                         {author.website && (
                           <div className="flex items-center gap-1 text-sm text-muted-foreground">

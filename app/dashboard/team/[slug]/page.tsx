@@ -86,7 +86,7 @@ export default async function MemberDetailPage({
               </div>
             </div>
             <EditMemberDialog member={member}>
-              <Button variant="outline" className="rounded-full md:rounded-xl">
+              <Button variant="outline" className="rounded-full">
                 <IconEdit className="size-4" />
                 <span className="hidden md:ml-2 md:block">Modifier</span>
               </Button>
@@ -95,7 +95,7 @@ export default async function MemberDetailPage({
         </section>
 
         <div className="grid gap-6">
-          <Card className="surface-card-elevated rounded-2xl border-border/70">
+          <Card className="surface-card-elevated rounded-4xl border-border/70">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <IconUser className="size-5" />
@@ -144,7 +144,7 @@ export default async function MemberDetailPage({
             </CardContent>
           </Card>
 
-          <Card className="surface-card-elevated rounded-2xl border-border/70">
+          <Card className="surface-card-elevated rounded-4xl border-border/70">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <IconCalendar className="size-5" />
@@ -173,7 +173,7 @@ export default async function MemberDetailPage({
             </CardContent>
           </Card>
 
-          <Card className="surface-card-elevated rounded-2xl border-border/70">
+          <Card className="surface-card-elevated rounded-4xl border-border/70">
             <CardHeader>
               <CardTitle>Permissions selon le rôle</CardTitle>
             </CardHeader>

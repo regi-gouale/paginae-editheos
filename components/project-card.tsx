@@ -8,8 +8,9 @@ import {
   IconSquareAsterisk,
   IconSquareCheck,
 } from "@tabler/icons-react";
-import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Card } from "@/components/ui/card";
 import {
   cn,
   formatDate,
@@ -19,7 +20,6 @@ import {
   isProjectOverdueForDisplay,
 } from "@/lib/utils";
 import type { ProjectWithDetails } from "@/types/kanban";
-import { Card } from "@/components/ui/card";
 
 interface ProjectCardProps {
   project: ProjectWithDetails;

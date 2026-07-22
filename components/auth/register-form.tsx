@@ -1,10 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IconLock, IconMail, IconUser } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQueryState } from "nuqs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
@@ -13,22 +14,44 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  acceptInvitationForCurrentUser,
+  getInvitationForRegistration,
+} from "@/lib/actions/member-invitations.action";
 import { authClient } from "@/lib/auth/auth-client";
 import { registerFormSchema } from "@/lib/schemas/auth-schema";
 import { cn } from "@/lib/utils";
 import { isEmailWhitelisted } from "@/lib/whitelist";
+import type { MemberRole } from "@/prisma/generated/prisma/client";
+
+type InvitationState = {
+  token: string;
+  email: string;
+  name: string;
+  role: MemberRole;
+};
+
+const roleLabels: Record<MemberRole, string> = {
+  ADMIN: "Administrateur",
+  DESIGNER: "Designer",
+  REVIEWER: "Relecteur",
+  CONTRIBUTOR: "Contributeur",
+  GUEST: "Invite",
+};
 
 export function RegisterForm() {
   const [email, setEmail] = useQueryState("email");
   const [name, setName] = useQueryState("name");
+  const [invitationToken] = useQueryState("invitation");
   const [loading, setLoading] = useState(false);
+  const [invitationLoading, setInvitationLoading] = useState(false);
+  const [invitation, setInvitation] = useState<InvitationState | null>(null);
 
   // Create Form object
   const form = useForm<z.infer<typeof registerFormSchema>>({
@@ -36,22 +59,78 @@ export function RegisterForm() {
     defaultValues: { name: name || "", email: email || "", password: "" },
   });
 
+  useEffect(() => {
+    if (!invitationToken) {
+      setInvitation(null);
+      return;
+    }
+
+    let cancelled = false;
+    setInvitationLoading(true);
+
+    void (async () => {
+      const result = await getInvitationForRegistration(invitationToken);
+
+      if (cancelled) {
+        return;
+      }
+
+      if (!result.success) {
+        setInvitation(null);
+        toast.error(result.error);
+        setInvitationLoading(false);
+        return;
+      }
+
+      setInvitation({
+        token: invitationToken,
+        email: result.invitation.email,
+        name: result.invitation.name,
+        role: result.invitation.role,
+      });
+
+      form.setValue("email", result.invitation.email, {
+        shouldValidate: true,
+      });
+      form.setValue("name", result.invitation.name, {
+        shouldValidate: true,
+      });
+
+      setInvitationLoading(false);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [form, invitationToken]);
+
   // Handle form submission
   async function onSubmit(data: z.infer<typeof registerFormSchema>) {
     setLoading(true);
     const normalizedEmail = data.email.trim().toLowerCase();
-    const emailIsWhitelisted = isEmailWhitelisted(normalizedEmail);
-    if (!emailIsWhitelisted) {
-      toast.error("Cette adresse email n'est pas autorisée à s'inscrire.");
-      setLoading(false);
-      return;
+
+    if (invitation) {
+      if (normalizedEmail !== invitation.email.toLowerCase()) {
+        toast.error(
+          "Cette invitation est liee a une autre adresse email. Utilisez l'email invite.",
+        );
+        setLoading(false);
+        return;
+      }
+    } else {
+      const emailIsWhitelisted = isEmailWhitelisted(normalizedEmail);
+      if (!emailIsWhitelisted) {
+        toast.error("Cette adresse email n'est pas autorisée à s'inscrire.");
+        setLoading(false);
+        return;
+      }
     }
 
     const result = await authClient.signUp.email({
-      email: data.email,
+      email: normalizedEmail,
       password: data.password,
-      name: data.name,
-      callbackURL: "/",
+      name: data.name.trim(),
+      callbackURL: "/dashboard",
     });
 
     if (result?.error) {
@@ -60,6 +139,21 @@ export function RegisterForm() {
       );
       setLoading(false);
     } else {
+      if (invitation) {
+        const inviteResult = await acceptInvitationForCurrentUser(
+          invitation.token,
+        );
+
+        if (!inviteResult.success) {
+          toast.warning(
+            "Compte créé, mais l'invitation n'a pas encore pu être activée.",
+            {
+              description: inviteResult.error,
+            },
+          );
+        }
+      }
+
       toast.success("Inscription réussie !");
     }
   }
@@ -82,6 +176,20 @@ export function RegisterForm() {
                     Inscrivez-vous sur Paginae
                   </p>
                 </div>
+
+                {invitationLoading && (
+                  <div className="rounded-2xl border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
+                    Verification de votre invitation en cours...
+                  </div>
+                )}
+
+                {invitation && (
+                  <div className="rounded-2xl border border-green-200 bg-green-50 p-3 text-sm text-green-800">
+                    Invitation active. Vous rejoindrez l'equipe avec le role{" "}
+                    <strong>{roleLabels[invitation.role]}</strong>.
+                  </div>
+                )}
+
                 <div className="grid gap-3">
                   <FormField
                     control={form.control}
@@ -90,16 +198,22 @@ export function RegisterForm() {
                       <FormItem>
                         <FormLabel>Prénom & Nom</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="John Doe"
-                            {...field}
-                            autoComplete="name"
-                            disabled={loading}
-                            onChange={(e) => {
-                              field.onChange(e);
-                              setName(e.target.value);
-                            }}
-                          />
+                          <div className="relative">
+                            <IconUser className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                              placeholder="John Doe"
+                              {...field}
+                              autoComplete="name"
+                              disabled={loading || invitationLoading}
+                              className="pl-10"
+                              onChange={(e) => {
+                                field.onChange(e);
+                                if (!invitation) {
+                                  setName(e.target.value);
+                                }
+                              }}
+                            />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -114,17 +228,25 @@ export function RegisterForm() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="email@editheos.com"
-                            type="email"
-                            {...field}
-                            autoComplete="email"
-                            disabled={loading}
-                            onChange={(e) => {
-                              field.onChange(e);
-                              setEmail(e.target.value);
-                            }}
-                          />
+                          <div className="relative">
+                            <IconMail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                              placeholder="email@editheos.com"
+                              type="email"
+                              {...field}
+                              autoComplete="email"
+                              disabled={
+                                loading || invitationLoading || !!invitation
+                              }
+                              className="pl-10"
+                              onChange={(e) => {
+                                field.onChange(e);
+                                if (!invitation) {
+                                  setEmail(e.target.value);
+                                }
+                              }}
+                            />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -139,22 +261,18 @@ export function RegisterForm() {
                       <FormItem>
                         <FormLabel>Mot de passe</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="************"
-                            type="password"
-                            {...field}
-                            autoComplete="current-password"
-                            disabled={loading}
-                          />
+                          <div className="relative">
+                            <IconLock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                              placeholder="************"
+                              type="password"
+                              {...field}
+                              autoComplete="current-password"
+                              disabled={loading || invitationLoading}
+                              className="pl-10"
+                            />
+                          </div>
                         </FormControl>
-                        <FormDescription className="flex">
-                          <Link
-                            href="#"
-                            className="ml-auto text-sm underline-offset-2 hover:underline w-full text-right"
-                          >
-                            Mot de passe oublié ?
-                          </Link>
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -163,7 +281,7 @@ export function RegisterForm() {
                 <Button
                   type="submit"
                   className="w-full mt-4"
-                  disabled={loading}
+                  disabled={loading || invitationLoading}
                 >
                   {loading ? "Inscription..." : "Inscription"}
                 </Button>

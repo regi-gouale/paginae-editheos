@@ -53,18 +53,16 @@ export default async function ProjectPage() {
           </div>
         </section>
 
-        <section className="surface-card-elevated rounded-2xl p-3 md:p-4">
-          <ProjectsBoard
-            initialColumns={columns}
-            isAdmin={isAdmin}
-            canCreateProject={canCreate}
-            canMoveProject={canMoveProject}
-            canEditProject={canEditProject}
-            canEditStatus={canEditStatus}
-            canEditDesign={canEditDesign}
-            canComment={canComment}
-          />
-        </section>
+        <ProjectsBoard
+          initialColumns={columns}
+          isAdmin={isAdmin}
+          canCreateProject={canCreate}
+          canMoveProject={canMoveProject}
+          canEditProject={canEditProject}
+          canEditStatus={canEditStatus}
+          canEditDesign={canEditDesign}
+          canComment={canComment}
+        />
       </main>
     </div>
   );

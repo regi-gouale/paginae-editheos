@@ -103,7 +103,7 @@ function AuthorActionsDropdown({
             e.stopPropagation();
             onEdit(author);
           }}
-          className="cursor-pointer"
+          className="cursor-pointer rounded-full"
         >
           <IconEdit className="mr-2 size-4" />
           Modifier
@@ -302,7 +302,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mx-4">
       {/* En-tête avec bouton d'ajout */}
       <div className="flex justify-between items-center">
         <div>
@@ -517,7 +517,7 @@ export function AuthorsTable({ initialData }: AuthorsTableProps) {
         </div>
       </div>
 
-      <div className="border rounded-2xl overflow-hidden">
+      <div className="border rounded-4xl overflow-hidden surface-card-elevated px-4 py-2">
         <Table>
           <TableHeader>
             <TableRow>

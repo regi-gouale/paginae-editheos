@@ -56,7 +56,7 @@ const roleColors = {
 };
 
 export function MembersTable({ initialData }: MembersTableProps) {
-  const { showSuccess, showError, confirm } = useAlerts();
+  const { showSuccess, showError, showWarning, confirm } = useAlerts();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<MembersResponse>(initialData);
@@ -106,7 +106,14 @@ export function MembersTable({ initialData }: MembersTableProps) {
         });
         // window.location.reload();
         setData(refreshedData);
-        showSuccess("Membre ajouté avec succès");
+        if (result.invitationSent) {
+          showSuccess(
+            "Membre ajouté avec succès",
+            "Un email d'invitation a été envoyé.",
+          );
+        } else {
+          showWarning("Membre ajouté", result.error);
+        }
       } else {
         showError("Erreur lors de l'ajout du membre", result.error);
       }
@@ -188,7 +195,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mx-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Membres de l&apos;équipe</h2>
         <AddMemberDialog
@@ -218,7 +225,7 @@ export function MembersTable({ initialData }: MembersTableProps) {
         </div>
       </div>
 
-      <div className="border rounded-2xl overflow-hidden">
+      <div className="border rounded-4xl overflow-hidden surface-card-elevated py-2 px-4">
         <Table>
           <TableHeader>
             <TableRow>

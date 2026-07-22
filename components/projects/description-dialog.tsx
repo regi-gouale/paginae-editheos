@@ -141,9 +141,6 @@ export function ProjectDescriptionDialog({
         >
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground/80">
-                {isDetailView ? "Description du projet" : "Description"}
-              </p>
               <p
                 className={`mt-2 whitespace-pre-wrap wrap-break-word ${
                   isDetailView ? "text-lg leading-8" : "text-sm leading-6"
@@ -152,7 +149,7 @@ export function ProjectDescriptionDialog({
                 {hasDescription
                   ? editedDescription
                   : canEdit
-                    ? "Cliquez pour ajouter une description claire et utile pour l'equipe."
+                    ? "Cliquez pour ajouter une description claire et utile pour l'équipe."
                     : "Aucune description."}
               </p>
             </div>
@@ -166,7 +163,7 @@ export function ProjectDescriptionDialog({
 
           {canEdit ? (
             <p className="mt-3 text-xs text-muted-foreground/80">
-              Cliquer pour modifier. Raccourci: Cmd/Ctrl + Entree pour
+              Cliquer pour modifier. Raccourci: Cmd/Ctrl + Entrée pour
               enregistrer.
             </p>
           ) : null}

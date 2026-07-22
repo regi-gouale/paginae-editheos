@@ -90,7 +90,9 @@ export const EditMemberDialog: React.FC<EditMemberDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger asChild className="rounded-full">
+        {children}
+      </DialogTrigger>
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Modifier le membre</DialogTitle>
@@ -150,10 +152,11 @@ export const EditMemberDialog: React.FC<EditMemberDialogProps> = ({
               type="button"
               variant="outline"
               onClick={() => setIsOpen(false)}
+              className="rounded-full"
             >
               Annuler
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} className="rounded-full">
               {isLoading ? "Modification..." : "Modifier"}
             </Button>
           </DialogFooter>

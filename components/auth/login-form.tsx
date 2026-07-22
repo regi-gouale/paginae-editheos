@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IconLock, IconMail } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQueryState } from "nuqs";
@@ -79,17 +80,21 @@ export function LoginForm() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="email@editheos.com"
-                            type="email"
-                            {...field}
-                            autoComplete="email"
-                            disabled={loading}
-                            onChange={(e) => {
-                              field.onChange(e);
-                              setEmail(e.target.value);
-                            }}
-                          />
+                          <div className="relative">
+                            <IconMail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                              placeholder="email@editheos.com"
+                              type="email"
+                              {...field}
+                              autoComplete="email"
+                              disabled={loading}
+                              className="pl-10"
+                              onChange={(e) => {
+                                field.onChange(e);
+                                setEmail(e.target.value);
+                              }}
+                            />
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -104,13 +109,17 @@ export function LoginForm() {
                       <FormItem>
                         <FormLabel>Mot de passe</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="************"
-                            type="password"
-                            {...field}
-                            autoComplete="current-password"
-                            disabled={loading}
-                          />
+                          <div className="relative">
+                            <IconLock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                              placeholder="************"
+                              type="password"
+                              {...field}
+                              autoComplete="current-password"
+                              disabled={loading}
+                              className="pl-10"
+                            />
+                          </div>
                         </FormControl>
                         <FormDescription className="flex">
                           <Link

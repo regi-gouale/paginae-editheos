@@ -248,10 +248,15 @@ export function EditAuthorDialog({
                 variant="outline"
                 onClick={() => setOpen(false)}
                 disabled={isPending}
+                className="rounded-full"
               >
                 Annuler
               </Button>
-              <Button type="submit" disabled={isPending}>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="rounded-full"
+              >
                 {isPending ? "Modification..." : "Modifier"}
               </Button>
             </div>
