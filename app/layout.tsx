@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ReactQueryProvider } from "@/components/providers/react-query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -76,15 +77,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <head>
-        <script
+      <head />
+      <body className={`${uiSans.variable} ${uiDisplay.variable} antialiased`}>
+        <Script
           defer
           src="https://analytics.gouale.com/recorder.js"
-          data-website-id="dafac991-7f83-4055-b4d4-ecd1ef6ea873"
-          data-domains="paginae.cotizoo.com"
+          data-website-id={process.env.DATA_WEBSITE_ID}
+          data-domains={process.env.NEXT_PUBLIC_SITE_URL}
+          strategy="afterInteractive"
         />
-      </head>
-      <body className={`${uiSans.variable} ${uiDisplay.variable} antialiased`}>
         <ThemeProvider
           attribute={"class"}
           defaultTheme="system"
