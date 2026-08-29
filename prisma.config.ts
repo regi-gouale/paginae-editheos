@@ -1,7 +1,7 @@
 import { defineConfig, env } from "prisma/config";
 
 const FALLBACK_DATABASE_URL =
-  "postgresql://127.0.0.1:5432/paginae_editheos?schema=public";
+  "postgresql://127.0.0.1:5432/dummy?schema=public";
 
 const isPrismaGenerateCommand = process.argv.some((arg) => arg === "generate");
 
