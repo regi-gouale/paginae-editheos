@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "prisma generate && next build --turbopack",
+    "build": "PRISMA_GENERATE_WITH_FALLBACK=1 prisma generate && next build --turbopack",
     "analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "biome check .",
